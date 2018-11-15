@@ -1,0 +1,57 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.nsa.team10'
+version = '0.0.1'
+sourceCompatibility = 10
+
+repositories {
+    mavenCentral()
+}
+
+bootRun {
+    sourceResources sourceSets.main
+    if (project.hasProperty("profiles")) {
+        systemProperty 'spring.profiles.active', project.property('profiles')
+    } else {
+        systemProperty 'spring.profiles.active', 'development'
+    }
+    main = 'com.nsa.team10.AsgApp'
+}
+
+test {
+    if (project.hasProperty("profiles")) {
+        systemProperty 'spring.profiles.active', project.property('profiles')
+    } else {
+        systemProperty 'spring.profiles.active', 'development'
+    }
+}
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+    implementation('org.springframework.boot:spring-boot-starter-cache')
+    implementation('org.springframework.boot:spring-boot-starter-jdbc')
+    implementation('org.springframework.boot:spring-boot-starter-mail')
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.flywaydb:flyway-core')
+    implementation('org.springframework.session:spring-session-jdbc')
+    runtimeOnly('mysql:mysql-connector-java')
+    compileOnly('org.projectlombok:lombok:1.18.2')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
+}
