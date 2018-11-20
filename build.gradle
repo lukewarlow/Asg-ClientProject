@@ -40,6 +40,11 @@ bootRun {
 }
 
 test {
+    if (project.hasProperty("password")) {
+        systemProperty 'spring.datasource.password', project.property('password')
+    } else {
+        systemProperty 'spring.datasource.password', 'comsc'
+    }
     if (project.hasProperty("profiles")) {
         systemProperty 'spring.profiles.active', project.property('profiles')
     } else {
@@ -52,12 +57,9 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-cache')
     implementation('org.springframework.boot:spring-boot-starter-jdbc')
     implementation('org.springframework.boot:spring-boot-starter-mail')
-    implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.flywaydb:flyway-core')
-    implementation('org.springframework.session:spring-session-jdbc')
     implementation('mysql:mysql-connector-java')
     compileOnly('org.projectlombok:lombok:1.18.2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework.security:spring-security-test')
 }
