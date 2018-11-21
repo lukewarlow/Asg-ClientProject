@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class AccountRepository implements IAccountRepository
 {
@@ -19,7 +21,13 @@ public class AccountRepository implements IAccountRepository
 
     public void register(UserDao newUser, String hashedPassword)
     {
-        var sql = "INSERT INTO user (forename, surname, email, phone_number, role, password) VALUES(?,?,?,?,?,?)";
+        var sql = "INSERT INTO user (forename, surname, email, phone_number, role, password) VALUES(?,?,?,?,?,?);";
         jdbcTemplate.update(sql, newUser.getForename(), newUser.getSurname(), newUser.getEmail(), newUser.getPhoneNumber(), newUser.getRole().ordinal(), hashedPassword);
+    }
+
+    public Optional<String> getPasswordByEmail(String email)
+    {
+        var sql = "SELECT password FROM user WHERE email = ?;";
+        return jdbcTemplate.query(sql, new Object[] {email}, (rs, i) -> rs.getString("password")).stream().findFirst();
     }
 }

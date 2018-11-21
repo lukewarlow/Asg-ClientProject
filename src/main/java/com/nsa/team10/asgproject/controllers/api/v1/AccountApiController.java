@@ -1,10 +1,13 @@
 package com.nsa.team10.asgproject.controllers.api.v1;
 
+import com.nsa.team10.asgproject.services.dtos.LoginDto;
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,8 +26,19 @@ public class AccountApiController
     }
 
     @PostMapping("register")
-    public void register(@Valid NewUserDto newUser)
+    public ResponseEntity register(@Valid NewUserDto newUser)
     {
         accountService.register(newUser);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("login")
+    public ResponseEntity login(@Valid @RequestBody LoginDto loginDto)
+    {
+        var success = accountService.login(loginDto);
+        if (success)
+            return new ResponseEntity(HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 }
