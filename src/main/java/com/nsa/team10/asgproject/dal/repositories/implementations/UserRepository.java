@@ -39,13 +39,7 @@ public class UserRepository implements IUserRepository
         jdbcTemplate.update(sql, newUser.getForename(), newUser.getSurname(), newUser.getEmail(), newUser.getPhoneNumber(), newUser.getRole().ordinal(), hashedPassword);
     }
 
-    public Optional<String> getPasswordByEmail(String email)
-    {
-        var sql = "SELECT password FROM user WHERE email = ?;";
-        return jdbcTemplate.query(sql, new Object[] {email}, (rs, i) -> rs.getString("password")).stream().findFirst();
-    }
-
-    public Optional<UserWithPasswordDao> getUserWithEmail(String email)
+    public Optional<UserWithPasswordDao> getUserWithPasswordByEmail(String email)
     {
         var sql = "SELECT * FROM user WHERE email = ?;";
         return jdbcTemplate.query(sql, new Object[] {email}, userWithPasswordMapper).stream().findFirst();

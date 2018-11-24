@@ -8,6 +8,5 @@ import java.util.Optional;
 public interface IUserRepository
 {
     void register(UserDao newUser, String hashedPassword);
-    Optional<String> getPasswordByEmail(String email);
-    Optional<UserWithPasswordDao> getUserWithEmail(String email);
+    Optional<UserWithPasswordDao> getUserWithPasswordByEmail(String email);
 }

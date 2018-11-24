@@ -105,15 +105,19 @@
 			$("#login-form").on('submit', function(event){
 				var email = $("#email").val();
 				var password = $("#password").val();
+				var formData = new FormData();
+				formData.set("username", email);
+				formData.set("password", password);
 
-				axios.post("/api/v1/account/login", {
-					email: email,
-					password: password
+				axios.post("/account/login", formData, {
+				    headers: { "Content-Type": "multipart/form-data" }
 				})
 				.then(function (response) {
+                    console.log(response.status);
 					window.location.href = "/";
 				})
 				.catch(function (error) {
+                    console.log(error.response.status);
                     $("#incorrect-details").css('display', 'block');
 				});
 
