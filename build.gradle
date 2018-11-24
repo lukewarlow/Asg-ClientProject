@@ -25,15 +25,15 @@ repositories {
 
 bootRun {
     sourceResources sourceSets.main
-    if (project.hasProperty("password")) {
-        systemProperty 'spring.datasource.password', project.property('password')
-    } else {
-        systemProperty 'spring.datasource.password', 'comsc'
-    }
     if (project.hasProperty("profiles")) {
         systemProperty 'spring.profiles.active', project.property('profiles')
     } else {
         systemProperty 'spring.profiles.active', 'development'
+        if (project.hasProperty("password")) {
+            systemProperty 'spring.datasource.password', project.property('password')
+        } else {
+            systemProperty 'spring.datasource.password', 'comsc'
+        }
     }
 
     main = 'com.nsa.team10.asgproject.AsgApp'
