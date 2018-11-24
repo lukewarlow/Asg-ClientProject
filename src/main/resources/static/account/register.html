@@ -41,7 +41,7 @@
 
         <div class="panel panel-sign">
             <div class="panel-body">
-                <form onsubmit="return register()" method="post" action="/api/v1/account/register">
+                <form method="post" id="registration-form" action="/api/v1/account/register">
                     <div class="form-group mb-lg">
                         <label for="forename">Forename *</label>
                         <input id="forename" name="forename" type="text" class="form-control input-lg" required />
@@ -78,8 +78,8 @@
                     <div class="row">
                         <div class="col-sm-8">
                             <div class="checkbox-custom checkbox-default">
-                                <input id="AgreeTerms" name="agreeterms" type="checkbox"/>
-                                <label for="AgreeTerms">I agree with <a href="#">terms of use</a></label>
+                                <input id="agree-terms" name="agreeterms" type="checkbox"/>
+                                <label for="agree-terms">I agree with <a href="#">terms of use</a></label>
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
@@ -92,6 +92,20 @@
 
                 </form>
             </div>
+        </div>
+
+        <div class="alert alert-danger" id="passwords-unmatched" style="display: none;" role="alert">
+            The passwords don't match.
+        </div>
+
+        <div class="alert alert-danger" id="terms-unnaccepted" style="display: none;" role="alert">
+            You must accept the terms and conditions to proceed!
+        </div>
+
+        <p class="alert alert-danger" id="conflict" style="display: none;" role="alert"></p>
+
+        <div class="alert alert-danger" id="error" style="display: none;" role="alert">
+            There was an error registering please try again later!
         </div>
 
         <p class="text-center text-muted mt-md mb-md">&copy; Copyright 2018. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
@@ -116,15 +130,61 @@
 
 <!-- Theme Initialization Files -->
 <script src="../assets/javascripts/theme.init.js"></script>
-<script>
-    function register(event)
-    {
-        var password = $("password").val;
-        var confirmPassword = $("confirm-password").val;
 
-        if (password !== confirmPassword)
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+
+<script>
+    $(function register(event)
+    {
+        $("#registration-form").on("submit", function(event) {
+            var tAndCError = $("#terms-unnaccepted");
+            var passwordError = $("#passwords-unmatched");
+            var conflictError = $("#conflict");
+            conflictError.css("display", "none");
+            tAndCError.css("display", "none");
+            passwordError.css("display", "none");
+            $("#error").css('display', 'none');
+
+            var forename = $("#forename").val();
+            var surname = $("#surname").val();
+            var phoneNumber = $("#phone-number").val();
+            var email = $("#email").val();
+            var password = $("#password").val();
+            var confirmPassword = $("#confirm-password").val();
+
+            var areTermsAndConditionsAccepted = $("#agree-terms").is(":checked");
+
+            if (!areTermsAndConditionsAccepted) {
+                tAndCError.css("display", "block");
+            } else {
+                if (password !== confirmPassword) {
+                    passwordError.css("display", "block");
+                } else {
+                    axios.post("/api/v1/account/register", {
+                        forename: forename,
+                        surname: surname,
+                        phoneNumber: phoneNumber,
+                        email: email,
+                        password: password,
+                        confirmPassword: confirmPassword
+                    })
+                    .then(function (response) {
+                        window.location.href = "/account/login";
+                    })
+                    .catch(function (error) {
+                        if (error.response.status !== 409) {
+                            $("#error").css('display', 'block');
+                        } else {
+                            var conflictError = $("#conflict");
+                            conflictError.text(error.response.data);
+                            conflictError.css("display", "block");
+                        }
+                    });
+                }
+            }
             event.preventDefault();
-    }
+        });
+    });
 </script>
 </body>
 </html>

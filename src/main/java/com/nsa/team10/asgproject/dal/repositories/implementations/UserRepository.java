@@ -3,11 +3,14 @@ package com.nsa.team10.asgproject.dal.repositories.implementations;
 import com.nsa.team10.asgproject.dal.daos.UserDao;
 import com.nsa.team10.asgproject.dal.daos.UserWithPasswordDao;
 import com.nsa.team10.asgproject.dal.repositories.interfaces.IUserRepository;
+import com.nsa.team10.asgproject.validation.UserConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Optional;
 
 @Repository
@@ -33,10 +36,21 @@ public class UserRepository implements IUserRepository
         );
     }
 
-    public void register(UserDao newUser, String hashedPassword)
+    public void register(UserDao newUser, String hashedPassword) throws UserConflictException
     {
         var sql = "INSERT INTO user (forename, surname, email, phone_number, role, password) VALUES(?,?,?,?,?,?);";
-        jdbcTemplate.update(sql, newUser.getForename(), newUser.getSurname(), newUser.getEmail(), newUser.getPhoneNumber(), newUser.getRole().ordinal(), hashedPassword);
+        try
+        {
+            jdbcTemplate.update(sql, newUser.getForename(), newUser.getSurname(), newUser.getEmail(), newUser.getPhoneNumber(), newUser.getRole().ordinal(), hashedPassword);
+        }
+        catch (DataAccessException ex)
+        {
+          if(ex.getLocalizedMessage().contains("for key 'email'"))
+            throw new UserConflictException("Email address already in use.");
+          if(ex.getLocalizedMessage().contains("for key 'phone_number'"))
+            throw new UserConflictException("Phone number already in use.");
+          else throw ex;
+        }
     }
 
     public Optional<UserWithPasswordDao> getUserWithPasswordByEmail(String email)

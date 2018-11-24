@@ -5,6 +5,7 @@ import com.nsa.team10.asgproject.dal.daos.UserDao;
 import com.nsa.team10.asgproject.dal.repositories.interfaces.IUserRepository;
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
+import com.nsa.team10.asgproject.validation.UserConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,10 +26,10 @@ public class AccountService implements IAccountService, UserDetailsService
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void register(NewUserDto newUser)
+    public void register(NewUserDto newUser) throws UserConflictException
     {
         var hashedPassword = passwordEncoder.encode(newUser.getPassword());
-        var user = new UserDao(newUser.getForename(), newUser.getSurname(), newUser.getEmail(), newUser.getPhoneNumber(), UserDao.Role.Candidate);
+        var user = new UserDao(newUser.getForename(), newUser.getSurname(), newUser.getEmail().toLowerCase(), newUser.getPhoneNumber(), UserDao.Role.Candidate);
         userRepository.register(user, hashedPassword);
     }
 

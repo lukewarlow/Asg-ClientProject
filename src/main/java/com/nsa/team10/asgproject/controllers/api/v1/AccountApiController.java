@@ -2,10 +2,12 @@ package com.nsa.team10.asgproject.controllers.api.v1;
 
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
+import com.nsa.team10.asgproject.validation.UserConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,9 +26,16 @@ public class AccountApiController
     }
 
     @PostMapping("register")
-    public ResponseEntity register(@Valid NewUserDto newUser)
+    public ResponseEntity register(@Valid @RequestBody NewUserDto newUser)
     {
-        accountService.register(newUser);
-        return new ResponseEntity(HttpStatus.OK);
+        try
+        {
+            accountService.register(newUser);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (UserConflictException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 }
