@@ -1,9 +1,9 @@
-package com.nsa.team10.asgproject.services.dtos;
+package com.nsa.team10.asgproject.dal.daos;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class NewBookingDto
+public class BookingDao
 {
     private String startDate;
     private String endDate;
@@ -24,24 +24,24 @@ public class NewBookingDto
     private String droneManufacturer;
     private String droneModel;
 
-    public NewBookingDto(@NotNull String startDate,
-            @NotNull String endDate,
-            @NotNull String location,
-            @NotNull String courseType,
-            @NotNull String dateBirth,
-            @NotNull String placeBirth,
-            @NotNull String address1,
-            String address2,
-            String address3,
-            @NotNull String postCode,
-            @NotNull String county,
-            @NotNull String country,
-            @NotNull String companyName,
-            @NotNull String companyEmail,
-            @NotNull String companyPhone,
-            @NotNull String flyExperiance,
-            @NotNull String droneManufacturer,
-            @NotNull String droneModel)
+    public BookingDao( String startDate,
+                       String endDate,
+                       String location,
+                       String courseType,
+                       String dateBirth,
+                       String placeBirth,
+                       String address1,
+                       String address2,
+                       String address3,
+                       String postCode,
+                       String county,
+                       String country,
+                       String companyName,
+                       String companyEmail,
+                       String companyPhone,
+                       String flyExperiance,
+                       String droneManufacturer,
+                       String droneModel)
     {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -135,8 +135,4 @@ public class NewBookingDto
         return droneModel;
     }
 
-    //testing purposes
-    public String getAll() {
-        return this.startDate + this.endDate + this.location + this.courseType + this.dateBirth + this.placeBirth + this.address1 + this.address2 + this.address3 + this.postCode + this.county + this.country + this.companyName + this.companyEmail + this.companyPhone + this.flyExperiance + this.droneManufacturer + this.droneModel;
-    }
 }
