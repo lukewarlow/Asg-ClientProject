@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 
 @Controller
-public class BookingFormController {
-
+public class BookingFormController
+{
     private final IBookingService bookingService;
 
     @Autowired

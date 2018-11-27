@@ -160,6 +160,6 @@ public class NewBookingDto
     @Override
     public String toString()
     {
-        return this.startDate + this.endDate + this.location + this.courseType + this.birthDate + this.placeBirth + this.address1 + this.address2 + this.city + this.postcode + this.county + this.companyName + this.companyEmail + this.companyPhone + this.flyingExperience + this.droneManufacturer + this.droneModel;
+        return this.getCandidateReferenceNumber() + this.startDate + this.endDate + this.location + this.courseType + this.dob + this.placeBirth + this.address1 + this.address2 + this.city + this.postcode + this.county + this.companyName + this.companyEmail + this.companyPhone + this.flyingExperience + this.droneManufacturer + this.droneModel;
     }
 }

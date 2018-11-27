@@ -10,5 +10,4 @@ import org.springframework.context.annotation.Bean;
 public interface IBookingService
 {
     void bookingEntry(NewBookingDto newBooking);
-//not sure about this
 }

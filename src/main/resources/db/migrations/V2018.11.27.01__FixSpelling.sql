@@ -1,1 +1,1 @@
-ALTER TABLE candiate RENAME COLUMN prefered_location TO preffered_location;
+ALTER TABLE candidate RENAME COLUMN prefered_location TO preffered_location;
