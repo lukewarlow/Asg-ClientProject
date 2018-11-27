@@ -39,7 +39,7 @@
             <td>{{ user.role }}</td>
         </tr>
         <tr v-if="users.length == 0">
-            <td colspan="3">No results</td>
+            <td colspan="4">No results</td>
         </tr>
         </tbody>
     </table>
@@ -61,7 +61,11 @@
             </ul>
         </div>
     </div>
+
+    <button v-if="showDisabled" class="btn-primary" @click="showDisabled = false; refresh();">Show enabled</button>
+    <button v-else class="btn-primary" @click="showDisabled = true; refresh();">Show disabled</button>
 </div>
+</body>
 
 <script>
     var app = new Vue ({
@@ -78,41 +82,38 @@
         },
         watch: {
             pageSize: function () {
-                refresh();
+                this.refresh();
             },
             searchTerm: function () {
-                refresh();
+                this.refresh();
             }
         },
         methods: {
             pageChange: function(page) {
                 app.page = page;
-                refresh();
+                this.refresh();
             },
             sortByChange: function(orderBy) {
                 if (orderBy === app.orderBy)
                     app.orderByAscending = !app.orderByAscending;
                 else
                     app.orderBy = orderBy;
-                refresh();
+                this.refresh();
             },
             goToProfile: function (id) {
                 window.location.href = "/admin/users/" + id;
+            },
+            refresh: function () {
+                var disabledUrl = this.showDisabled ? "/disabled" : "";
+                axios.get("/api/v1/users" + disabledUrl + "?page=" + app.page + "&pageSize=" + app.pageSize + "&orderBy=" + app.orderBy + "&orderByAscending=" + app.orderByAscending + "&search=" + app.searchTerm)
+                    .then(function (response) {
+                        app.users = response.data.list;
+                        app.noOfPages = response.data.noOfPages;
+                    });
             }
         }
     });
 
-    function refresh() {
-        var disabledUrl = this.showDisabled ? "/disabled" : "";
-        axios.get("/api/v1/users" + disabledUrl + "?page=" + app.page + "&pageSize=" + app.pageSize + "&orderBy=" + app.orderBy + "&orderByAscending=" + app.orderByAscending + "&search=" + app.searchTerm)
-            .then(function (response) {
-                app.users = response.data.list;
-                app.noOfPages = response.data.noOfPages;
-            });
-    }
-
-    refresh();
+    app.refresh();
 </script>
-</body>
-
 </html>

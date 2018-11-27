@@ -139,7 +139,7 @@ public class UserRepository implements IUserRepository
                 "OFFSET ?;";
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
         users = jdbcTemplate.query(sql, params, userMapper);
-        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user WHERE forename LIKE ? AND disabled = TRUE;", new Object[]{pageRequest.getSearchTermSql(), pageRequest.getSearchTermSql()}, Long.class);
+        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user WHERE forename LIKE ? AND disabled = TRUE;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(users, count, pageRequest);
     }
 
