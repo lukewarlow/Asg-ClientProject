@@ -1,0 +1,19 @@
+DELIMITER $
+CREATE TRIGGER updateUserTimestamp BEFORE UPDATE ON user
+  FOR EACH ROW
+  BEGIN
+    UPDATE user SET NEW.updated_at = NOW();
+  END;$
+DELIMITER ;
+
+ALTER TABLE candidate
+ADD COLUMN created_at DATETIME DEFAULT NOW(),
+ADD COLUMN updated_at DATETIME DEFAULT NOW();
+
+DELIMITER $
+CREATE TRIGGER updateCandidateTimestamp BEFORE UPDATE ON candidate
+  FOR EACH ROW
+  BEGIN
+    UPDATE candidate SET NEW.updated_at = NOW();
+  END;$
+DELIMITER ;
