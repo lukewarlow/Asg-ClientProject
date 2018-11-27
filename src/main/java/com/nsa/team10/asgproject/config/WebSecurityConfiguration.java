@@ -15,12 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
 {
     private final AccountService userDetailsService;
 
     @Autowired
-    public SecurityConfiguration(AccountService userDetailsService)
+    public WebSecurityConfiguration(AccountService userDetailsService)
     {
         this.userDetailsService = userDetailsService;
     }
@@ -46,7 +46,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("admin")
                 .antMatchers("/account/**", "/api/v1/account/**").permitAll()
                 .antMatchers("/assets/**").permitAll()
                 .anyRequest().authenticated()
