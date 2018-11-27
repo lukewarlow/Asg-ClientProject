@@ -1,63 +1,48 @@
 package com.nsa.team10.asgproject.dal.repositories.implementations;
 
-import com.nsa.team10.asgproject.dal.daos.UserDao;
-import com.nsa.team10.asgproject.dal.daos.BookingDao;
 import com.nsa.team10.asgproject.dal.repositories.interfaces.IBookingRepository;
 import com.nsa.team10.asgproject.services.dtos.NewBookingDto;
-import com.nsa.team10.asgproject.validation.UserConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Optional;
 
 @Repository
 public class BookingRepository implements IBookingRepository
 {
     private final JdbcTemplate jdbcTemplate;
 
-    private static RowMapper<NewBookingDto> bookingMapper;
-
     @Autowired
     public BookingRepository(JdbcTemplate jdbcTemplate)
     {
         this.jdbcTemplate = jdbcTemplate;
-
-        bookingMapper = (rs, i) -> new NewBookingDto(
-                rs.getString("startDate"),
-                rs.getString("endDate"),
-                rs.getString("location"),
-                rs.getString("courseType"),
-                rs.getString("dateBirth"),
-                rs.getString("placeBirth"),
-                rs.getString("address1"),
-                rs.getString("address2"),
-                rs.getString("address3"),
-                rs.getString("postCode"),
-                rs.getString("county"),
-                rs.getString("country"),
-                rs.getString("companyName"),
-                rs.getString("companyEmail"),
-                rs.getString("companyPhone"),
-                rs.getString("flyExperiance"),
-                rs.getString("droneManufacturer"),
-                rs.getString("droneModel")
-        );
     }
 
-
-    public void bookingEntry(NewBookingDto newBooking)
+    public void bookingEntry(long userId, NewBookingDto newBooking)
     {
-        var sql = "INSERT INTO user (startDate, endDate, location, courseType, dateBirth, placeBirth, address1, address2, address3, postCode, county, " +
-                "country, companyName, companyEmail, comapnyPhone, flyExperiance, droneManufacturer,  droneModel) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        //TODO add a transaction
+        var addressSql = "INSERT INTO address(line_one, line_two, city, county, postcode) VALUES(?, ?, ?, ?, ?); " +
+                "SELECT LAST_INSERT_ID();";
 
-            jdbcTemplate.update(sql, newBooking.getStartDate(), newBooking.getEndDate(), newBooking.getCourseType(), newBooking.getDateBirth(),
-                    newBooking.getPlaceBirth(), newBooking.getAddress1(), newBooking.getAddress2(), newBooking.getAddress3(), newBooking.getPostCode(),
-                    newBooking.getCounty(),newBooking.getCountry(), newBooking.getCompanyName(), newBooking.getCompanyEmail(), newBooking.getCompanyPhone(),
-                    newBooking.getFlyExperiance(), newBooking.getDroneManufacturer(), newBooking.getDroneModel());
+        var addressId = jdbcTemplate.queryForObject(addressSql, new Object[] {newBooking.getAddress1(), newBooking.getAddress2(), newBooking.getCity(), newBooking.getCounty(), newBooking.getPostcode()}, Long.class);
+        long companyId = -1;
+        if (newBooking.getCompanyName() != null)
+        {
+            var companySql = "INSERT INTO company(name, phone_number, email) VALUES(?, ?, ?); " +
+                    "SELECT LAST_INSERT_ID();";
+            companyId = jdbcTemplate.queryForObject(companySql, new Object[]{ newBooking.getCompanyName(), newBooking.getCompanyPhone(), newBooking.getCompanyEmail() }, Long.class);
+        }
 
+        var droneSql = "INSERT INTO drone(manufacturer, model, suas_category) VALUES(?, ?, ?); " +
+                "SELECT LAST_INSERT_ID();";
+
+        var droneId = jdbcTemplate.queryForObject(droneSql, new Object[] {newBooking.getDroneManufacturer(), newBooking.getDroneModel()}, Long.class);
+
+        var candidateSql = "INSERT INTO candidate(candidate_number, user_id, address_id, company_id, dob, drone_id, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        jdbcTemplate.update(candidateSql, newBooking.getCandidateReferenceNumber(), userId, addressId, companyId == -1 ? null : companyId, newBooking.getDateOfBirth(), droneId, false);
+
+        var courseSql = "INSERT INTO course(location, start_date, end_date, candidate) VALUES(?, ?, ?, ?);";
+
+        jdbcTemplate.update(courseSql, newBooking.getLocation(), newBooking.getStartDate(), newBooking.getEndDate());
     }
 }

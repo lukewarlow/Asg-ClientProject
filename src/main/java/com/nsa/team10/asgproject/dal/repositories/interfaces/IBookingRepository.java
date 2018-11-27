@@ -10,6 +10,5 @@ import java.util.Optional;
 
 public interface IBookingRepository
 {
-
-    void bookingEntry(NewBookingDto newBooking);
+    void bookingEntry(long userId, NewBookingDto newBooking);
 }
