@@ -23,19 +23,19 @@ public class BookingRepository implements IBookingRepository
         var addressSql = "INSERT INTO address(line_one, line_two, city, county, postcode) VALUES(?, ?, ?, ?, ?); " +
                 "SELECT LAST_INSERT_ID();";
 
-        var addressId = jdbcTemplate.queryForObject(addressSql, new Object[] {newBooking.getAddress1(), newBooking.getAddress2(), newBooking.getCity(), newBooking.getCounty(), newBooking.getPostcode()}, Long.class);
+        var addressId = jdbcTemplate.update(addressSql, new Object[] {newBooking.getAddress1(), newBooking.getAddress2(), newBooking.getCity(), newBooking.getCounty(), newBooking.getPostcode()}, Long.class);
         long companyId = -1;
         if (newBooking.getCompanyName() != null)
         {
             var companySql = "INSERT INTO company(name, phone_number, email) VALUES(?, ?, ?); " +
                     "SELECT LAST_INSERT_ID();";
-            companyId = jdbcTemplate.queryForObject(companySql, new Object[]{ newBooking.getCompanyName(), newBooking.getCompanyPhone(), newBooking.getCompanyEmail() }, Long.class);
+            companyId = jdbcTemplate.update(companySql, new Object[]{ newBooking.getCompanyName(), newBooking.getCompanyPhone(), newBooking.getCompanyEmail() }, Long.class);
         }
 
         var droneSql = "INSERT INTO drone(manufacturer, model, suas_category) VALUES(?, ?, ?); " +
                 "SELECT LAST_INSERT_ID();";
 
-        var droneId = jdbcTemplate.queryForObject(droneSql, new Object[] {newBooking.getDroneManufacturer(), newBooking.getDroneModel()}, Long.class);
+        var droneId = jdbcTemplate.update(droneSql, new Object[] {newBooking.getDroneManufacturer(), newBooking.getDroneModel()}, Long.class);
 
         var candidateSql = "INSERT INTO candidate(candidate_number, user_id, address_id, company_id, dob, drone_id, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
 

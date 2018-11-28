@@ -1,1 +1,0 @@
-ALTER TABLE candidate RENAME COLUMN prefered_location TO preffered_location;
