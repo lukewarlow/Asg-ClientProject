@@ -3,90 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Booking Form</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body class="container">
 <form action="/bookingForm" method="post">
     <div class="form-group">
-        Start Date:<br>
-        <input required type="date" name="startDate">
-    </div>
-    <div class="form-group">
-        End date:<br>
-        <input required type="date" name="endDate">
-    </div>
-    <div class="form-group">
-        Location:<br>
-        <select required name="location">
+        Prefered Location: *<br>
+        <select required name="preferedLocation">
             <option value="Cardiff">Cardiff</option>
             <option value="Somerset">Somerset</option>
             <option value="Aberdeen">Aberdeen</option>
         </select>
     </div>
     <div class="form-group">
-        Course Type::<br>
-        <select required name="courseType">
-            <option value="Full">Full</option>
-            <option value="Part">Part</option>
-        </select>
+        Date of Birth: *<br>
+        <input required type="date" name="dob">
     </div>
     <div class="form-group">
-        Date of Birth:<br>
-        <input required type="date" name="dateBirth">
-    </div>
-    <div class="form-group">
-        Place of Birth:<br>
+        Place of Birth: *<br>
         <input required type="text" name="placeBirth"><br>
     </div>
     <div class="form-group">
-
-    Address Line 1:<br>
-    <input required type="text" name="address1"><br>
+        Address Line 1: *<br>
+        <input required type="text" name="address1"><br>
     </div>
     <div class="form-group">
-    Address Line 2:<br>
-    <input required type="text" name="address2"><br>
+        Address Line 2:<br>
+        <input type="text" name="address2"><br>
     </div>
     <div class="form-group">
-    Address Line 3:<br>
-        <input required type="text" name="address3"><br>
+        City: *<br>
+        <input required type="text" name="city"><br>
     </div>
     <div class="form-group">
-    Post Code:<br>
-    <input required type="text" name="postCode"><br>
+        County:<br>
+        <input type="text" name="county"><br>
     </div>
     <div class="form-group">
-    County:<br>
-    <input required type="text" name="county"><br>
+        Post Code: *<br>
+        <input required type="text" name="postcode"><br>
     </div>
     <div class="form-group">
-    Country:<br>
-    <input required type="text" name="country"><br>
+        Company Name:<br>
+        <input type="text" name="companyName"><br>
     </div>
     <div class="form-group">
-    Company Name:<br>
-    <input required type="text" name="companyName"><br>
+        Company Email:<br>
+        <input type="text" name="companyEmail"><br>
     </div>
     <div class="form-group">
-    Company Email:<br>
-    <input required type="text" name="companyEmail"><br>
+        Company Phone Number:<br>
+        <input type="number" name="companyPhone"><br>
     </div>
     <div class="form-group">
-    Company Phone Number:<br>
-    <input required type="number" name="companyPhone"><br>
+        Flying Experience Details: *<br>
+        <input required type="text" name="flyingExperience"><br>
     </div>
     <div class="form-group">
-    Flying Experiance Details:<br>
-    <input required type="text" name="flyExperience"><br>
+        Drone Manufacturer: *<br>
+        <input required type="text" name="droneManufacturer"><br>
     </div>
     <div class="form-group">
-    Drone Manufacturer:<br>
-    <input required type="text" name="droneManufacturer"><br>
+        Drone Model: *<br>
+        <input required type="text" name="droneModel"><br>
     </div>
-    <div class="form-group">
-    Drone Model:<br>
-    <input required type="text" name="droneModel"><br>
-    </div>
+    <div>* means required.</div>
     <input type="submit" id="submitBooking" value="submit"/>
 </form>
 </body>

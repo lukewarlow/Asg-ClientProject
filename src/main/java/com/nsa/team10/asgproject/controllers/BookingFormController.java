@@ -30,11 +30,10 @@ public class BookingFormController
     }
 
     @PostMapping("/bookingForm")
-    public ResponseEntity submitBooking(@Valid NewBookingDto newBooking)
+    public String submitBooking(@Valid NewBookingDto newBooking)
     {
-        System.out.println(newBooking.toString());
         bookingService.bookingEntry(newBooking);
-        return new ResponseEntity(HttpStatus.OK);
+        return "redirect:/";
     }
 }
 

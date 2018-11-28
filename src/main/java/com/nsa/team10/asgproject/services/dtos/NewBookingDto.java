@@ -1,18 +1,12 @@
 package com.nsa.team10.asgproject.services.dtos;
 
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.Random;
 
 public class NewBookingDto
 {
-    private String startDate;
-    private String endDate;
-    private String location;
-    private String courseType;
+    private String preferedLocation;
     private String dob;
     private String placeBirth;
     private String address1;
@@ -27,34 +21,28 @@ public class NewBookingDto
     private String droneManufacturer;
     private String droneModel;
 
-    public NewBookingDto(@NotNull String startDate,
-                         @NotNull String endDate,
-                         @NotNull String location,
-                         @NotNull String courseType,
-                         @NotNull String dob,
-                         @NotNull String placeBirth,
-                         @NotNull String address1,
+    public NewBookingDto(@NotNull @NotEmpty String preferedLocation,
+                         @NotNull @NotEmpty String dob,
+                         @NotNull @NotEmpty String placeBirth,
+                         @NotNull @NotEmpty String address1,
                          String address2,
-                         @NotNull String city,
-                         @NotNull String postcode,
-                         @NotNull String county,
+                         @NotNull @NotEmpty String city,
+                         @NotNull @NotEmpty String postcode,
+                         @NotNull @NotEmpty String county,
                          String companyName,
                          String companyEmail,
                          String companyPhone,
-                         @NotNull String flyingExperience,
-                         @NotNull String droneManufacturer,
-                         @NotNull String droneModel)
+                         @NotNull @NotEmpty String flyingExperience,
+                         @NotNull @NotEmpty String droneManufacturer,
+                         @NotNull @NotEmpty String droneModel)
     {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.location = location;
-        this.courseType = courseType;
+        this.preferedLocation = preferedLocation;
         this.dob = dob;
         this.placeBirth = placeBirth;
         this.address1 = address1;
         this.address2 = address2;
         this.city = city;
-        this.postcode = postcode;
+        this.postcode = postcode.replaceAll("\\s+","");
         this.county = county;
         this.companyName = companyName;
         this.companyEmail = companyEmail;
@@ -71,24 +59,9 @@ public class NewBookingDto
         return Long.toString(new Random().nextLong());
     }
 
-    public String getStartDate()
+    public String getPreferedLocation()
     {
-        return startDate;
-    }
-
-    public String getEndDate()
-    {
-        return endDate;
-    }
-
-    public String getLocation()
-    {
-        return location;
-    }
-
-    public String getCourseType()
-    {
-        return courseType;
+        return preferedLocation;
     }
 
     public String getDateOfBirth()
@@ -160,6 +133,6 @@ public class NewBookingDto
     @Override
     public String toString()
     {
-        return this.getCandidateReferenceNumber() + this.startDate + this.endDate + this.location + this.courseType + this.dob + this.placeBirth + this.address1 + this.address2 + this.city + this.postcode + this.county + this.companyName + this.companyEmail + this.companyPhone + this.flyingExperience + this.droneManufacturer + this.droneModel;
+        return this.getCandidateReferenceNumber() + this.preferedLocation + this.dob + this.placeBirth + this.address1 + this.address2 + this.city + this.postcode + this.county + this.companyName + this.companyEmail + this.companyPhone + this.flyingExperience + this.droneManufacturer + this.droneModel;
     }
 }
