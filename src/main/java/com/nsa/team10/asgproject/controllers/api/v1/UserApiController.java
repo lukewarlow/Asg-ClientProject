@@ -55,8 +55,7 @@ public class UserApiController
     public ResponseEntity disable(@PathVariable long id)
     {
         var success = userService.disable(id);
-        if (success)
-            return new ResponseEntity(HttpStatus.OK);
+        if (success) return new ResponseEntity(HttpStatus.OK);
         else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
     }
 
@@ -65,8 +64,16 @@ public class UserApiController
     public ResponseEntity enable(@PathVariable long id)
     {
         var success = userService.enable(id);
-        if (success)
-            return new ResponseEntity(HttpStatus.OK);
+        if (success) return new ResponseEntity(HttpStatus.OK);
+        else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @DeleteMapping("/{id:[0-9]+}")
+    public ResponseEntity delete(@PathVariable long id)
+    {
+        var success = userService.delete(id);
+        if (success) return new ResponseEntity(HttpStatus.OK);
         else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
     }
 }

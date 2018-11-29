@@ -14,4 +14,5 @@ public interface IUserService
     Optional<UserDao> findByIdIncDisabled(long userId);
     boolean disable(long userId);
     boolean enable(long userId);
+    boolean delete(long userId);
 }

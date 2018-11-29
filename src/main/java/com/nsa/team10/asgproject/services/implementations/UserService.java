@@ -62,4 +62,13 @@ public class UserService implements IUserService
             return userRepository.enable(userId);
         else return false;
     }
+
+    @Override
+    public boolean delete(long userId)
+    {
+        var user = userRepository.findByIdIncDisabled(userId);
+        if (user.isPresent())
+            return userRepository.delete(userId);
+        else return false;
+    }
 }

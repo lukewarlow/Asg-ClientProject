@@ -178,4 +178,12 @@ public class UserRepository implements IUserRepository
         var rowsAffected = jdbcTemplate.update(sql, userId);
         return rowsAffected == 1;
     }
+
+    @Override
+    public boolean delete(long userId)
+    {
+        var sql = "DELETE FROM user WHERE id = ?";
+        var rowsAffected = jdbcTemplate.update(sql, userId);
+        return rowsAffected == 1;
+    }
 }
