@@ -143,9 +143,39 @@ public class UserRepository implements IUserRepository
         return new PaginatedList<>(users, count, pageRequest);
     }
 
-    public Optional<UserWithPasswordDao> getUserWithPasswordByEmail(String email)
+    public Optional<UserWithPasswordDao> findWithPasswordByEmail(String email)
     {
         var sql = "SELECT * FROM enabled_user WHERE email = ?;";
         return jdbcTemplate.query(sql, new Object[] {email}, userWithPasswordMapper).stream().findFirst();
+    }
+
+    @Override
+    public Optional<UserDao> findById(long userId)
+    {
+        var sql = "SELECT * FROM enabled_user WHERE id = ?;";
+        return jdbcTemplate.query(sql, new Object[] {userId}, userMapper).stream().findFirst();
+    }
+
+    @Override
+    public Optional<UserDao> findByIdIncDisabled(long userId)
+    {
+        var sql = "SELECT * FROM user WHERE id = ?;";
+        return jdbcTemplate.query(sql, new Object[] {userId}, userMapper).stream().findFirst();
+    }
+
+    @Override
+    public boolean disable(long userId)
+    {
+        var sql = "UPDATE user SET disabled = TRUE WHERE id = ?;";
+        var rowsAffected = jdbcTemplate.update(sql, userId);
+        return rowsAffected == 1;
+    }
+
+    @Override
+    public boolean enable(long userId)
+    {
+        var sql = "UPDATE user SET disabled = FALSE WHERE id = ?;";
+        var rowsAffected = jdbcTemplate.update(sql, userId);
+        return rowsAffected == 1;
     }
 }

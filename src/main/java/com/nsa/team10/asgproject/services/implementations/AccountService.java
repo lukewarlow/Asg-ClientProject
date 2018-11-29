@@ -36,7 +36,7 @@ public class AccountService implements IAccountService, UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
     {
-        var user = userRepository.getUserWithPasswordByEmail(email);
+        var user = userRepository.findWithPasswordByEmail(email);
         if (!user.isPresent()) throw new UsernameNotFoundException(email);
         else return new DefaultUserDetails(user.get());
     }

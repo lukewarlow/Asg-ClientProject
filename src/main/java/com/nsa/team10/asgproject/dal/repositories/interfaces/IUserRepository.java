@@ -15,6 +15,9 @@ public interface IUserRepository
 
     PaginatedList<UserDao> findAll(FilteredPageRequest pageRequest);
     PaginatedList<UserDao> findAllDisabled(FilteredPageRequest pageRequest);
-
-    Optional<UserWithPasswordDao> getUserWithPasswordByEmail(String email);
+    Optional<UserWithPasswordDao> findWithPasswordByEmail(String email);
+    Optional<UserDao> findById(long userId);
+    Optional<UserDao> findByIdIncDisabled(long userId);
+    boolean disable(long userId);
+    boolean enable(long userId);
 }
