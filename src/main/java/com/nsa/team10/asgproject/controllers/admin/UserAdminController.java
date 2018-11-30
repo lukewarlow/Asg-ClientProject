@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserAdminController
 {
     @GetMapping()
-    public String FindAllUsers()
+    public String findAllUsers()
     {
         return "users/manage-users.html";
     }
 
     @GetMapping("/{id:[0-9]+}")
-    public String FindById()
+    public String findById()
     {
         return "manage-user.html";
     }

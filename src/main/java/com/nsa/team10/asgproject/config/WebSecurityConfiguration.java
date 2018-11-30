@@ -1,6 +1,6 @@
 package com.nsa.team10.asgproject.config;
 
-import com.nsa.team10.asgproject.services.implementations.AccountService;
+import com.nsa.team10.asgproject.services.implementations.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,10 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
 {
-    private final AccountService userDetailsService;
+    private final UserService userDetailsService;
 
     @Autowired
-    public WebSecurityConfiguration(AccountService userDetailsService)
+    public WebSecurityConfiguration(UserService userDetailsService)
     {
         this.userDetailsService = userDetailsService;
     }
@@ -47,7 +47,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/account/**", "/api/v1/account/**").permitAll()
-                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/fonts/**").permitAll()
+                .antMatchers("/images/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/vendor/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

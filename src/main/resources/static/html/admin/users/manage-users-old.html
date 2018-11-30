@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id = "app" class="container-fluid">
+
+</div>
+</body>
+
+<script>
+    var app = new Vue ({
+        el: "#app",
+        data: {
+
+        },
+        watch: {
+            pageSize: function () {
+                this.refresh();
+            },
+            searchTerm: function () {
+                this.refresh();
+            }
+        },
+        methods: {
+            pageChange: function(page) {
+                app.page = page;
+                app.refresh();
+            },
+            sortByChange: function(orderBy) {
+                if (orderBy === app.orderBy)
+                    app.orderByAscending = !app.orderByAscending;
+                else
+                    app.orderBy = orderBy;
+                app.refresh();
+            },
+            goToProfile: function (id) {
+                window.location.href = "/admin/users/" + id;
+            },
+            refresh: function () {
+                var disabledUrl = app.showDisabled ? "/disabled" : "";
+                axios.get("/api/v1/users" + disabledUrl + "?page=" + app.page + "&pageSize=" + app.pageSize + "&orderBy=" + app.orderBy + "&orderByAscending=" + app.orderByAscending + "&search=" + app.searchTerm)
+                    .then(function (response) {
+                        app.users = response.data.list;
+                        app.noOfPages = response.data.noOfPages;
+                    });
+            },
+            confirmDelete: function (user) {
+                app.deleting = user;
+            },
+            deleteUser: function() {
+                var toDeleteId = app.deleting.id;
+                console.log(toDeleteId);
+                app.deleting = {};
+                axios.delete("/api/v1/users/" + toDeleteId)
+                    .then(function (response) {
+                        app.refresh()
+                    })
+                    .catch(function (reason) {
+                        console.log(reason.response);
+                    })
+            }
+        }
+    });
+
+    app.refresh();
+</script>
+</html>

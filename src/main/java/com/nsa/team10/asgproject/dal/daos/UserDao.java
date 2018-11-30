@@ -63,6 +63,7 @@ public class UserDao
 
     public enum Role
     {
+        Guest,
         Candidate,
         Instructor,
         Admin

@@ -5,14 +5,13 @@ import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.dal.daos.UserDao;
 import com.nsa.team10.asgproject.dal.daos.UserWithPasswordDao;
 import com.nsa.team10.asgproject.dal.repositories.interfaces.IUserRepository;
-import com.nsa.team10.asgproject.validation.UserConflictException;
+import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +74,7 @@ public class UserRepository implements IUserRepository
         );
     }
 
-    public void register(UserDao newUser, String hashedPassword) throws UserConflictException
+    public void register(UserDao newUser, String hashedPassword) throws ConflictException
     {
         var sql = "INSERT INTO user (forename, surname, email, phone_number, role, password) VALUES(?,?,?,?,?,?);";
         try
@@ -85,9 +84,9 @@ public class UserRepository implements IUserRepository
         catch (DataAccessException ex)
         {
           if(ex.getLocalizedMessage().contains("for key 'email'"))
-            throw new UserConflictException("Email address already in use.");
+            throw new ConflictException(UserDao.class.getTypeName(), "Email address already in use.");
           if(ex.getLocalizedMessage().contains("for key 'phone_number'"))
-            throw new UserConflictException("Phone number already in use.");
+            throw new ConflictException(UserDao.class.getTypeName(), "Phone number already in use.");
           else throw ex;
         }
     }

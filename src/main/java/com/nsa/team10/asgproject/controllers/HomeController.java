@@ -11,4 +11,10 @@ public class HomeController
     {
         return "index.html";
     }
+
+    @GetMapping("old")
+    public String old()
+    {
+        return "index-old.html";
+    }
 }
