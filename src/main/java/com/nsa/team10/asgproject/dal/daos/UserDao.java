@@ -8,15 +8,13 @@ public class UserDao
     private String email;
     private String phoneNumber;
     private Role role;
+    private boolean disabled;
 
-    public UserDao(long id, String forename, String surname, String email, String phoneNumber, Role role)
+    public UserDao(long id, String forename, String surname, String email, String phoneNumber, Role role, boolean disabled)
     {
+        this(forename, surname, email, phoneNumber, role);
         this.id = id;
-        this.forename = forename;
-        this.surname = surname;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
+        this.disabled = disabled;
     }
 
     public UserDao(String forename, String surname, String email, String phoneNumber, Role role)
@@ -56,6 +54,11 @@ public class UserDao
     public Role getRole()
     {
         return role;
+    }
+
+    public boolean isDisabled()
+    {
+        return disabled;
     }
 
     public enum Role
