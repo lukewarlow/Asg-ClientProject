@@ -1,4 +1,4 @@
-<#include "../../base.ftl">
+<#include "../../common/base.ftl">
 <#macro page_body>
     <div class="row">
         <div class="col-lg-12">

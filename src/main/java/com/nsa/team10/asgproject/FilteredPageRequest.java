@@ -6,9 +6,9 @@ public class FilteredPageRequest
     private byte pageSize;
     private String orderBy;
     private boolean orderByAscending;
-    private String searchTerm;
+    private String[] searchTerms;
 
-    public FilteredPageRequest(long page, byte pageSize, String orderBy, boolean orderByAscending, String search)
+    public FilteredPageRequest(long page, byte pageSize, String orderBy, boolean orderByAscending, String... searchTerms)
     {
         if (page < 1)
             throw new IllegalArgumentException("Page cannot be less than 1");
@@ -19,7 +19,7 @@ public class FilteredPageRequest
         this.pageSize = pageSize;
         this.orderBy = orderBy;
         this.orderByAscending = orderByAscending;
-        this.searchTerm = search;
+        this.searchTerms = searchTerms;
     }
 
     public long getPage()
@@ -47,9 +47,14 @@ public class FilteredPageRequest
         return orderByAscending ? " ASC" : " DESC";
     }
 
+    public String getSearchTermSql(int index)
+    {
+        return searchTerms[index].trim() + "%";
+    }
+
     public String getSearchTermSql()
     {
-        return searchTerm.trim() + "%";
+        return getSearchTermSql(0);
     }
 }
 

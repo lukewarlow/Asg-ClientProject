@@ -1,4 +1,4 @@
-<#include "../base.ftl">
+<#include "../common/base.ftl">
 
 <#macro style>
     <style>
@@ -108,7 +108,7 @@
                             <input v-model="candidateSignup.flyingExperience" class="form-control" type="text" id="flying-experience" name="flying-experience" required>
                         </div>
                         <div class="form-group autocomplete-container">
-                            <label for="drone-selection" class="form-control-label">Search for your drone</label>
+                            <label for="drone-selection" class="form-control-label">Search for your drone <a href="/candidate/signup/newdrone" target="_blank"><i class="material-icons">add_circle</i></a></label>
                             <input class="form-control" type="text" id="drone-selection" name="drone-selection" v-model="searchTerm" @input="find()" autocomplete="off" placeholder="Search for drone (manufacturer model)">
                             <div v-if="showSuggestions" class="autocomplete-content">
                                 <h4 class="header">Suggestions</h4>
