@@ -31,6 +31,7 @@ public class EmailService implements IEmailService
         {
             var message = new SimpleMailMessage();
             message.setTo(to);
+            message.setFrom("asgsystem@example.com");
             message.setSubject(subject);
             message.setText(text);
 
@@ -58,6 +59,7 @@ public class EmailService implements IEmailService
             var helper = new MimeMessageHelper(message, true);
 
             helper.setTo(to);
+            helper.setFrom("asgsystem@example.com");
             helper.setSubject(subject);
             helper.setText(text);
 
