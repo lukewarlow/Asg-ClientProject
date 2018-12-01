@@ -6,8 +6,11 @@ import com.nsa.team10.asgproject.dal.daos.DroneDao;
 import com.nsa.team10.asgproject.services.dtos.NewDroneDto;
 import com.nsa.team10.asgproject.validation.ConflictException;
 
+import java.util.List;
+
 public interface IDroneService
 {
     void create(NewDroneDto newDrone) throws ConflictException;
     PaginatedList<DroneDao> findAll(FilteredPageRequest pageRequest);
+    List<DroneDao> search(String search);
 }

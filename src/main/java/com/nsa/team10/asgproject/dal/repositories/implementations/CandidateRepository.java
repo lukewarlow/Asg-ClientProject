@@ -1,5 +1,6 @@
 package com.nsa.team10.asgproject.dal.repositories.implementations;
 
+import com.nsa.team10.asgproject.dal.daos.UserDao;
 import com.nsa.team10.asgproject.dal.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 
@@ -21,9 +23,9 @@ public class CandidateRepository implements ICandidateRepository
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Transactional
     public void create(long userId, NewCandidateDto newCandidate)
     {
-        //TODO add a transaction
         var addressSql = "INSERT INTO address(line_one, line_two, city, county, postcode) VALUES(?, ?, ?, ?, ?);";
 
         KeyHolder holder = new GeneratedKeyHolder();
@@ -57,8 +59,12 @@ public class CandidateRepository implements ICandidateRepository
             companyId = holder.getKey().longValue();
         }
 
-        var candidateSql = "INSERT INTO candidate(candidate_number, user_id, address_id, company_id, dob, drone_id, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?);";
+        var candidateSql = "INSERT INTO candidate(candidate_number, user_id, address_id, company_id, dob, drone_id, prefered_location, has_payed) VALUES('THISWILLBEREPLACED', ?, ?, ?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(candidateSql, newCandidate.getCandidateReferenceNumber(), userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), false);
+        jdbcTemplate.update(candidateSql, userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), newCandidate.getPreferedLocation(), false);
+
+        var userSql = "UPDATE user SET ROLE = ? WHERE id = ?;";
+
+        jdbcTemplate.update(userSql, UserDao.Role.Candidate.ordinal(), userId);
     }
 }

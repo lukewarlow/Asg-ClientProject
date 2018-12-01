@@ -14,12 +14,12 @@ public class UserAdminController
     @GetMapping()
     public String findAllUsers()
     {
-        return "users/manage-users.html";
+        return "/admin/users/index";
     }
 
     @GetMapping("/{id:[0-9]+}")
     public String findById()
     {
-        return "manage-user.html";
+        return "/admin/users/manage";
     }
 }

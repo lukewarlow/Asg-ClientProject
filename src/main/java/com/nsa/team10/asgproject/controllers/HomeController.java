@@ -9,12 +9,6 @@ public class HomeController
     @GetMapping("")
     public String home()
     {
-        return "index.html";
-    }
-
-    @GetMapping("old")
-    public String old()
-    {
-        return "index-old.html";
+        return "index";
     }
 }

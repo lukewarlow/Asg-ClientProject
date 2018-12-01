@@ -11,7 +11,7 @@ public class CandidateController
     @GetMapping("/signup")
     public String submitForm()
     {
-        return "sign-up.html";
+        return "/candidate/sign-up";
     }
 }
 

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/drones")
@@ -44,6 +45,13 @@ public class DroneApiController
     {
         var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, "");
         var drones = droneService.findAll(pageRequest);
+        return new ResponseEntity<>(drones, HttpStatus.OK);
+    }
+
+    @GetMapping("autocomplete")
+    public ResponseEntity<List<DroneDao>> search(@RequestParam(value = "search", required = false, defaultValue = "") String search)
+    {
+        var drones = droneService.search(search);
         return new ResponseEntity<>(drones, HttpStatus.OK);
     }
 }

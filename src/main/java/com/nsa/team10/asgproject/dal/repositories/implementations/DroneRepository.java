@@ -75,7 +75,7 @@ public class DroneRepository implements IDroneRepository
         long count;
         var sql = "SELECT d.id,\n" +
                 "d.manufacturer,\n" +
-                "d.model,\n" +
+                "d.model\n" +
                 "FROM drone d\n" +
                 "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
                 "LIMIT ?\n" +
@@ -84,5 +84,21 @@ public class DroneRepository implements IDroneRepository
         drones = jdbcTemplate.query(sql, params, droneMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM drone;", Long.class);
         return new PaginatedList<>(drones, count, pageRequest);
+    }
+
+    @Override
+    public List<DroneDao> search(String search)
+    {
+        List<DroneDao> drones;
+        var sql = "SELECT d.id,\n" +
+                "d.manufacturer,\n" +
+                "d.model\n" +
+                "FROM drone d\n" +
+                "WHERE LOWER(CONCAT(d.manufacturer, ' ', d.model)) LIKE ?\n" +
+                "LIMIT 8;";
+        var params = new Object[]{search.toLowerCase() + "%"};
+        drones = jdbcTemplate.query(sql, params, droneMapper);
+        return drones;
+
     }
 }

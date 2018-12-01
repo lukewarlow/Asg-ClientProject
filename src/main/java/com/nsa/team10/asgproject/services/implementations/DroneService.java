@@ -10,6 +10,8 @@ import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DroneService implements IDroneService
 {
@@ -31,5 +33,11 @@ public class DroneService implements IDroneService
     public PaginatedList<DroneDao> findAll(FilteredPageRequest pageRequest)
     {
         return droneRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public List<DroneDao> search(String search)
+    {
+        return droneRepository.search(search);
     }
 }

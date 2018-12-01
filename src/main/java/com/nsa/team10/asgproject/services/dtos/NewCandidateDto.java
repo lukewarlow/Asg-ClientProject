@@ -34,7 +34,7 @@ public class NewCandidateDto
                            String companyEmail,
                            String companyPhone,
                            @NotNull @NotEmpty String flyingExperience,
-                           @NotNull @NotEmpty long droneId)
+                           @NotNull long droneId)
     {
         this.preferedLocation = preferedLocation;
         this.dob = dob;
@@ -49,14 +49,6 @@ public class NewCandidateDto
         this.companyPhone = companyPhone;
         this.flyingExperience = flyingExperience;
         this.droneId = droneId;
-    }
-
-    @Deprecated
-    public String getCandidateReferenceNumber()
-    {
-        //TODO implement this jobie
-//        return "ASG-" + someshit;
-        return Long.toString(new Random().nextLong());
     }
 
     public String getPreferedLocation()
