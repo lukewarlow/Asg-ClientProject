@@ -61,7 +61,7 @@ public class DroneRepository implements IDroneRepository
         }
         catch (DataAccessException ex)
         {
-            if(ex.getLocalizedMessage().contains("unique"))
+            if(ex.getLocalizedMessage().contains("Duplicate entry"))
                 throw new ConflictException(DroneDao.class.getTypeName(), "Duplicate entry");
             else
                 throw ex;
@@ -77,10 +77,11 @@ public class DroneRepository implements IDroneRepository
                 "d.manufacturer,\n" +
                 "d.model\n" +
                 "FROM drone d\n" +
+                "WHERE LOWER(CONCAT(d.manufacturer, ' ', d.model)) LIKE ?\n" +
                 "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
-        var params = new Object[]{pageRequest.getPageSize(), pageRequest.getOffset()};
+        var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
         drones = jdbcTemplate.query(sql, params, droneMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM drone;", Long.class);
         return new PaginatedList<>(drones, count, pageRequest);

@@ -125,7 +125,7 @@
                     app.refresh();
                 },
                 refresh: function () {
-                    axios.get("/api/v1/drones?page=" + app.page + "&pageSize=" + app.pageSize + "&orderBy=" + app.orderBy + "&orderByAscending=" + app.orderByAscending + "&search=" + app.searchTerm.split(' '))
+                    axios.get("/api/v1/drones?page=" + app.page + "&pageSize=" + app.pageSize + "&orderBy=" + app.orderBy + "&orderByAscending=" + app.orderByAscending + "&search=" + app.searchTerm)
                         .then(function (response) {
                             app.drones = response.data.list;
                             app.noOfPages = response.data.noOfPages;

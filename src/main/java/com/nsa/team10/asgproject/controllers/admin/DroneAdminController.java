@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/drones")
 public class DroneAdminController
 {
-    @GetMapping("")
+    @GetMapping()
     public String list()
     {
         return "/admin/drones/index";

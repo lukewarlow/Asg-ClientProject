@@ -41,9 +41,9 @@ public class DroneApiController
     }
 
     @GetMapping("")
-    public ResponseEntity<PaginatedList<DroneDao>> findAll(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String... searchTerms)
+    public ResponseEntity<PaginatedList<DroneDao>> findAll(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
-        var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerms);
+        var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerm);
         var drones = droneService.findAll(pageRequest);
         return new ResponseEntity<>(drones, HttpStatus.OK);
     }

@@ -6,4 +6,28 @@ VALUES
 
 INSERT INTO drone(manufacturer, model)
 VALUES
-       ('DJI', 'Phantom');
+       ('DJI', 'Mavic 2'),
+       ('DJI', 'Mavic Air'),
+       ('DJI', 'Mavic Pro'),
+       ('DJI', 'Mavic Pro Platinum'),
+       ('DJI', 'Phantom 1'),
+       ('DJI', 'Phantom FC40'),
+       ('DJI', 'Phantom 2'),
+       ('DJI', 'Phantom 2 Vision'),
+       ('DJI', 'Phantom 2 Vision+'),
+       ('DJI', 'Phantom 3 Standard'),
+       ('DJI', 'Phantom 3 4K'),
+       ('DJI', 'Phantom 3 SE'),
+       ('DJI', 'Phantom 3 Advanced'),
+       ('DJI', 'Phantom 3 Professional'),
+       ('DJI', 'Phantom 4'),
+       ('DJI', 'Phantom 4 Advanced'),
+       ('DJI', 'Phantom 4 Pro'),
+       ('DJI', 'Phantom 4 Pro V2.0'),
+       ('DJI', 'Inspire 1'),
+       ('DJI', 'Inspire 1 Pro/Raw'),
+       ('DJI', 'Inspire 2'),
+       ('Parrot', 'Anafi'),
+       ('Parrot', 'Bebop 2'),
+       ('Parrot', 'Bebop 2 Power'),
+       ('Parrot', 'Mambo');

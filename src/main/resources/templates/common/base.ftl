@@ -94,6 +94,9 @@
                             <li>
                                 <a href="/admin/users">Manage Users</a>
                             </li>
+                            <li>
+                                <a href="/admin/drones">Manage Drones</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -125,6 +128,9 @@
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
                                 <a href="/admin/users">Manage Users</a>
+                            </li>
+                            <li>
+                                <a href="/admin/drones">Manage Drones</a>
                             </li>
                         </ul>
                     </li>
