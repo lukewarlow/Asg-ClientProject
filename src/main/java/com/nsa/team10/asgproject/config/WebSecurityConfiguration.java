@@ -1,5 +1,6 @@
 package com.nsa.team10.asgproject.config;
 
+import com.nsa.team10.asgproject.services.implementations.AccountService;
 import com.nsa.team10.asgproject.services.implementations.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,10 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
 {
-    private final UserService userDetailsService;
+    private final AccountService userDetailsService;
 
     @Autowired
-    public WebSecurityConfiguration(UserService userDetailsService)
+    public WebSecurityConfiguration(AccountService userDetailsService)
     {
         this.userDetailsService = userDetailsService;
     }
@@ -52,6 +53,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/vendor/**").permitAll()
+                .antMatchers("/error").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

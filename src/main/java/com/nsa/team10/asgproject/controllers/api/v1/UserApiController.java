@@ -19,26 +19,12 @@ import java.util.Optional;
 @RequestMapping("/api/v1/users")
 public class UserApiController
 {
-    private IUserService userService;
+    private final IUserService userService;
 
     @Autowired
     public UserApiController(IUserService userService)
     {
         this.userService = userService;
-    }
-
-    @PostMapping("")
-    public ResponseEntity create(@Valid @RequestBody NewUserDto newUser)
-    {
-        try
-        {
-            userService.create(newUser);
-            return new ResponseEntity(HttpStatus.CREATED);
-        }
-        catch (ConflictException e)
-        {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
     }
 
     @PreAuthorize("hasAuthority('Admin')")

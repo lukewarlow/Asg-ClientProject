@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface IUserService
 {
-    void create(NewUserDto newUser) throws ConflictException;
     PaginatedList<UserDao> findAll(FilteredPageRequest pageRequest);
     PaginatedList<UserDao> findAllDisabled(FilteredPageRequest pageRequest);
     Optional<UserDao> findById(long userId);

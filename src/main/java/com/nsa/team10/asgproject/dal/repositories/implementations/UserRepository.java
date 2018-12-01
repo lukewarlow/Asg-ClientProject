@@ -74,7 +74,7 @@ public class UserRepository implements IUserRepository
         );
     }
 
-    public void register(UserDao newUser, String hashedPassword) throws ConflictException
+    public void create(UserDao newUser, String hashedPassword) throws ConflictException
     {
         var sql = "INSERT INTO user (forename, surname, email, phone_number, role, password) VALUES(?,?,?,?,?,?);";
         try
@@ -144,7 +144,7 @@ public class UserRepository implements IUserRepository
 
     public Optional<UserWithPasswordDao> findWithPasswordByEmail(String email)
     {
-        var sql = "SELECT * FROM enabled_user WHERE email = ?;";
+        var sql = "SELECT * FROM activated_user WHERE email = ?;";
         return jdbcTemplate.query(sql, new Object[] {email}, userWithPasswordMapper).stream().findFirst();
     }
 
@@ -163,6 +163,21 @@ public class UserRepository implements IUserRepository
     }
 
     @Override
+    public Optional<UserDao> findByEmail(String email)
+    {
+        var sql = "SELECT * FROM enabled_user WHERE email = ?;";
+        return jdbcTemplate.query(sql, new Object[] {email}, userMapper).stream().findFirst();
+    }
+
+    @Override
+    public boolean verifyActivationToken(String email, String token)
+    {
+        var sql = "UPDATE enabled_user SET activated = TRUE, activation_token = NULL WHERE email = ? AND activation_token = ?;";
+        var rowsAffected = jdbcTemplate.update(sql, email, token);
+        return rowsAffected == 1;
+    }
+
+    @Override
     public boolean disable(long userId)
     {
         var sql = "UPDATE user SET disabled = TRUE WHERE id = ?;";
@@ -176,6 +191,18 @@ public class UserRepository implements IUserRepository
         var sql = "UPDATE user SET disabled = FALSE WHERE id = ?;";
         var rowsAffected = jdbcTemplate.update(sql, userId);
         return rowsAffected == 1;
+    }
+
+    @Override
+    public String generateActivationToken(String email)
+    {
+        var generateTokenSql = "UPDATE user SET activation_token = md5(CONCAT(NOW(), RAND())), activated = FALSE WHERE email = ?;";
+
+        var retrieveTokenSql = "SELECT activation_token FROM user WHERE email = ?";
+
+        jdbcTemplate.update(generateTokenSql, email);
+
+        return jdbcTemplate.queryForObject(retrieveTokenSql, new Object[] {email}, String.class);
     }
 
     @Override

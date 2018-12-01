@@ -1,39 +1,40 @@
 package com.nsa.team10.asgproject.services.implementations;
 
+import com.nsa.team10.asgproject.services.dtos.Mail;
 import com.nsa.team10.asgproject.services.interfaces.IEmailService;
+import freemarker.template.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-
-import javax.mail.MessagingException;
-import java.io.File;
-import java.util.List;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 @Component
 public class EmailService implements IEmailService
 {
     private final JavaMailSender emailSender;
 
+    private final Configuration freemarkerConfig;
+
     @Autowired
-    public EmailService(JavaMailSender emailSender)
+    public EmailService(JavaMailSender emailSender, Configuration freemarkerConfig)
     {
         this.emailSender = emailSender;
+        this.freemarkerConfig = freemarkerConfig;
     }
 
     @Override
-    public void sendSimpleMessage(String to, String subject, String text)
+    public void sendSimpleEmail(Mail mail)
     {
         try
         {
             var message = new SimpleMailMessage();
-            message.setTo(to);
-            message.setFrom("asgsystem@example.com");
-            message.setSubject(subject);
-            message.setText(text);
+            message.setTo(mail.getTo());
+            message.setFrom(mail.getFrom());
+            message.setSubject(mail.getSubject());
+            message.setText(mail.getContent());
 
             emailSender.send(message);
         }
@@ -44,31 +45,25 @@ public class EmailService implements IEmailService
     }
 
     @Override
-    public void sendSimpleMessageUsingTemplate(String to, String subject, SimpleMailMessage template, List<String> templateArgs)
-    {
-        var text = String.format(template.getText(), templateArgs);
-        sendSimpleMessage(to, subject, text);
-    }
-
-    @Override
-    public void sendMessageWithAttachment(String to, String subject, String text, String fileName, String pathToAttachment)
+    public void sendEmail(Mail mail, String pathToEmailTemplate)
     {
         try
         {
             var message = emailSender.createMimeMessage();
-            var helper = new MimeMessageHelper(message, true);
+            var helper = new MimeMessageHelper(message);
 
-            helper.setTo(to);
-            helper.setFrom("asgsystem@example.com");
-            helper.setSubject(subject);
-            helper.setText(text);
+            freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/templates/emails");
+            var template = freemarkerConfig.getTemplate(pathToEmailTemplate);
+            var text = FreeMarkerTemplateUtils.processTemplateIntoString(template, mail.getModel());
 
-            FileSystemResource file = new FileSystemResource(new File(pathToAttachment));
-            helper.addAttachment(fileName, file);
+            helper.setTo(mail.getTo());
+            helper.setFrom(mail.getFrom());
+            helper.setText(text, true);
+            helper.setSubject(mail.getSubject());
 
             emailSender.send(message);
         }
-        catch (MessagingException ex)
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }

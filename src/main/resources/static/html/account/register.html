@@ -22,6 +22,7 @@
     <link href="/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
 
     <!-- Vendor CSS-->
+    <link href="/vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
     <link href="/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
     <link href="/vendor/wow/animate.css" rel="stylesheet" media="all">
     <link href="/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
@@ -67,7 +68,7 @@
                                 <div class="row">
                                     <div class="col-sm-6 mb-lg">
                                         <label>Password *</label>
-                                        <input class="au-input au-input--full" type="password" name="password" placeholder="Password" required>
+                                        <input class="au-input au-input--full" id="password" type="password" name="password" placeholder="Password" required>
                                     </div>
                                     <div class="col-sm-6 mb-lg">
                                         <label for="confirm-password">Password Confirmation *</label>
@@ -83,6 +84,17 @@
                             </div>
                             <button class="au-btn au-btn--block au-btn--blue m-b-20" type="submit">register</button>
                         </form>
+                        <div class="alert alert-danger" id="terms-unnaccepted" style="display: none;" role="alert">
+                            Terms and conditions must be accepted!
+                        </div>
+                        <div class="alert alert-danger" id="password-unmatched" style="display: none;" role="alert">
+                            Passwords don't match!
+                        </div>
+                        <div class="alert alert-danger" id="conflict" style="display: none;" role="alert">Passwords don't match!
+                        </div>
+                        <div class="alert alert-danger" id="error" style="display: none;" role="alert">Passwords don't match!
+                            An unknown error occurred!
+                        </div>
                         <div class="register-link">
                             <p>
                                 Already have an account?
@@ -106,6 +118,7 @@
 <script src="/vendor/slick/slick.min.js">
 </script>
 <script src="/vendor/wow/wow.min.js"></script>
+<script src="/vendor/animsition/animsition.min.js"></script>
 <script src="/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
 </script>
 <script src="/vendor/counter-up/jquery.waypoints.min.js"></script>
@@ -142,14 +155,13 @@
             var confirmPassword = $("#confirm-password").val();
 
             var areTermsAndConditionsAccepted = $("#agree-terms").is(":checked");
-
             if (!areTermsAndConditionsAccepted) {
                 tAndCError.css("display", "block");
             } else {
                 if (password !== confirmPassword) {
                     passwordError.css("display", "block");
                 } else {
-                    axios.post("/api/v1/users", {
+                    axios.post("/api/v1/account/register", {
                         forename: forename,
                         surname: surname,
                         phoneNumber: phoneNumber,

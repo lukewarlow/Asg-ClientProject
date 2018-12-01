@@ -1,12 +1,9 @@
 package com.nsa.team10.asgproject.services.interfaces;
 
-import org.springframework.mail.SimpleMailMessage;
-
-import java.util.List;
+import com.nsa.team10.asgproject.services.dtos.Mail;
 
 public interface IEmailService
 {
-    void sendSimpleMessage(String to, String subject, String text);
-    void sendSimpleMessageUsingTemplate(String to, String subject, SimpleMailMessage template, List<String> templateArgs);
-    void sendMessageWithAttachment(String to, String subject, String text, String fileName, String pathToAttachment);
+    void sendSimpleEmail(Mail mail);
+    void sendEmail(Mail mail, String pathToEmailTemplate);
 }
