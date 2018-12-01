@@ -10,6 +10,11 @@ public class UserWithPasswordDao extends UserDao
         this.password = password;
     }
 
+    public UserDao getWithoutPassword()
+    {
+        return new UserDao(super.getId(), super.getForename(), super.getSurname(), super.getEmail(), super.getPhoneNumber(), super.getRole(), super.isDisabled());
+    }
+
     public String getPassword()
     {
         return password;

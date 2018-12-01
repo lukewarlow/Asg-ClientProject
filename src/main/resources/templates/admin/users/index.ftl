@@ -99,7 +99,6 @@
         var app = new Vue ({
             el: "#app",
             data: {
-                account: {},
                 users: [],
                 noOfPages: 0,
                 pageSize: 10,
@@ -109,13 +108,6 @@
                 searchTerm: "",
                 showDisabled: false,
                 deleting: {}
-            },
-            created: function () {
-                axios.get("/api/v1/account/loggedin")
-                    .then(function (response) {
-                        app.account = response.data;
-                        $("." + app.account.role.toLowerCase()).css('display', 'block');
-                    });
             },
             watch: {
                 pageSize: function () {

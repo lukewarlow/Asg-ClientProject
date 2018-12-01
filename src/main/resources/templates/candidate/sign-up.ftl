@@ -156,22 +156,11 @@
         var app = new Vue ({
             el: "#app",
             data: {
-                account: {},
                 showSuggestions: false,
                 searchTerm: "",
                 suggestions: [],
                 selectedItem: {},
-                candidateSignup: { },
-                showSuccessModal: {
-
-                }
-            },
-            created: function() {
-                axios.get("/api/v1/account/loggedin")
-                    .then(function (response) {
-                        app.account = response.data;
-                        $("." + app.account.role.toLowerCase()).css('display', 'block');
-                    });
+                candidateSignup: { }
             },
             methods: {
                 find: function() {

@@ -73,16 +73,8 @@
         var app = new Vue ({
             el: "#app",
             data: {
-                account: {},
                 user: {},
                 id: 0
-            },
-            created: function () {
-                axios.get("/api/v1/account/loggedin")
-                    .then(function (response) {
-                        app.account = response.data;
-                        $("." + app.account.role.toLowerCase()).css('display', 'block');
-                    });
             },
             methods: {
                 toggleStatus: function () {
