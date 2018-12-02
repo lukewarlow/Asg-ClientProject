@@ -122,6 +122,7 @@
                 })
                 .catch(function (error) {
                     console.log(error.response.status);
+                    console.log(error.response.data);
                     $("#incorrect-details").css('display', 'block');
                 });
 

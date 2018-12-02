@@ -36,7 +36,6 @@ public class AccountService implements IAccountService, UserDetailsService
     }
 
     @Override
-    @Transactional
     public void register(NewUserDto newUser) throws ConflictException
     {
         var hashedPassword = passwordEncoder.encode(newUser.getPassword());

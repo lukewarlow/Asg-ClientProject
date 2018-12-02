@@ -52,8 +52,8 @@ public class EmailService implements IEmailService
             var message = emailSender.createMimeMessage();
             var helper = new MimeMessageHelper(message);
 
-            freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/templates/emails");
-            var template = freemarkerConfig.getTemplate(pathToEmailTemplate);
+            freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/templates");
+            var template = freemarkerConfig.getTemplate("/emails/" + pathToEmailTemplate);
             var text = FreeMarkerTemplateUtils.processTemplateIntoString(template, mail.getModel());
 
             helper.setTo(mail.getTo());

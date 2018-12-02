@@ -30,7 +30,7 @@
     <title>${title}</title>
 
     <!-- Fontfaces CSS-->
-    <link href="/css/font-face.css" rel="stylesheet" media="all">
+    <link href="/css/font-face.css" type="text/css" rel="stylesheet" media="all">
     <link href="/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
     <link href="/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
     <link href="/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
@@ -230,7 +230,6 @@
         axios.get("/api/v1/account/loggedin")
             .then(function (response) {
                 var account = response.data;
-                console.log(account);
                 $("." + account.role.toLowerCase()).css('display', 'block');
                 $(".account-name").text(account.forename + " " + account.surname);
                 $(".account-email").text(account.email);

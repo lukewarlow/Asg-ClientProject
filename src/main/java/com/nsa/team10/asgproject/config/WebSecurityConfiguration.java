@@ -59,7 +59,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .formLogin()
                 .loginPage("/account/login")
                 .loginProcessingUrl("/account/login")
-                .defaultSuccessUrl("/", true)
                 .failureHandler((request, response, exception) ->
                         response.setStatus(HttpStatus.UNAUTHORIZED.value()))
                 .and()
