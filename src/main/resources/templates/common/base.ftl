@@ -68,7 +68,7 @@
             <div class="container-fluid">
                 <div class="header-mobile-inner">
                     <a class="logo" href="/">
-                        <img src="/images/icon/asg_logo.png" alt="AviationSystemsGroup"/>
+                        <img src="/images/icon/asg_logo.png" width="60%" alt="AviationSystemsGroup"/>
                     </a>
                     <button class="hamburger hamburger--slider" type="button">
                         <span class="hamburger-box">
@@ -109,7 +109,7 @@
     <aside class="menu-sidebar d-none d-lg-block">
         <div class="logo">
             <a href="/">
-                <img src="/images/icon/asg_logo.png" alt="AviationSystemsGroup"/>
+                <img src="/images/icon/asg_logo_transparent.png" alt="AviationSystemsGroup"/>
             </a>
         </div>
         <div class="menu-sidebar__content js-scrollbar1">
@@ -143,11 +143,11 @@
     <!-- PAGE CONTAINER-->
     <div id="app" class="page-container">
         <!-- HEADER DESKTOP-->
-        <header class="header-desktop">
+        <header class="header-desktop" style="height: 40px;">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="header-wrap">
-                        <div class="header-button">
+                        <div class="header-button" style="margin-top: 0;">
                             <div class="noti-wrap">
                             </div>
                             <div class="account-wrap">
