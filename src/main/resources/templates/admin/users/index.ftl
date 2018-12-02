@@ -28,6 +28,9 @@
                             <th scope="col" @click="sortByChange('role')" style="cursor: pointer;">Role
                                 <span v-show="orderBy == 'role' && orderByAscending == true">▲</span>
                                 <span v-show="orderBy == 'role' && orderByAscending == false">▼</span></th>
+                            <th scope="col" @click="sortByChange('activated')" style="cursor: pointer;">Activation
+                                <span v-show="orderBy == 'activated' && orderByAscending == true">▲</span>
+                                <span v-show="orderBy == 'activated' && orderByAscending == false">▼</span></th>
                             <th span="col"></th>
                         </tr>
                         </thead>
@@ -37,10 +40,14 @@
                             <td @click="goToProfile(user.id)">{{ user.surname }}</td>
                             <td @click="goToProfile(user.id)">{{ user.email }}</td>
                             <td @click="goToProfile(user.id)">{{ user.role }}</td>
+                            <td @click="goToProfile(user.id)">
+                                <span v-if="user.activated">Activated</span>
+                                <span v-else>Not Activated</span>
+                            </td>
                             <td data-toggle="modal" data-target="#confirmDelete" @click="confirmDelete(user)"><i class="material-icons">delete</i></td>
                         </tr>
                         <tr v-if="users.length == 0">
-                            <td colspan="4">No results</td>
+                            <td colspan="5">No results</td>
                         </tr>
                         </tbody>
                     </table>

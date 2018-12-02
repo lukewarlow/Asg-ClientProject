@@ -29,11 +29,26 @@
                             <td>{{user.role}}</td>
                         </tr>
                         <tr>
+                            <th>Activated</th>
+                            <td>
+                                <i v-if="user.activated" class="material-icons">done</i>
+                                <i v-else class="material-icons">close</i>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Enabled</th>
                             <td>
                                 <i v-if="user.disabled" class="material-icons">close</i>
                                 <i v-else class="material-icons">done</i>
                             </td>
+                        </tr>
+                        <tr>
+                            <th>Created at</th>
+                            <td>{{user.createdAt}}</td>
+                        </tr>
+                        <tr>
+                            <th>Updated at</th>
+                            <td>{{user.updatedAt}}</td>
                         </tr>
                     </table>
                 </div>

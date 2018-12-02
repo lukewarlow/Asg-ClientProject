@@ -60,7 +60,10 @@ public class UserRepository implements IUserRepository
             rs.getString("email"),
             rs.getString("phone_number"),
             UserDao.Role.values()[rs.getInt("role")],
+            rs.getBoolean("activated"),
             rs.getBoolean("disabled"),
+            rs.getString("created_at"),
+            rs.getString("updated_at"),
             rs.getString("password")
         );
         userMapper = (rs, i) -> new UserDao(
@@ -70,7 +73,10 @@ public class UserRepository implements IUserRepository
             rs.getString("email"),
             rs.getString("phone_number"),
             UserDao.Role.values()[rs.getInt("role")],
-            rs.getBoolean("disabled")
+            rs.getBoolean("activated"),
+            rs.getBoolean("disabled"),
+            rs.getString("created_at"),
+            rs.getString("updated_at")
         );
     }
 
@@ -102,6 +108,7 @@ public class UserRepository implements IUserRepository
                 "u.email,\n" +
                 "u.phone_number,\n" +
                 "u.role,\n" +
+                "u.activated,\n" +
                 "u.disabled,\n" +
                 "u.created_at,\n" +
                 "u.updated_at\n" +
@@ -127,6 +134,7 @@ public class UserRepository implements IUserRepository
                 "u.email,\n" +
                 "u.phone_number,\n" +
                 "u.role,\n" +
+                "u.activated,\n" +
                 "u.disabled,\n" +
                 "u.created_at,\n" +
                 "u.updated_at\n" +
@@ -144,28 +152,73 @@ public class UserRepository implements IUserRepository
 
     public Optional<UserWithPasswordDao> findWithPasswordByEmail(String email)
     {
-        var sql = "SELECT * FROM activated_user WHERE email = ?;";
+        var sql = "SELECT u.id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at,\n" +
+                "u.password\n" +
+                "FROM activated_user u\n" +
+                "WHERE u.email = ?;";
         return jdbcTemplate.query(sql, new Object[] {email}, userWithPasswordMapper).stream().findFirst();
     }
 
     @Override
     public Optional<UserDao> findById(long userId)
     {
-        var sql = "SELECT * FROM enabled_user WHERE id = ?;";
+        var sql = "SELECT u.id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at\n" +
+                "FROM enabled_user u\n" +
+                "WHERE u.id = ?;";
         return jdbcTemplate.query(sql, new Object[] {userId}, userMapper).stream().findFirst();
     }
 
     @Override
     public Optional<UserDao> findByIdIncDisabled(long userId)
     {
-        var sql = "SELECT * FROM user WHERE id = ?;";
+        var sql = "SELECT u.id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at\n" +
+                "FROM user u\n" +
+                "WHERE u.id = ?;";
         return jdbcTemplate.query(sql, new Object[] {userId}, userMapper).stream().findFirst();
     }
 
     @Override
     public Optional<UserDao> findByEmail(String email)
     {
-        var sql = "SELECT * FROM enabled_user WHERE email = ?;";
+        var sql = "SELECT u.id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at\n" +
+                "FROM enabled_user u\n" +
+                "WHERE u.email = ?;";
         return jdbcTemplate.query(sql, new Object[] {email}, userMapper).stream().findFirst();
     }
 

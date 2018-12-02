@@ -8,13 +8,19 @@ public class UserDao
     private String email;
     private String phoneNumber;
     private Role role;
+    private boolean activated;
     private boolean disabled;
+    private String createdAt;
+    private String updatedAt;
 
-    public UserDao(long id, String forename, String surname, String email, String phoneNumber, Role role, boolean disabled)
+    public UserDao(long id, String forename, String surname, String email, String phoneNumber, Role role, boolean activated, boolean disabled, String createdAt, String updatedAt)
     {
         this(forename, surname, email, phoneNumber, role);
         this.id = id;
+        this.activated = activated;
         this.disabled = disabled;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public UserDao(String forename, String surname, String email, String phoneNumber, Role role)
@@ -56,9 +62,24 @@ public class UserDao
         return role;
     }
 
+    public boolean isActivated()
+    {
+        return activated;
+    }
+
     public boolean isDisabled()
     {
         return disabled;
+    }
+
+    public String getCreatedAt()
+    {
+        return createdAt;
+    }
+
+    public String getUpdatedAt()
+    {
+        return updatedAt;
     }
 
     public enum Role
