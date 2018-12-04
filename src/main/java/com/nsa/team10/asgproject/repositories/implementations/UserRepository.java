@@ -1,10 +1,10 @@
-package com.nsa.team10.asgproject.dal.repositories.implementations;
+package com.nsa.team10.asgproject.repositories.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
-import com.nsa.team10.asgproject.dal.daos.UserDao;
-import com.nsa.team10.asgproject.dal.daos.UserWithPasswordDao;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.IUserRepository;
+import com.nsa.team10.asgproject.repositories.daos.UserDao;
+import com.nsa.team10.asgproject.repositories.daos.UserWithPasswordDao;
+import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
 import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

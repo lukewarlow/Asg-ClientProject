@@ -1,8 +1,8 @@
 package com.nsa.team10.asgproject.services.implementations;
 
 import com.nsa.team10.asgproject.config.DefaultUserDetails;
-import com.nsa.team10.asgproject.dal.daos.UserDao;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.IUserRepository;
+import com.nsa.team10.asgproject.repositories.daos.UserDao;
+import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
 import com.nsa.team10.asgproject.services.dtos.Mail;
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 
@@ -25,7 +24,7 @@ public class AccountService implements IAccountService, UserDetailsService
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     @Value("${server.basedomain}")
-    private String userBucketPath;
+    private String baseDomain;
 
     @Autowired
     public AccountService(IUserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService)
@@ -47,7 +46,7 @@ public class AccountService implements IAccountService, UserDetailsService
         mail.setSubject("Welcome to Aviation Systems Group");
         var model = new HashMap<String, Object>();
         model.put("forename", user.getForename());
-        model.put("link", "localhost:8080/account/activate?email=" + user.getEmail() + "&token=" + activationToken);
+        model.put("link", baseDomain + "/account/activate?email=" + user.getEmail() + "&token=" + activationToken);
         mail.setModel(model);
         emailService.sendEmail(mail, "activation.ftl");
     }

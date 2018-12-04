@@ -1,7 +1,7 @@
 package com.nsa.team10.asgproject.controllers.api.v1;
 
 import com.nsa.team10.asgproject.config.DefaultUserDetails;
-import com.nsa.team10.asgproject.dal.daos.UserDao;
+import com.nsa.team10.asgproject.repositories.daos.UserDao;
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
 import com.nsa.team10.asgproject.validation.ConflictException;

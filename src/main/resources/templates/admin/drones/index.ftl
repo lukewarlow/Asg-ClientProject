@@ -15,12 +15,13 @@
                             </th>
                         </tr>
                         <tr>
-                            <th scope="col" @click="sortByChange('manufacturer')" style="cursor: pointer;">Manufacturer
-                                <span v-show="orderBy == 'manufacturer' && orderByAscending == true">▲</span>
-                                <span v-show="orderBy == 'manufacturer' && orderByAscending == false">▼</span></th>
-                            <th scope="col" @click="sortByChange('model')" style="cursor: pointer;">Model
-                                <span v-show="orderBy == 'model' && orderByAscending == true">▲</span>
-                                <span v-show="orderBy == 'model' && orderByAscending == false">▼</span></th>
+                            <th scope="col" v-for="column in columns" @click="sortByChange(column.value)" style="cursor: pointer;">
+                                <span class="d-inline float-left">{{column.text}}</span>
+                                <span class="d-inline d-flex justify-content-start">
+                                <i v-show="orderBy == column.value && orderByAscending == true" class="material-icons">arrow_upward</i>
+                                <i v-show="orderBy == column.value && orderByAscending == false" class="material-icons">arrow_downward</i>
+                                </span>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -102,7 +103,11 @@
                 orderBy: "manufacturer",
                 orderByAscending: false,
                 searchTerm: "",
-                newDrone: {}
+                newDrone: {},
+                columns: [
+                    {text: "Manufacturer", value: "Manufacturer"},
+                    {text: "Model", value: "model"}
+                ]
             },
             watch: {
                 pageSize: function () {
@@ -129,6 +134,9 @@
                         .then(function (response) {
                             app.drones = response.data.list;
                             app.noOfPages = response.data.noOfPages;
+                            if (app.noOfPages === 0) {
+                                app.noOfPages = 1;
+                            }
                         });
                 },
                 addDrone: function () {
@@ -144,4 +152,4 @@
     </script>
 </#macro>
 
-<@display_page "Users"/>
+<@display_page "Drones"/>

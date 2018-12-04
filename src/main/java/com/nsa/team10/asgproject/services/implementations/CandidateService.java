@@ -1,19 +1,21 @@
 package com.nsa.team10.asgproject.services.implementations;
 
+import com.nsa.team10.asgproject.FilteredPageRequest;
+import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.config.DefaultUserDetails;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.ICandidateRepository;
+import com.nsa.team10.asgproject.repositories.daos.CandidateDao;
+import com.nsa.team10.asgproject.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.services.dtos.Mail;
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 import com.nsa.team10.asgproject.services.interfaces.ICandidateService;
 import com.nsa.team10.asgproject.services.interfaces.IEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -40,20 +42,28 @@ public class CandidateService implements ICandidateService
     }
 
     @Override
+    public PaginatedList<CandidateDao> findAll(FilteredPageRequest pageRequest)
+    {
+        return candidateRepository.findAll(pageRequest);
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('Candidate')")
     public void sendReceipt(boolean hasPayed)
     {
         var userDetails = getCurrentUserDetails();
         if (userDetails.isPresent())
         {
             var mail = new Mail();
-            mail.setTo(userDetails.get().getUsername());
+            var user = userDetails.get().getUser();
+            mail.setTo(user.getEmail());
             mail.setSubject("Payment Received");
             var model = new HashMap<String, Object>();
             model.put("link", "localhost:8080");
             mail.setModel(model);
             emailService.sendEmail(mail, "receipt.ftl");
 
-            candidateRepository.setHasPayed(true);
+            candidateRepository.setHasPayed(user.getId(), true);
         }
     }
 

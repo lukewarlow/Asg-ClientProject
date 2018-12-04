@@ -62,14 +62,12 @@
                         <div class="form-group">
                             <label for="preferedLocation" class="form-control-label">Prefered Location *</label>
                             <select v-model="candidateSignup.preferedLocation" class="form-control" id="preferedLocation" name="preferedLocation" required>
-                                <option value="Cardiff">Cardiff</option>
-                                <option value="Somerset">Somerset</option>
-                                <option value="Aberdeen">Aberdeen</option>
+                                <option v-for="l in locations" :value="l.id">{{l.location}}</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="dob" class="form-control-label">Date of Birth *</label>
-                            <input v-model="candidateSignup.dob" class="form-control" type="date" id="dob" name="dob" required>
+                            <input v-model="candidateSignup.dob" :max="getMaxDob()" class="form-control" class="form-control" type="date" id="dob" name="dob" required>
                         </div>
                         <div class="form-group">
                             <label for="address1" class="form-control-label">Address Line 1 *</label>
@@ -160,7 +158,8 @@
                 searchTerm: "",
                 suggestions: [],
                 selectedItem: {},
-                candidateSignup: { }
+                candidateSignup: { },
+                locations: []
             },
             methods: {
                 find: function() {
@@ -190,9 +189,19 @@
                         .then(function() {
                             $("#successModal").modal();
                         });
+                },
+                getMaxDob: function () {
+                    var eighteenYearsAgo = new Date();
+                    eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear()-18);
+                    return eighteenYearsAgo.toISOString().split('T')[0];
                 }
             }
         });
+
+        axios.get("/api/v1/gscourses/locations/all")
+            .then(function (response) {
+                app.locations = response.data;
+            });
     </script>
 </#macro>
 
