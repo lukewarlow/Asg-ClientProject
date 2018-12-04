@@ -62,9 +62,7 @@
                         <div class="form-group">
                             <label for="preferedLocation" class="form-control-label">Prefered Location *</label>
                             <select v-model="candidateSignup.preferedLocation" class="form-control" id="preferedLocation" name="preferedLocation" required>
-                                <option v-for="l in locations" value="l.id">Cardiff</option>
-                                <option value="Somerset">Somerset</option>
-                                <option value="Aberdeen">Aberdeen</option>
+                                <option v-for="l in locations" :value="l.id">{{l.location}}</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -163,12 +161,6 @@
                 candidateSignup: { },
                 locations: []
             },
-            created: function() {
-                axios.get("/api/v1/gscourses/locations/all")
-                    .then(function (response) {
-                        this.locations = response.data;
-                    });
-            },
             methods: {
                 find: function() {
                     if (app.searchTerm === "") {
@@ -205,6 +197,11 @@
                 }
             }
         });
+
+        axios.get("/api/v1/gscourses/locations/all")
+            .then(function (response) {
+                app.locations = response.data;
+            });
     </script>
 </#macro>
 
