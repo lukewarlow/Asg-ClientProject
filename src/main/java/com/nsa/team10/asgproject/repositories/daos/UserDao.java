@@ -1,4 +1,4 @@
-package com.nsa.team10.asgproject.dal.daos;
+package com.nsa.team10.asgproject.repositories.daos;
 
 public class UserDao
 {

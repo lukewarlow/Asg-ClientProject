@@ -31,3 +31,14 @@ VALUES
        ('Parrot', 'Bebop 2'),
        ('Parrot', 'Bebop 2 Power'),
        ('Parrot', 'Mambo');
+
+INSERT INTO course_type(type)
+VALUES
+       ('Full'),
+       ('Partial');
+
+INSERT INTO course_location(location)
+VALUES
+       ('Cardiff'),
+       ('Somerset'),
+       ('Aberdeen');

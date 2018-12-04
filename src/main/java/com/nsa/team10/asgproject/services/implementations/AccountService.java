@@ -1,8 +1,8 @@
 package com.nsa.team10.asgproject.services.implementations;
 
 import com.nsa.team10.asgproject.config.DefaultUserDetails;
-import com.nsa.team10.asgproject.dal.daos.UserDao;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.IUserRepository;
+import com.nsa.team10.asgproject.repositories.daos.UserDao;
+import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
 import com.nsa.team10.asgproject.services.dtos.Mail;
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 

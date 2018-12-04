@@ -52,7 +52,7 @@
     <link href="/css/theme.css" rel="stylesheet" media="all">
 
     <style>
-        .guest, .candidate, .instructor, .admin {
+        .guest, .candidate, .instructor, .admin, .card {
             display: none;
         }
     </style>
@@ -95,6 +95,9 @@
                                 <a href="/admin/users">Manage Users</a>
                             </li>
                             <li>
+                                <a href="/admin/courses">Manage Courses</a>
+                            </li>
+                            <li>
                                 <a href="/admin/drones">Manage Drones</a>
                             </li>
                         </ul>
@@ -128,6 +131,9 @@
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
                                 <a href="/admin/users">Manage Users</a>
+                            </li>
+                            <li>
+                                <a href="/admin/courses">Manage Courses</a>
                             </li>
                             <li>
                                 <a href="/admin/drones">Manage Drones</a>
@@ -227,6 +233,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 
     <script>
+        $('.card').css('display', 'block');
         axios.get("/api/v1/account/loggedin")
             .then(function (response) {
                 var account = response.data;

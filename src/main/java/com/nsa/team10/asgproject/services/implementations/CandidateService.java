@@ -1,7 +1,7 @@
 package com.nsa.team10.asgproject.services.implementations;
 
 import com.nsa.team10.asgproject.config.DefaultUserDetails;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.ICandidateRepository;
+import com.nsa.team10.asgproject.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 import com.nsa.team10.asgproject.services.interfaces.ICandidateService;
 import org.springframework.beans.factory.annotation.Autowired;

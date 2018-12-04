@@ -1,7 +1,7 @@
-package com.nsa.team10.asgproject.dal.repositories.implementations;
+package com.nsa.team10.asgproject.repositories.implementations;
 
-import com.nsa.team10.asgproject.dal.daos.UserDao;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.ICandidateRepository;
+import com.nsa.team10.asgproject.repositories.daos.UserDao;
+import com.nsa.team10.asgproject.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,7 +59,7 @@ public class CandidateRepository implements ICandidateRepository
             companyId = holder.getKey().longValue();
         }
 
-        var candidateSql = "INSERT INTO candidate(candidate_number, user_id, address_id, company_id, dob, drone_id, prefered_location, has_payed) VALUES('THISWILLBEREPLACED', ?, ?, ?, ?, ?, ?, ?);";
+        var candidateSql = "INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_location, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?);";
 
         jdbcTemplate.update(candidateSql, userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), newCandidate.getPreferedLocation(), false);
 

@@ -2,8 +2,8 @@ package com.nsa.team10.asgproject.services.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
-import com.nsa.team10.asgproject.dal.daos.DroneDao;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.IDroneRepository;
+import com.nsa.team10.asgproject.repositories.daos.DroneDao;
+import com.nsa.team10.asgproject.repositories.interfaces.IDroneRepository;
 import com.nsa.team10.asgproject.services.dtos.NewDroneDto;
 import com.nsa.team10.asgproject.services.interfaces.IDroneService;
 import com.nsa.team10.asgproject.validation.ConflictException;

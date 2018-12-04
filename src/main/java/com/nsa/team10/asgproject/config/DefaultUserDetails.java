@@ -1,7 +1,7 @@
 package com.nsa.team10.asgproject.config;
 
-import com.nsa.team10.asgproject.dal.daos.UserDao;
-import com.nsa.team10.asgproject.dal.daos.UserWithPasswordDao;
+import com.nsa.team10.asgproject.repositories.daos.UserDao;
+import com.nsa.team10.asgproject.repositories.daos.UserWithPasswordDao;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -28,6 +28,6 @@ public class CandidateApiController
     public ResponseEntity create(@Valid @RequestBody NewCandidateDto newCandidate)
     {
         candidateService.create(newCandidate);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

@@ -1,9 +1,9 @@
-package com.nsa.team10.asgproject.dal.repositories.implementations;
+package com.nsa.team10.asgproject.repositories.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
-import com.nsa.team10.asgproject.dal.daos.DroneDao;
-import com.nsa.team10.asgproject.dal.repositories.interfaces.IDroneRepository;
+import com.nsa.team10.asgproject.repositories.daos.DroneDao;
+import com.nsa.team10.asgproject.repositories.interfaces.IDroneRepository;
 import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -83,7 +83,7 @@ public class DroneRepository implements IDroneRepository
                 "OFFSET ?;";
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
         drones = jdbcTemplate.query(sql, params, droneMapper);
-        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM drone;", Long.class);
+        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM drone d WHERE LOWER(CONCAT(d.manufacturer, ' ', d.model)) LIKE ?;", new Object[] {pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(drones, count, pageRequest);
     }
 

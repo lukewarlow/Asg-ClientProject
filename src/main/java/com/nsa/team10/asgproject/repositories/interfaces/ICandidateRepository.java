@@ -1,4 +1,4 @@
-package com.nsa.team10.asgproject.dal.repositories.interfaces;
+package com.nsa.team10.asgproject.repositories.interfaces;
 
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 

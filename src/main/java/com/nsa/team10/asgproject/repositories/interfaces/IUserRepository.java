@@ -1,12 +1,11 @@
-package com.nsa.team10.asgproject.dal.repositories.interfaces;
+package com.nsa.team10.asgproject.repositories.interfaces;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
-import com.nsa.team10.asgproject.dal.daos.UserDao;
-import com.nsa.team10.asgproject.dal.daos.UserWithPasswordDao;
+import com.nsa.team10.asgproject.repositories.daos.UserDao;
+import com.nsa.team10.asgproject.repositories.daos.UserWithPasswordDao;
 import com.nsa.team10.asgproject.validation.ConflictException;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface IUserRepository

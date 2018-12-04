@@ -16,21 +16,13 @@
                             <th colspan="5"></th>
                         </tr>
                         <tr>
-                            <th scope="col" @click="sortByChange('forename')" style="cursor: pointer;">Forename
-                                <span v-show="orderBy == 'forename' && orderByAscending == true">▲</span>
-                                <span v-show="orderBy == 'forename' && orderByAscending == false">▼</span></th>
-                            <th scope="col" @click="sortByChange('surname')" style="cursor: pointer;">Surname
-                                <span v-show="orderBy == 'surname' && orderByAscending == true">▲</span>
-                                <span v-show="orderBy == 'surname' && orderByAscending == false">▼</span></th>
-                            <th scope="col" @click="sortByChange('email')" style="cursor: pointer;">Email
-                                <span v-show="orderBy == 'email' && orderByAscending == true">▲</span>
-                                <span v-show="orderBy == 'email' && orderByAscending == false">▼</span></th>
-                            <th scope="col" @click="sortByChange('role')" style="cursor: pointer;">Role
-                                <span v-show="orderBy == 'role' && orderByAscending == true">▲</span>
-                                <span v-show="orderBy == 'role' && orderByAscending == false">▼</span></th>
-                            <th scope="col" @click="sortByChange('activated')" style="cursor: pointer;">Activation
-                                <span v-show="orderBy == 'activated' && orderByAscending == true">▲</span>
-                                <span v-show="orderBy == 'activated' && orderByAscending == false">▼</span></th>
+                            <th scope="col" v-for="column in columns" @click="sortByChange(column.value)" style="cursor: pointer;">
+                                <span class="d-inline float-left">{{column.text}}</span>
+                                <span class="d-inline d-flex justify-content-start">
+                                <i v-show="orderBy == column.value && orderByAscending == true" class="material-icons">arrow_upward</i>
+                                <i v-show="orderBy == column.value && orderByAscending == false" class="material-icons">arrow_downward</i>
+                                </span>
+                            </th>
                             <th span="col"></th>
                         </tr>
                         </thead>
@@ -114,7 +106,14 @@
                 orderByAscending: false,
                 searchTerm: "",
                 showDisabled: false,
-                deleting: {}
+                deleting: {},
+                columns: [
+                    {text: "Forename", value: "forename"},
+                    {text: "Surname", value: "surname"},
+                    {text: "Email", value: "email"},
+                    {text: "Role", value: "role"},
+                    {text: "Activation", value: "activated"}
+                ]
             },
             watch: {
                 pageSize: function () {
@@ -145,6 +144,9 @@
                         .then(function (response) {
                             app.users = response.data.list;
                             app.noOfPages = response.data.noOfPages;
+                            if (app.noOfPages === 0) {
+                                app.noOfPages = 1;
+                            }
                         });
                 },
                 confirmDelete: function (user) {

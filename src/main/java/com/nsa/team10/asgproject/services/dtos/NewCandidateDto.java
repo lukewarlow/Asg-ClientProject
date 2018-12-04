@@ -1,14 +1,11 @@
 package com.nsa.team10.asgproject.services.dtos;
 
-import com.nsa.team10.asgproject.dal.daos.DroneDao;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Random;
 
 public class NewCandidateDto
 {
-    private String preferedLocation;
+    private long preferedLocation;
     private String dob;
     private String placeBirth;
     private String address1;
@@ -22,7 +19,7 @@ public class NewCandidateDto
     private String flyingExperience;
     private long droneId;
 
-    public NewCandidateDto(@NotNull @NotEmpty String preferedLocation,
+    public NewCandidateDto(@NotNull @NotEmpty long preferedLocation,
                            @NotNull @NotEmpty String dob,
                            @NotNull @NotEmpty String placeBirth,
                            @NotNull @NotEmpty String address1,
@@ -51,7 +48,7 @@ public class NewCandidateDto
         this.droneId = droneId;
     }
 
-    public String getPreferedLocation()
+    public long getPreferedLocation()
     {
         return preferedLocation;
     }
