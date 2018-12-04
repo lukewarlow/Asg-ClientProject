@@ -34,6 +34,7 @@ public class CandidateRepository implements ICandidateRepository
             PreparedStatement pstmt = connection.prepareStatement(
                     addressSql,
                     new String[] {"id"});
+
             pstmt.setString(1, newCandidate.getAddress1());
             pstmt.setString(2, newCandidate.getAddress2());
             pstmt.setString(3, newCandidate.getCity());
@@ -66,5 +67,12 @@ public class CandidateRepository implements ICandidateRepository
         var userSql = "UPDATE user SET ROLE = ? WHERE id = ?;";
 
         jdbcTemplate.update(userSql, UserDao.Role.Candidate.ordinal(), userId);
+    }
+
+    @Override
+    public void setHasPayed(boolean hasPayed)
+    {
+        var candidateSql = "UPDATE candidate SET has_payed = ?;";
+        jdbcTemplate.update(candidateSql, hasPayed);
     }
 }

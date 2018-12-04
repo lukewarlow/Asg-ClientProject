@@ -1,5 +1,7 @@
 package com.nsa.team10.asgproject.controllers.api.v1;
 
+import com.nsa.team10.asgproject.dal.repositories.implementations.CandidateRepository;
+import com.nsa.team10.asgproject.dal.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 import com.nsa.team10.asgproject.services.interfaces.ICandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,14 @@ public class CandidateApiController
     public ResponseEntity create(@Valid @RequestBody NewCandidateDto newCandidate)
     {
         candidateService.create(newCandidate);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("sendpayment")
+    public ResponseEntity receipt()
+    {
+        System.out.print("debug testing blah blah blah");
+        candidateService.sendReceipt(true);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

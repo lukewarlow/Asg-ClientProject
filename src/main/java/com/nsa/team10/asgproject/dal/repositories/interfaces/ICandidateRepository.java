@@ -5,4 +5,6 @@ import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 public interface ICandidateRepository
 {
     void create(long userId, NewCandidateDto newCandidate);
+
+    void setHasPayed(boolean hasPayed);
 }

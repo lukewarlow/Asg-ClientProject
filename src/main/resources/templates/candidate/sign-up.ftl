@@ -101,7 +101,7 @@
                         </div>
                         <div class="form-group">
                             <label for="company-phone-number" class="form-control-label">Company Phone Number <small>(optional)</small></label>
-                            <input v-model="candidateSignup.companyPhone" class="form-control" type="email" id="company-phone-number" name="company-phone-number">
+                            <input v-model="candidateSignup.companyPhone" class="form-control" type="number" id="company-phone-number" name="company-phone-number">
                         </div>
                         <div class="form-group autocomplete-container">
                             <label for="drone-selection" class="form-control-label">Search for your drone <a href="/candidate/signup/newdrone" target="_blank"><i class="material-icons">add_circle</i></a></label>
