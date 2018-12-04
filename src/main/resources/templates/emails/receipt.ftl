@@ -3,8 +3,7 @@
 <#macro content>
     <tr>
         <td>
-            <p>Hi ${forename},</p>
-            <p>Welcome to Aviation Systems Group, your account has been successfully created. Please follow the link below to verify your email address.</p>
+            <p>Dear Aviation Systems Group customer, your payment has been accepted. Please follow the link below to return to the dashboard.</p>
             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                 <tbody>
                 <tr>
@@ -12,7 +11,7 @@
                         <table role="presentation"activation.ftl border="0" cellpadding="0" cellspacing="0">
                             <tbody>
                             <tr>
-                                <td> <a href="${link}" target="_blank">Verify email</a> </td>
+                                <td> <a href="${link}" target="_blank">Dashboard</a> </td>
                             </tr>
                             </tbody>
                         </table>
@@ -20,7 +19,7 @@
                 </tr>
                 </tbody>
             </table>
-            <p>Once your account has been activated you'll be sent to the login screen to get started.</p>
+            <p>Return to the dashboard to check your next steps</p>
         </td>
     </tr>
 </#macro>
@@ -29,4 +28,4 @@
 
 </#macro>
 
-<@shell title="Aviation Systems Group" preheader="Welcome to Aviation Systems Group, your account has been successfully created..."></@shell>
+<@shell title="Aviation Systems Group" preheader="Welcome to Aviation Systems Group, your payment has been accepted"></@shell>
