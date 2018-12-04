@@ -1,6 +1,9 @@
 package com.nsa.team10.asgproject.services.implementations;
 
+import com.nsa.team10.asgproject.FilteredPageRequest;
+import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.config.DefaultUserDetails;
+import com.nsa.team10.asgproject.repositories.daos.CandidateDao;
 import com.nsa.team10.asgproject.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
 import com.nsa.team10.asgproject.services.interfaces.ICandidateService;
@@ -30,6 +33,12 @@ public class CandidateService implements ICandidateService
 
         var userId = getCurrentUserDetails().get().getUser().getId();
         candidateRepository.create(userId, newCandidate);
+    }
+
+    @Override
+    public PaginatedList<CandidateDao> findAll(FilteredPageRequest pageRequest)
+    {
+        return candidateRepository.findAll(pageRequest);
     }
 
     private Optional<DefaultUserDetails> getCurrentUserDetails()

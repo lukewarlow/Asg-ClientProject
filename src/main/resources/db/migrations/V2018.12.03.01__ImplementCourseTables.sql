@@ -12,6 +12,21 @@ ALTER TABLE candidate
   MODIFY COLUMN prefered_location BIGINT,
   ADD FOREIGN KEY (prefered_location) REFERENCES course_location(id);
 
+DROP TRIGGER generate_candidate_number;
+
+DELIMITER $
+CREATE TRIGGER generate_candidate_number BEFORE INSERT ON candidate
+  FOR EACH ROW
+BEGIN
+  DECLARE NewID INT;
+  SELECT MAX(id) + 1 INTO NewID FROM candidate;
+  IF(@NewID IS NULL) THEN
+    SET NewID := 1;
+  END IF;
+  SET NEW.candidate_number = CONCAT('ASG-', NewID, '-', YEAR(NOW()), '-', MONTH(NOW()));
+END;$
+DELIMITER ;
+
 CREATE TABLE course_type
 (
   id BIGINT AUTO_INCREMENT,

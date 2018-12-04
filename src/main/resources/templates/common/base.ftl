@@ -95,6 +95,9 @@
                                 <a href="/admin/users">Manage Users</a>
                             </li>
                             <li>
+                                <a href="/admin/candidates">Manage Candidates</a>
+                            </li>
+                            <li>
                                 <a href="/admin/courses">Manage Courses</a>
                             </li>
                             <li>
@@ -131,6 +134,9 @@
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
                                 <a href="/admin/users">Manage Users</a>
+                            </li>
+                            <li>
+                                <a href="/admin/candidates">Manage Candidates</a>
                             </li>
                             <li>
                                 <a href="/admin/courses">Manage Courses</a>
