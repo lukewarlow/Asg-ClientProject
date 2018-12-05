@@ -8,8 +8,9 @@ public class GSCourseDao
     private String endDate;
     private GSCourseTypeDao type;
     private GSCourseLocationDao location;
+    private UserDao instructor;
 
-    public GSCourseDao(long id, String courseNumber, String startDate, String endDate, GSCourseTypeDao type, GSCourseLocationDao location)
+    public GSCourseDao(long id, String courseNumber, String startDate, String endDate, GSCourseTypeDao type, GSCourseLocationDao location, UserDao instructor)
     {
         this.id = id;
         this.courseNumber = courseNumber;
@@ -17,6 +18,7 @@ public class GSCourseDao
         this.endDate = endDate;
         this.type = type;
         this.location = location;
+        this.instructor = instructor;
     }
 
     public GSCourseDao(String startDate, String endDate, GSCourseTypeDao type, GSCourseLocationDao location)
@@ -55,5 +57,10 @@ public class GSCourseDao
     public GSCourseLocationDao getLocation()
     {
         return location;
+    }
+
+    public UserDao getInstructor()
+    {
+        return instructor;
     }
 }

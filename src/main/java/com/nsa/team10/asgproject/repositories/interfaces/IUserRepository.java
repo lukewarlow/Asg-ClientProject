@@ -13,6 +13,7 @@ public interface IUserRepository
     void create(UserDao newUser, String hashedPassword) throws ConflictException;
     PaginatedList<UserDao> findAll(FilteredPageRequest pageRequest);
     PaginatedList<UserDao> findAllDisabled(FilteredPageRequest pageRequest);
+    PaginatedList<UserDao> findAllInstructors(FilteredPageRequest pageRequest);
     Optional<UserWithPasswordDao> findWithPasswordByEmail(String email);
     Optional<UserDao> findById(long userId);
     Optional<UserDao> findByIdIncDisabled(long userId);

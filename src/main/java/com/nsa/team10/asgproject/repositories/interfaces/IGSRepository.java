@@ -15,7 +15,11 @@ public interface IGSRepository
 {
     void create(NewGSCourseDto newGSCourse);
     void assignCandidateToCourse(long gsCourseId, long candidateId);
+    void assignInstructorToCourse(long gsCourseId, long instructorId);
     PaginatedList<GSCourseDao> findAll(FilteredPageRequest pageRequest);
+
+    PaginatedList<GSCourseDao> findAllForInstructor(long instructorId, FilteredPageRequest pageRequest);
+
     Optional<GSCourseDao> findById(long gsCourseId);
     PaginatedList<GSCourseTypeDao> findAllTypes(FilteredPageRequest pageRequest);
     /*
@@ -27,4 +31,5 @@ public interface IGSRepository
         For select dropdown on forms in UI. Wouldn't use this in reality but not worth time to do a better selection UI.
      */
     List<GSCourseLocationDao> findAllLocations();
+
 }

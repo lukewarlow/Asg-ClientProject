@@ -73,20 +73,36 @@ public class GSCourseRepository implements IGSRepository
     public GSCourseRepository(JdbcTemplate jdbcTemplate)
     {
         this.jdbcTemplate = jdbcTemplate;
-        gsCourseMapper = (rs, i) -> new GSCourseDao(
-            rs.getLong("id"),
-            rs.getString("course_number"),
-            rs.getString("start_date"),
-            rs.getString("end_date"),
-            new GSCourseTypeDao(
-                rs.getLong("type_id"),
-                rs.getString("type")
-            ),
-            new GSCourseLocationDao(
-                rs.getLong("location_id"),
-                rs.getString("location")
-            )
-        );
+        gsCourseMapper = (rs, i) ->
+        {
+            var instructorId = rs.getLong("instructor_id");
+            return new GSCourseDao(
+                    rs.getLong("id"),
+                    rs.getString("course_number"),
+                    rs.getString("start_date"),
+                    rs.getString("end_date"),
+                    new GSCourseTypeDao(
+                            rs.getLong("type_id"),
+                            rs.getString("type")
+                    ),
+                    new GSCourseLocationDao(
+                            rs.getLong("location_id"),
+                            rs.getString("location")
+                    ),
+                    instructorId == 0 ? null : new UserDao(
+                            instructorId,
+                            rs.getString("forename"),
+                            rs.getString("surname"),
+                            rs.getString("email"),
+                            rs.getString("phone_number"),
+                            UserDao.Role.values()[rs.getInt("role")],
+                            rs.getBoolean("activated"),
+                            rs.getBoolean("disabled"),
+                            rs.getString("created_at"),
+                            rs.getString("updated_at")
+                    )
+                );
+        };
         typeMapper = (rs, i) -> new GSCourseTypeDao(
                 rs.getLong("id"),
                 rs.getString("type")
@@ -116,10 +132,21 @@ public class GSCourseRepository implements IGSRepository
                 "c.type_id,\n" +
                 "ct.type,\n" +
                 "c.location_id,\n" +
-                "cl.location\n" +
+                "cl.location,\n" +
+                "c.instructor_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at\n" +
                 "FROM ground_school_course c\n" +
                 "   JOIN course_location cl ON cl.id = c.location_id\n" +
                 "   JOIN course_type ct ON ct.id = c.type_id\n" +
+                "   LEFT JOIN enabled_user u ON u.id = c.instructor_id\n" +
                 "WHERE c.course_number LIKE ?\n" +
                 "ORDER BY " + gsCourseOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
                 "LIMIT ?\n" +
@@ -127,6 +154,43 @@ public class GSCourseRepository implements IGSRepository
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
         courses = jdbcTemplate.query(sql, params, gsCourseMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ground_school_course c WHERE c.course_number LIKE ?;", new Object[] {pageRequest.getSearchTermSql()}, Long.class);
+        return new PaginatedList<>(courses, count, pageRequest);
+    }
+
+    @Override
+    public PaginatedList<GSCourseDao> findAllForInstructor(long instructorId, FilteredPageRequest pageRequest)
+    {
+        List<GSCourseDao> courses;
+        long count;
+        var sql = "SELECT c.id,\n" +
+                "c.course_number,\n" +
+                "c.start_date,\n" +
+                "c.end_date,\n" +
+                "c.type_id,\n" +
+                "ct.type,\n" +
+                "c.location_id,\n" +
+                "cl.location,\n" +
+                "c.instructor_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at\n" +
+                "FROM ground_school_course c\n" +
+                "   JOIN course_location cl ON cl.id = c.location_id\n" +
+                "   JOIN course_type ct ON ct.id = c.type_id\n" +
+                "   JOIN enabled_user u ON u.id = c.instructor_id\n" +
+                "WHERE c.instructor_id = ? AND c.course_number LIKE ?\n" +
+                "ORDER BY " + gsCourseOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "LIMIT ?\n" +
+                "OFFSET ?;";
+        var params = new Object[]{instructorId, pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
+        courses = jdbcTemplate.query(sql, params, gsCourseMapper);
+        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ground_school_course c JOIN enabled_user u ON u.id = c.instructor_id WHERE c.instructor_id = ? AND c.course_number LIKE ?;", new Object[] {instructorId, pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(courses, count, pageRequest);
     }
 
@@ -140,10 +204,21 @@ public class GSCourseRepository implements IGSRepository
                 "c.type_id,\n" +
                 "ct.type,\n" +
                 "c.location_id,\n" +
-                "cl.location\n" +
+                "cl.location,\n" +
+                "c.instructor_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at\n" +
                 "FROM ground_school_course c\n" +
                 "   JOIN course_location cl ON cl.id = c.location_id\n" +
                 "   JOIN course_type ct ON ct.id = c.type_id\n" +
+                "   LEFT JOIN enabled_user u ON u.id = c.instructor_id\n" +
                 "WHERE c.id LIKE ?;";
         return jdbcTemplate.query(sql, new Object[] {gsCourseId}, gsCourseMapper).stream().findFirst();
     }
@@ -208,5 +283,12 @@ public class GSCourseRepository implements IGSRepository
         var stageSql = "UPDATE candidate SET stage_id = ? WHERE id = ?;";
 
         jdbcTemplate.update(stageSql, CandidateProcessStage.AWAITING_GS_RESULT.getStageId(), candidateId);
+    }
+
+    @Override
+    public void assignInstructorToCourse(long gsCourseId, long instructorId)
+    {
+        var gsAttemptSql = "UPDATE ground_school_course c SET instructor_id = ? WHERE c.id = ?;";
+        jdbcTemplate.update(gsAttemptSql, instructorId, gsCourseId);
     }
 }

@@ -42,9 +42,21 @@ public class GSCourseService implements IGSCourseService
     }
 
     @Override
+    public void assignInstructorToCourse(long gsCourseId, long instructorId)
+    {
+        gsCourseRepository.assignInstructorToCourse(gsCourseId, instructorId);
+    }
+
+    @Override
     public PaginatedList<GSCourseDao> findAll(FilteredPageRequest pageRequest)
     {
         return gsCourseRepository.findAll(pageRequest);
+    }
+
+    @Override
+    public PaginatedList<GSCourseDao> findAllForInstructor(long instructorId, FilteredPageRequest pageRequest)
+    {
+        return gsCourseRepository.findAllForInstructor(instructorId, pageRequest);
     }
 
     @Override

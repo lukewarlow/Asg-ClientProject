@@ -10,6 +10,7 @@ public interface IUserService
 {
     PaginatedList<UserDao> findAll(FilteredPageRequest pageRequest);
     PaginatedList<UserDao> findAllDisabled(FilteredPageRequest pageRequest);
+    PaginatedList<UserDao> findAllInstructors(FilteredPageRequest pageRequest);
     Optional<UserDao> findById(long userId);
     Optional<UserDao> findByIdIncDisabled(long userId);
     boolean disable(long userId);

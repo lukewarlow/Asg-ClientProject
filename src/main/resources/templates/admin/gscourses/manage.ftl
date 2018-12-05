@@ -7,7 +7,7 @@
                     Course Information
                 </div>
                 <div class="card-body card-block">
-                    <table class="table">
+                    <table class="table" v-if="course.courseNumber != null">
                         <tr>
                             <th>Course Number</th>
                             <td>{{course.courseNumber}}</td>
@@ -28,7 +28,21 @@
                             <th>Location</th>
                             <td>{{course.location.location}}</td>
                         </tr>
+                        <tr>
+                            <th>Instructor forename</th>
+                            <td v-if="course.instructor">{{course.instructor.forename}}</td>
+                            <td v-else>N/A</td>
+                        </tr>
+                        <tr>
+                            <th>Instructor surname</th>
+                            <td v-if="course.instructor">{{course.instructor.surname }}</td>
+                            <td v-else>N/A</td>
+                        </tr>
                     </table>
+                    <h2 v-else>Course not found</h2>
+                </div>
+                <div class="card-footer" v-if="!course.instructor">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#assign-instructor">Assign Instructor</button>
                 </div>
             </div>
         </div>
@@ -86,7 +100,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-modal-lg">Assign candidates to course</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assign-candidates">Assign candidates to course</button>
                 </div>
             </div>
         </div>
@@ -94,11 +108,11 @@
 </#macro>
 
 <#macro modals>
-    <div class="modal bd-modal-lg fade" id="assign-candidate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal bd-modal-lg fade" id="assign-instructor" tabindex="-1" role="dialog" aria-labelledby="assign-instructor-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content modal-lg">
                 <div class="modal-header modal-lg">
-                    <h5 class="modal-title" id="exampleModalLabel">Add ground school course</h5>
+                    <h5 class="modal-title" id="assign-instructor-label">Assign instructor to course</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i class="material-icons">close</i>
                     </button>
@@ -108,16 +122,80 @@
                         <thead>
                         <tr>
                             <th scope="col">
-                                <input v-model="modalSearchTerm" class="form-control" type="search" placeholder="Search candidate number...">
+                                <input v-model="instructorModalSearchTerm" class="form-control" type="search" placeholder="Search forename...">
+                            </th>
+                            <th colspan="3"></th>
+                        </tr>
+                        <tr>
+                            <th scope="col" v-for="column in instructorModalColumns" @click="instructorModalSortByChange(column.value)" style="cursor: pointer;">
+                                <span class="d-inline float-left">{{column.text}}</span>
+                                <span class="d-inline d-flex justify-content-start">
+                                <i v-show="instructorModalOrderBy == column.value && instructorModalOrderByAscending == true" class="material-icons">arrow_upward</i>
+                                <i v-show="instructorModalOrderBy == column.value && instructorModalOrderByAscending == false" class="material-icons">arrow_downward</i>
+                                </span>
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="instructor in potentialInstructors">
+                            <td>{{ instructor.forename }}</td>
+                            <td>{{ instructor.surname }}</td>
+                            <td>{{ instructor.email }}</td>
+                            <td style="cursor: pointer;" @click="assignInstructorToCourse(instructor.id)"><i class="material-icons">insert_link</i></td>
+                        </tr>
+                        <tr v-if="potentialInstructors.length == 0">
+                            <td colspan="4">No results</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex flex-row justify-content-center bd-highlight mb-3">
+                        <div class="p-2 bd-highlight">
+                            <select class="form-control" v-model="instructorModalPageSize">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+
+                        <div class="p-2 bd-highlight">
+                            <ul class="pagination" style="margin: 0;">
+                                <li class="page-item" v-for="page in instructorModalNoOfPages">
+                                    <a class="page-link" @click="instructorModalPageChange(page)">{{ page }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bd-modal-lg fade" id="assign-candidates" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content modal-lg">
+                <div class="modal-header modal-lg">
+                    <h5 class="modal-title" id="exampleModalLabel">Assign candidates to course</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <div class="modal-body modal-lg">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">
+                                <input v-model="candidateModalSearchTerm" class="form-control" type="search" placeholder="Search candidate number...">
                             </th>
                             <th colspan="5"></th>
                         </tr>
                         <tr>
-                            <th scope="col" v-for="column in modalColumns" @click="modalSortByChange(column.value)" style="cursor: pointer;">
+                            <th scope="col" v-for="column in candidateModalColumns" @click="candidateModalSortByChange(column.value)" style="cursor: pointer;">
                                 <span class="d-inline float-left">{{column.text}}</span>
                                 <span class="d-inline d-flex justify-content-start">
-                                <i v-show="modalOrderBy == column.value && modalOrderByAscending == true" class="material-icons">arrow_upward</i>
-                                <i v-show="modalOrderBy == column.value && modalOrderByAscending == false" class="material-icons">arrow_downward</i>
+                                <i v-show="candidateModalOrderBy == column.value && candidateModalOrderByAscending == true" class="material-icons">arrow_upward</i>
+                                <i v-show="candidateModalOrderBy == column.value && candidateModalOrderByAscending == false" class="material-icons">arrow_downward</i>
                                 </span>
                             </th>
                             <th></th>
@@ -140,7 +218,7 @@
 
                     <div class="d-flex flex-row justify-content-center bd-highlight mb-3">
                         <div class="p-2 bd-highlight">
-                            <select class="form-control" v-model="modalPageSize">
+                            <select class="form-control" v-model="candidateModalPageSize">
                                 <option value="5">5</option>
                                 <option value="10">10</option>
                                 <option value="25">25</option>
@@ -150,8 +228,8 @@
 
                         <div class="p-2 bd-highlight">
                             <ul class="pagination" style="margin: 0;">
-                                <li class="page-item" v-for="page in modalNoOfPages">
-                                    <a class="page-link" @click="modalPageChange(page)">{{ page }}</a>
+                                <li class="page-item" v-for="page in candidateModalNoOfPages">
+                                    <a class="page-link" @click="candidateModalodalPageChange(page)">{{ page }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -169,9 +247,11 @@
             data: {
                 course: {
                     type: {},
-                    location: {}
+                    location: {},
+                    instructor: {}
                 },
                 potentialCandidates: {},
+                potentialInstructors: {},
                 assignedCandidates: {},
                 id: 0,
                 noOfPages: 1,
@@ -179,12 +259,18 @@
                 page: 1,
                 orderBy: "id",
                 orderByAscending: false,
-                modalNoOfPages: 1,
-                modalPageSize: 10,
-                modalPage: 1,
-                modalOrderBy: "id",
-                modalOrderByAscending: false,
-                modalSearchTerm: "",
+                candidateModalNoOfPages: 1,
+                candidateModalPageSize: 10,
+                candidateModalPage: 1,
+                candidateModalOrderBy: "id",
+                candidateModalOrderByAscending: false,
+                candidateModalSearchTerm: "",
+                instructorModalNoOfPages: 1,
+                instructorModalPageSize: 10,
+                instructorModalPage: 1,
+                instructorModalOrderBy: "id",
+                instructorModalOrderByAscending: false,
+                instructorModalSearchTerm: "",
                 columns: [
                     {text: "Candidate Number", value: "candidateNumber"},
                     {text: "Forename", value: "forename"},
@@ -192,7 +278,12 @@
                     {text: "Email", value: "email"},
                     {text: "Prefered Location", value: "preferedLocation"}
                 ],
-                modalColumns: [
+                instructorModalColumns: [
+                    {text: "Forename", value: "forename"},
+                    {text: "Surname", value: "surname"},
+                    {text: "Email", value: "email"}
+                ],
+                candidateModalColumns: [
                     {text: "Candidate Number", value: "candidateNumber"},
                     {text: "Forename", value: "forename"},
                     {text: "Surname", value: "surname"},
@@ -204,10 +295,10 @@
                 pageSize: function () {
                     this.refresh();
                 },
-                modalPageSize: function () {
+                candidateModalPageSize: function () {
                     this.modalRefresh();
                 },
-                modalSearchTerm: function () {
+                candidateModalSearchTerm: function () {
                     this.modalRefresh();
                 }
             },
@@ -233,24 +324,45 @@
                             }
                         });
                 },
-                modalPageChange: function (page) {
-                    app.modalPage = page;
-                    app.modalRefresh();
+                candidateModalPageChange: function (page) {
+                    app.candidateModalPage = page;
+                    app.candidateModalRefresh();
                 },
-                modalSortByChange: function (orderBy) {
+                candidateModalSortByChange: function (orderBy) {
+                    if (orderBy === app.candidateModalOrderBy)
+                        app.candidateModalOrderByAscending = !app.candidateModalOrderByAscending;
+                    else
+                        app.candidateModalOrderBy = orderBy;
+                    app.candidateModalRefresh();
+                },
+                candidateModalRefresh: function () {
+                    axios.get("/api/v1/candidates/needassigning?page=" + app.candidateModalPage + "&pageSize=" + app.candidateModalPageSize + "&orderBy=" + app.candidateModalOrderBy + "&orderByAscending=" + app.candidateModalOrderByAscending + "&search=" + app.candidateModalSearchTerm)
+                        .then(function (response) {
+                            app.potentialCandidates = response.data.list;
+                            app.candidateModalNoOfPages = response.data.noOfPages;
+                            if (app.candidateModalNoOfPages === 0) {
+                                app.candidateModalNoOfPages = 1;
+                            }
+                        });
+                },
+                instructorModalPageChange: function (page) {
+                    app.modalPage = page;
+                    app.instructorModalRefresh();
+                },
+                instructorModalSortByChange: function (orderBy) {
                     if (orderBy === app.modalOrderBy)
                         app.modalOrderByAscending = !app.modalOrderByAscending;
                     else
                         app.modalOrderBy = orderBy;
-                    app.modalRefresh();
+                    app.instructorModalRefresh();
                 },
-                modalRefresh: function () {
-                    axios.get("/api/v1/candidates/needassigning?page=" + app.modalPage + "&pageSize=" + app.modalPageSize + "&orderBy=" + app.modalOrderBy + "&orderByAscending=" + app.modalOrderByAscending + "&search=" + app.modalSearchTerm)
+                instructorModalRefresh: function () {
+                    axios.get("/api/v1/users/instructors?page=" + app.instructorModalPage + "&pageSize=" + app.instructorModalPageSize + "&orderBy=" + app.instructorModalOrderBy + "&orderByAscending=" + app.instructorModalOrderByAscending + "&search=" + app.instructorModalSearchTerm)
                         .then(function (response) {
-                            app.potentialCandidates = response.data.list;
-                            app.modalNoOfPages = response.data.noOfPages;
-                            if (app.modalNoOfPages === 0) {
-                                app.modalNoOfPages = 1;
+                            app.potentialInstructors = response.data.list;
+                            app.instructorModalNoOfPages = response.data.noOfPages;
+                            if (app.instructorModalNoOfPages === 0) {
+                                app.instructorModalNoOfPages = 1;
                             }
                         });
                 },
@@ -270,8 +382,16 @@
                 assignCandidateToCourse: function (candidateId) {
                     axios.post("/api/v1/gscourses/" + app.id + "/candidates/" + candidateId)
                         .then(function () {
-                            $('#assign-candidate').modal('hide');
-                            app.modalRefresh();
+                            $('#assign-candidates').modal('hide');
+                            app.candidateModalRefresh();
+                            app.refresh();
+                        })
+                },
+                assignInstructorToCourse: function (instructorId) {
+                    axios.post("/api/v1/gscourses/" + app.id + "/instructor/" + instructorId)
+                        .then(function () {
+                            $('#assign-instructor').modal('hide');
+                            app.instructorModalRefresh();
                             app.refresh();
                         })
                 }
@@ -279,7 +399,8 @@
         });
         app.created();
         app.refresh();
-        app.modalRefresh();
+        app.candidateModalRefresh();
+        app.instructorModalRefresh();
     </script>
 </#macro>
 

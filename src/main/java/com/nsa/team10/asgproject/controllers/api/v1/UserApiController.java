@@ -43,6 +43,15 @@ public class UserApiController
     }
 
     @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/instructors")
+    public ResponseEntity<PaginatedList<UserDao>> findAllInstructors(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
+    {
+        var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerm);
+        var list = userService.findAllInstructors(pageRequest);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/{id:[0-9]+}")
     public ResponseEntity<UserDao> findById(@PathVariable long id)
     {

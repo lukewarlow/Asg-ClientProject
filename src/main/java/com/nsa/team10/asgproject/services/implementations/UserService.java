@@ -35,6 +35,12 @@ public class UserService implements IUserService
     }
 
     @Override
+    public PaginatedList<UserDao> findAllInstructors(FilteredPageRequest pageRequest)
+    {
+        return userRepository.findAllInstructors(pageRequest);
+    }
+
+    @Override
     public Optional<UserDao> findById(long userId)
     {
         return userRepository.findById(userId);

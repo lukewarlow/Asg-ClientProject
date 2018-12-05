@@ -247,27 +247,30 @@
 
     <script>
         $('.card').css('display', 'block');
+        var account = {};
         axios.get("/api/v1/account/loggedinuser")
             .then(function (response) {
-                var account = response.data;
+                this.account = response.data;
                 $("." + account.role.toLowerCase()).css('display', 'block');
                 $(".account-name").text(account.forename + " " + account.surname);
                 $(".account-email").text(account.email);
             });
-        axios.get("/api/v1/account/loggedincandidate")
-            .then(function (response) {
-                var candidate = response.data;
-                for (var i = 0; i < 10; i++) {
-                    if (i !== candidate.stage.id) {
-                        $(".stage-" + i).css('display', 'none');
+        if (account.role === "Candidate") {
+            axios.get("/api/v1/account/loggedincandidate")
+                .then(function (response) {
+                    var candidate = response.data;
+                    for (var i = 0; i < 10; i++) {
+                        if (i !== candidate.stage.id) {
+                            $(".stage-" + i).css('display', 'none');
+                        }
                     }
-                }
-            })
-            .catch(function (reason) {
-                if (reason.response.status === 417) {
-                    console.log("test");
-                }
-            });
+                })
+                .catch(function (reason) {
+                    if (reason.response.status === 417) {
+                        console.log("test");
+                    }
+                });
+        }
     </script>
 
     <!-- Main JS-->

@@ -150,6 +150,32 @@ public class UserRepository implements IUserRepository
         return new PaginatedList<>(users, count, pageRequest);
     }
 
+    @Override
+    public PaginatedList<UserDao> findAllInstructors(FilteredPageRequest pageRequest)
+    {
+        List<UserDao> users;
+        long count;
+        var sql = "SELECT u.id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at,\n" +
+                "u.updated_at\n" +
+                "FROM enabled_user u\n" +
+                "WHERE u.role = 2 AND u.forename LIKE ?\n" +
+                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "LIMIT ?\n" +
+                "OFFSET ?;";
+        var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
+        users = jdbcTemplate.query(sql, params, userMapper);
+        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM enabled_user WHERE role = 2 AND forename LIKE ?;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
+        return new PaginatedList<>(users, count, pageRequest);
+    }
+
     public Optional<UserWithPasswordDao> findWithPasswordByEmail(String email)
     {
         var sql = "SELECT u.id,\n" +
