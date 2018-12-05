@@ -1,20 +1,26 @@
 package com.nsa.team10.asgproject.services.implementations;
 
-import com.nsa.team10.asgproject.FilteredPageRequest;
-import com.nsa.team10.asgproject.PaginatedList;
-import com.nsa.team10.asgproject.repositories.daos.CountDao;
-import com.nsa.team10.asgproject.repositories.daos.DroneDao;
-import com.nsa.team10.asgproject.repositories.implementations.MetricsRepository;
-import com.nsa.team10.asgproject.repositories.interfaces.IDroneRepository;
+import com.nsa.team10.asgproject.repositories.daos.StageMetricsDao;
 import com.nsa.team10.asgproject.repositories.interfaces.IMetricsRepository;
+import com.nsa.team10.asgproject.services.interfaces.IMetricsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class MetricsService {
-    private IMetricsRepository metricsRepository;
+@Service
+public class MetricsService implements IMetricsService
+{
+    private final IMetricsRepository metricsRepository;
 
-    public List<CountDao> countStages()
+    @Autowired
+    public MetricsService(IMetricsRepository metricsRepository)
     {
-        return metricsRepository.countStages();
+        this.metricsRepository = metricsRepository;
+    }
+
+    public List<StageMetricsDao> findStageMetrics()
+    {
+        return metricsRepository.findStageMetrics();
     }
 }
