@@ -12,6 +12,7 @@ public interface ICandidateService
     void create(NewCandidateDto newCandidate);
 
     PaginatedList<CandidateDao> findAll(FilteredPageRequest pageRequest);
+    PaginatedList<CandidateDao> findAllNeedAssigning(FilteredPageRequest pageRequest);
 
     Optional<CandidateDao> findById(long candidateId);
 }

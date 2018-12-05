@@ -2,6 +2,7 @@ package com.nsa.team10.asgproject.controllers.api.v1;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
+import com.nsa.team10.asgproject.repositories.daos.CandidateDao;
 import com.nsa.team10.asgproject.repositories.daos.GSCourseDao;
 import com.nsa.team10.asgproject.repositories.daos.GSCourseLocationDao;
 import com.nsa.team10.asgproject.repositories.daos.GSCourseTypeDao;
@@ -34,12 +35,37 @@ public class GSCourseApiController
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    @PostMapping("/{courseId:[0-9]+}/candidates/{candidateId:[0-9]+}")
+    public ResponseEntity assignCandidateToCourse(@PathVariable long courseId, @PathVariable long candidateId)
+    {
+        gsCourseService.assignCandidateToCourse(courseId, candidateId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     @GetMapping("")
     public ResponseEntity<PaginatedList<GSCourseDao>> findAll(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
         var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerm);
         var courses = gsCourseService.findAll(pageRequest);
         return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id:[0-9]+}")
+    public ResponseEntity<GSCourseDao> findById(@PathVariable long id)
+    {
+        var course = gsCourseService.findById(id);
+        if (course.isPresent())
+            return new ResponseEntity<>(course.get(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/{id:[0-9]+}/candidates")
+    public ResponseEntity<PaginatedList<CandidateDao>> findAssignedCandidates(@PathVariable long id, @RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending)
+    {
+        var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, "");
+        var candidates = gsCourseService.findAssignedCandidates(id, pageRequest);
+        return new ResponseEntity<>(candidates, HttpStatus.OK);
     }
 
     @GetMapping("/types")

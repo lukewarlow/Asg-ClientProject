@@ -39,7 +39,15 @@ public class CandidateApiController
         return new ResponseEntity<>(candidates, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/needassigning")
+    public ResponseEntity<PaginatedList<CandidateDao>> findAllNeedAssigning(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
+    {
+        var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerm);
+        var candidates = candidateService.findAllNeedAssigning(pageRequest);
+        return new ResponseEntity<>(candidates, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id:[0-9]+}")
     public ResponseEntity<CandidateDao> findById(@PathVariable long id)
     {
         var candidate = candidateService.findById(id);

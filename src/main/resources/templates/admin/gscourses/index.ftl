@@ -27,7 +27,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="course in courses" style="cursor: pointer;">
+                        <tr v-for="course in courses"  @click="goToPage(course.id)" style="cursor: pointer;">
                             <td>{{ course.courseNumber }}</td>
                             <td>{{ course.startDate }}</td>
                             <td>{{ course.endDate }}</td>
@@ -189,6 +189,9 @@
                             app.newCourse = {};
                             app.refresh();
                         })
+                },
+                goToPage: function (id) {
+                    window.location.href = "/admin/courses/" + id;
                 }
             }
         });

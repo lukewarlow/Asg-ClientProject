@@ -42,6 +42,12 @@ public class CandidateService implements ICandidateService
     }
 
     @Override
+    public PaginatedList<CandidateDao> findAllNeedAssigning(FilteredPageRequest pageRequest)
+    {
+        return candidateRepository.findAllNeedAssigning(pageRequest);
+    }
+
+    @Override
     public Optional<CandidateDao> findById(long candidateId)
     {
         return candidateRepository.findById(candidateId);

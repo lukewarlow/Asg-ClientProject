@@ -13,4 +13,7 @@ public interface ICandidateRepository
     PaginatedList<CandidateDao> findAll(FilteredPageRequest pageRequest);
 
     Optional<CandidateDao> findById(long candidateId);
+
+    PaginatedList<CandidateDao> findAllAssignedToCourse(long gsCourseId, FilteredPageRequest pageRequest);
+    PaginatedList<CandidateDao> findAllNeedAssigning(FilteredPageRequest pageRequest);
 }
