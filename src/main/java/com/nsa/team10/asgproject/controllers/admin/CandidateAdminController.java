@@ -13,4 +13,10 @@ public class CandidateAdminController
     {
         return "/admin/candidates/index";
     }
+
+    @GetMapping("/{id}")
+    public String findById()
+    {
+        return "/admin/candidates/manage";
+    }
 }

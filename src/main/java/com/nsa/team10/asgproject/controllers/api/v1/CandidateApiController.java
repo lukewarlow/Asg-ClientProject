@@ -36,7 +36,16 @@ public class CandidateApiController
     {
         var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerm);
         var candidates = candidateService.findAll(pageRequest);
-        System.out.println(candidates.getList().get(0).isPayed());
         return new ResponseEntity<>(candidates, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CandidateDao> findById(@PathVariable long id)
+    {
+        var candidate = candidateService.findById(id);
+        if (candidate.isPresent())
+            return new ResponseEntity<>(candidate.get(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

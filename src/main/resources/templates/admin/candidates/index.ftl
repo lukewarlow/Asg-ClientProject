@@ -27,7 +27,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="candidate in candidates" style="cursor: pointer;">
+                        <tr v-for="candidate in candidates" @click="goToProfile(candidate.id)" style="cursor: pointer;">
                             <td>{{ candidate.candidateNumber }}</td>
                             <td>{{ candidate.user.forename }}</td>
                             <td>{{ candidate.user.surname }}</td>
@@ -125,6 +125,9 @@
                                 app.noOfPages = 1;
                             }
                         });
+                },
+                goToProfile: function (id) {
+                    window.location.href = "/admin/candidates/" + id;
                 }
             }
         });

@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class CandidateRepository implements ICandidateRepository
@@ -193,5 +194,48 @@ public class CandidateRepository implements ICandidateRepository
         candidates = jdbcTemplate.query(sql, params, candidateMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id WHERE c.candidate_number LIKE ?;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(candidates, count, pageRequest);
+    }
+
+    @Override
+    public Optional<CandidateDao> findById(long candidateId)
+    {
+        var sql = "SELECT ca.id,\n" +
+                "ca.candidate_number,\n" +
+                "ca.user_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at AS user_created_at,\n" +
+                "u.updated_at AS user_updated_at,\n" +
+                "ca.prefered_location,\n" +
+                "l.location,\n" +
+                "ca.dob,\n" +
+                "ca.address_id,\n" +
+                "a.line_one,\n" +
+                "a.line_two,\n" +
+                "a.city,\n" +
+                "a.county,\n" +
+                "a.postcode,\n" +
+                "ca.company_id,\n" +
+                "c.name,\n" +
+                "c.phone_number AS company_phone,\n" +
+                "c.email AS company_email,\n" +
+                "ca.flying_experience,\n" +
+                "ca.drone_id,\n" +
+                "d.manufacturer,\n" +
+                "d.model,\n" +
+                "ca.has_payed\n" +
+                "FROM candidate ca\n" +
+                "   JOIN enabled_user u ON u.id = ca.user_id\n" +
+                "   JOIN course_location l ON l.id = ca.prefered_location\n" +
+                "   JOIN address a ON a.id = ca.address_id\n" +
+                "   LEFT JOIN company c ON c.id = ca.company_id\n" +
+                "   JOIN drone d ON d.id = ca.drone_id\n" +
+                "WHERE ca.id = ?;";
+        return jdbcTemplate.query(sql, new Object[] {candidateId}, candidateMapper).stream().findFirst();
     }
 }

@@ -41,6 +41,12 @@ public class CandidateService implements ICandidateService
         return candidateRepository.findAll(pageRequest);
     }
 
+    @Override
+    public Optional<CandidateDao> findById(long candidateId)
+    {
+        return candidateRepository.findById(candidateId);
+    }
+
     private Optional<DefaultUserDetails> getCurrentUserDetails()
     {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
