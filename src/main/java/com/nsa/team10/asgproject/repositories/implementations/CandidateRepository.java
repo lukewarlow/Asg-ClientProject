@@ -412,7 +412,7 @@ public class CandidateRepository implements ICandidateRepository
     public boolean setHasPayed(long userId, boolean hasPayed)
     {
         var sql = "UPDATE candidate SET has_payed = ?, stage_id = ? WHERE user_id = ?;";
-        var rowsAffected = jdbcTemplate.update(sql, hasPayed, hasPayed ? CandidateProcessStage.AWAITING_GS_ASSIGNMENT : CandidateProcessStage.MAKE_PAYMENT, userId);
+        var rowsAffected = jdbcTemplate.update(sql, hasPayed, hasPayed ? CandidateProcessStage.AWAITING_GS_ASSIGNMENT.getStageId() : CandidateProcessStage.MAKE_PAYMENT.getStageId(), userId);
         return rowsAffected == 1;
     }
 }
