@@ -10,13 +10,12 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-body">
-                    <div class="card-header">
-                        Dashboard
-                    </div>
-                    <div class="card-body">
-                        <button class="btn btn-primary candidate" id="make-payment">Make Payment</button>
-                    </div>
+                <div class="card-header">
+                    Dashboard
+                </div>
+                <div class="card-body card-block">
+                    <button class="btn btn-primary candidate stage-1" id="make-payment">Make Payment</button>
+                    <h2 class="candidate stage-2">An admin will assign you to a ground school course soon.</h2>
                 </div>
             </div>
         </div>
@@ -30,7 +29,7 @@
                     .then(function () {
                         $('#make-payment').css('display', 'block');
                     });
-        })
+        });
     </script>
 </#macro>
 

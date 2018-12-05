@@ -2,9 +2,7 @@ package com.nsa.team10.asgproject.repositories.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
-import com.nsa.team10.asgproject.repositories.daos.GSCourseDao;
-import com.nsa.team10.asgproject.repositories.daos.GSCourseLocationDao;
-import com.nsa.team10.asgproject.repositories.daos.GSCourseTypeDao;
+import com.nsa.team10.asgproject.repositories.daos.*;
 import com.nsa.team10.asgproject.repositories.interfaces.IGSRepository;
 import com.nsa.team10.asgproject.services.dtos.NewGSCourseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class GSCourseRepository implements IGSRepository
@@ -132,6 +131,24 @@ public class GSCourseRepository implements IGSRepository
     }
 
     @Override
+    public Optional<GSCourseDao> findById(long gsCourseId)
+    {
+        var sql = "SELECT c.id,\n" +
+                "c.course_number,\n" +
+                "c.start_date,\n" +
+                "c.end_date,\n" +
+                "c.type_id,\n" +
+                "ct.type,\n" +
+                "c.location_id,\n" +
+                "cl.location\n" +
+                "FROM ground_school_course c\n" +
+                "   JOIN course_location cl ON cl.id = c.location_id\n" +
+                "   JOIN course_type ct ON ct.id = c.type_id\n" +
+                "WHERE c.id LIKE ?;";
+        return jdbcTemplate.query(sql, new Object[] {gsCourseId}, gsCourseMapper).stream().findFirst();
+    }
+
+    @Override
     public PaginatedList<GSCourseTypeDao> findAllTypes(FilteredPageRequest pageRequest)
     {
         List<GSCourseTypeDao> types;
@@ -140,7 +157,7 @@ public class GSCourseRepository implements IGSRepository
                 "ct.type\n" +
                 "FROM course_type ct\n" +
                 "WHERE ct.type LIKE ?\n" +
-                "ORDER BY " + locationOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY " + typeOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
@@ -179,5 +196,17 @@ public class GSCourseRepository implements IGSRepository
     {
         var sql = "SELECT cl.id, cl.location FROM course_location cl;";
         return jdbcTemplate.query(sql, locationMapper);
+    }
+
+    @Override
+    public void assignCandidateToCourse(long gsCourseId, long candidateId)
+    {
+        var gsAttemptSql = "INSERT INTO ground_school_attempt(ground_school_id, candidate_id) VALUES (?, ?);";
+
+        jdbcTemplate.update(gsAttemptSql, gsCourseId, candidateId);
+
+        var stageSql = "UPDATE candidate SET stage_id = ? WHERE id = ?;";
+
+        jdbcTemplate.update(stageSql, CandidateProcessStage.AWAITING_GS_RESULT.getStageId(), candidateId);
     }
 }

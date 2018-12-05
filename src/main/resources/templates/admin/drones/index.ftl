@@ -25,7 +25,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="drone in drones" style="cursor: pointer;">
+                        <tr v-for="drone in drones">
                             <td>{{ drone.manufacturer }}</td>
                             <td>{{ drone.model }}</td>
                         </tr>

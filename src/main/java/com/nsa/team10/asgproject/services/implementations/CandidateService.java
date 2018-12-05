@@ -48,6 +48,23 @@ public class CandidateService implements ICandidateService
     }
 
     @Override
+    public Optional<CandidateDao> findByEmail(String email)
+    {
+        return candidateRepository.findByEmail(email);
+    }
+
+    public PaginatedList<CandidateDao> findAllNeedAssigning(FilteredPageRequest pageRequest)
+    {
+        return candidateRepository.findAllNeedAssigning(pageRequest);
+    }
+
+    @Override
+    public Optional<CandidateDao> findById(long candidateId)
+    {
+        return candidateRepository.findById(candidateId);
+    }
+
+    @Override
     @PreAuthorize("hasAuthority('Candidate')")
     public void sendReceipt(boolean hasPayed)
     {

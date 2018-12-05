@@ -8,9 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/candidates")
 public class CandidateAdminController
 {
-    @GetMapping("")
+    @GetMapping()
     public String findAll()
     {
         return "/admin/candidates/index";
+    }
+
+    @GetMapping("/{id:[0-9]+}")
+    public String findById()
+    {
+        return "/admin/candidates/manage";
     }
 }

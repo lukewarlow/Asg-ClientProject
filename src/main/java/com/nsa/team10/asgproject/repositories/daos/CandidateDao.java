@@ -12,8 +12,9 @@ public class CandidateDao
     private String flyingExperience;
     private DroneDao drone;
     private Boolean hasPayed;
+    private CandidateProcessStageDao stage;
 
-    public CandidateDao(long id, String candidateNumber, UserDao userDao, GSCourseLocationDao preferedLocation, String dob, AddressDao address, CompanyDao company, String flyingExperience, DroneDao drone, boolean hasPayed)
+    public CandidateDao(long id, String candidateNumber, UserDao userDao, GSCourseLocationDao preferedLocation, String dob, AddressDao address, CompanyDao company, String flyingExperience, DroneDao drone, boolean hasPayed, CandidateProcessStageDao stage)
     {
         this.id = id;
         this.candidateNumber = candidateNumber;
@@ -25,6 +26,7 @@ public class CandidateDao
         this.flyingExperience = flyingExperience;
         this.drone = drone;
         this.hasPayed = hasPayed;
+        this.stage = stage;
     }
 
     public CandidateDao(String candidateNumber, UserDao userDao, GSCourseLocationDao preferedLocation, String dob, AddressDao address, CompanyDao company, String flyingExperience, DroneDao drone)
@@ -87,5 +89,10 @@ public class CandidateDao
     public boolean isPayed()
     {
         return hasPayed;
+    }
+
+    public CandidateProcessStageDao getStage()
+    {
+        return stage;
     }
 }

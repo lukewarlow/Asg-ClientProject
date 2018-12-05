@@ -55,6 +55,10 @@
         .guest, .candidate, .instructor, .admin, .card {
             display: none;
         }
+
+        [class^=”stage-”] {
+            display: none !important;
+        }
     </style>
 
     <@style></@style>
@@ -92,16 +96,16 @@
                             <i class="fas fa-table"></i>Admin</a>
                         <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                             <li>
-                                <a href="/admin/users">Manage Users</a>
+                                <a href="/admin/users">Users</a>
                             </li>
                             <li>
-                                <a href="/admin/candidates">Manage Candidates</a>
+                                <a href="/admin/candidates">Candidates</a>
                             </li>
                             <li>
-                                <a href="/admin/courses">Manage Courses</a>
+                                <a href="/admin/courses">Ground School Courses</a>
                             </li>
                             <li>
-                                <a href="/admin/drones">Manage Drones</a>
+                                <a href="/admin/drones">Drones</a>
                             </li>
                         </ul>
                     </li>
@@ -133,16 +137,16 @@
                             <i class="fas fa-table"></i>Admin</a>
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
-                                <a href="/admin/users">Manage Users</a>
+                                <a href="/admin/users">Users</a>
                             </li>
                             <li>
-                                <a href="/admin/candidates">Manage Candidates</a>
+                                <a href="/admin/candidates">Candidates</a>
                             </li>
                             <li>
-                                <a href="/admin/courses">Manage Courses</a>
+                                <a href="/admin/courses">Ground School Courses</a>
                             </li>
                             <li>
-                                <a href="/admin/drones">Manage Drones</a>
+                                <a href="/admin/drones">Drones</a>
                             </li>
                         </ul>
                     </li>
@@ -238,17 +242,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 
+
+    <@scripts></@scripts>
+
     <script>
         $('.card').css('display', 'block');
-        axios.get("/api/v1/account/loggedin")
+        axios.get("/api/v1/account/loggedinuser")
             .then(function (response) {
                 var account = response.data;
                 $("." + account.role.toLowerCase()).css('display', 'block');
                 $(".account-name").text(account.forename + " " + account.surname);
                 $(".account-email").text(account.email);
             });
+        axios.get("/api/v1/account/loggedincandidate")
+            .then(function (response) {
+                var candidate = response.data;
+                for (var i = 0; i < 10; i++) {
+                    if (i !== candidate.stage.id) {
+                        $(".stage-" + i).css('display', 'none');
+                    }
+                }
+            })
+            .catch(function (reason) {
+                if (reason.response.status === 417) {
+                    console.log("test");
+                }
+            });
     </script>
-    <@scripts></@scripts>
 
     <!-- Main JS-->
     <script src="/js/main.js"></script>

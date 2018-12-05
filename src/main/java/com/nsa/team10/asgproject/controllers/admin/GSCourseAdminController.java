@@ -13,4 +13,10 @@ public class GSCourseAdminController
     {
         return "/admin/gscourses/index";
     }
+
+    @GetMapping("/{id:[0-9]+}")
+    public String manageGSCourse()
+    {
+        return "/admin/gscourses/manage";
+    }
 }

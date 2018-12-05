@@ -14,7 +14,7 @@
                             <th scope="col">
                                 <input v-model="searchTerm" class="form-control" type="search" placeholder="Search candidate number...">
                             </th>
-                            <th colspan="4"></th>
+                            <th colspan="5"></th>
                         </tr>
                         <tr>
                             <th scope="col" v-for="column in columns" @click="sortByChange(column.value)" style="cursor: pointer;">
@@ -27,7 +27,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="candidate in candidates" style="cursor: pointer;">
+                        <tr v-for="candidate in candidates" @click="goToProfile(candidate.id)" style="cursor: pointer;">
                             <td>{{ candidate.candidateNumber }}</td>
                             <td>{{ candidate.user.forename }}</td>
                             <td>{{ candidate.user.surname }}</td>
@@ -36,9 +36,10 @@
                                 <i v-if="candidate.payed" class="material-icons">check</i>
                                 <i v-else class="material-icons">close</i>
                             </td>
+                            <td>{{ candidate.stage.stage }}</td>
                         </tr>
                         <tr v-if="candidates.length == 0">
-                            <td colspan="5">No results</td>
+                            <td colspan="6">No results</td>
                         </tr>
                         </tbody>
                     </table>
@@ -93,7 +94,8 @@
                     {text: "Forename", value: "forename"},
                     {text: "Surname", value: "surname"},
                     {text: "Email", value: "email"},
-                    {text: "Has Payed", value: "hasPayed"}
+                    {text: "Has Payed", value: "hasPayed"},
+                    {text: "Stage", value: "stage"}
                 ]
             },
             watch: {
@@ -125,6 +127,9 @@
                                 app.noOfPages = 1;
                             }
                         });
+                },
+                goToProfile: function (id) {
+                    window.location.href = "/admin/candidates/" + id;
                 }
             }
         });

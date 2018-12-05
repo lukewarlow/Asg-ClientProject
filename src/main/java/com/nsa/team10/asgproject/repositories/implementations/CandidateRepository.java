@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class CandidateRepository implements ICandidateRepository
@@ -32,6 +33,7 @@ public class CandidateRepository implements ICandidateRepository
             put("surname", "surname");
             put("email", "email");
             put("hasPayed", "has_payed");
+            put("stage", "stage_id");
         }
 
         /**
@@ -93,9 +95,12 @@ public class CandidateRepository implements ICandidateRepository
                             rs.getString("manufacturer"),
                             rs.getString("model")
                     ),
-                    rs.getBoolean("has_payed")
+                    rs.getBoolean("has_payed"),
+                    new CandidateProcessStageDao(
+                            rs.getLong("stage_id"),
+                            rs.getString("stage")
+                    )
             );
-
         };
     }
 
@@ -139,6 +144,10 @@ public class CandidateRepository implements ICandidateRepository
 
         jdbcTemplate.update(candidateSql, userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), newCandidate.getPreferedLocation(), false);
 
+        var stageSql = "UPDATE candidate SET stage_id = ? WHERE user_id = ?";
+
+        jdbcTemplate.update(stageSql, CandidateProcessStage.MAKE_PAYMENT.getStageId(), userId);
+
         var userSql = "UPDATE user SET ROLE = ? WHERE id = ?;";
 
         jdbcTemplate.update(userSql, UserDao.Role.Candidate.ordinal(), userId);
@@ -178,13 +187,16 @@ public class CandidateRepository implements ICandidateRepository
                 "ca.drone_id,\n" +
                 "d.manufacturer,\n" +
                 "d.model,\n" +
-                "ca.has_payed\n" +
+                "ca.has_payed,\n" +
+                "ca.stage_id,\n" +
+                "s.stage\n" +
                 "FROM candidate ca\n" +
                 "   JOIN enabled_user u ON u.id = ca.user_id\n" +
                 "   JOIN course_location l ON l.id = ca.prefered_location\n" +
                 "   JOIN address a ON a.id = ca.address_id\n" +
                 "   LEFT JOIN company c ON c.id = ca.company_id\n" +
                 "   JOIN drone d ON d.id = ca.drone_id\n" +
+                "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "WHERE ca.candidate_number LIKE ?\n" +
                 "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
                 "LIMIT ?\n" +
@@ -195,11 +207,212 @@ public class CandidateRepository implements ICandidateRepository
         return new PaginatedList<>(candidates, count, pageRequest);
     }
 
+
+
+    @Override
+    public PaginatedList<CandidateDao> findAllAssignedToCourse(long gsCourseId, FilteredPageRequest pageRequest)
+    {
+        List<CandidateDao> candidates;
+        long count;
+        var sql = "SELECT ca.id,\n" +
+                "ca.candidate_number,\n" +
+                "ca.user_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at AS user_created_at,\n" +
+                "u.updated_at AS user_updated_at,\n" +
+                "ca.prefered_location,\n" +
+                "l.location,\n" +
+                "ca.dob,\n" +
+                "ca.address_id,\n" +
+                "a.line_one,\n" +
+                "a.line_two,\n" +
+                "a.city,\n" +
+                "a.county,\n" +
+                "a.postcode,\n" +
+                "ca.company_id,\n" +
+                "c.name,\n" +
+                "c.phone_number AS company_phone,\n" +
+                "c.email AS company_email,\n" +
+                "ca.flying_experience,\n" +
+                "ca.drone_id,\n" +
+                "d.manufacturer,\n" +
+                "d.model,\n" +
+                "ca.has_payed,\n" +
+                "ca.stage_id,\n" +
+                "s.stage\n" +
+                "FROM candidate ca\n" +
+                "   JOIN enabled_user u ON u.id = ca.user_id\n" +
+                "   JOIN course_location l ON l.id = ca.prefered_location\n" +
+                "   JOIN address a ON a.id = ca.address_id\n" +
+                "   LEFT JOIN company c ON c.id = ca.company_id\n" +
+                "   JOIN drone d ON d.id = ca.drone_id\n" +
+                "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
+                "   JOIN ground_school_attempt gsa ON gsa.candidate_id = ca.id AND gsa.ground_school_id = ?\n" +
+                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "LIMIT ?\n" +
+                "OFFSET ?;";
+        var params = new Object[]{gsCourseId, pageRequest.getPageSize(), pageRequest.getOffset()};
+        candidates = jdbcTemplate.query(sql, params, candidateMapper);
+        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id JOIN ground_school_attempt gsa on gsa.candidate_id = c.id AND gsa.ground_school_id = ?;", new Object[]{gsCourseId}, Long.class);
+        return new PaginatedList<>(candidates, count, pageRequest);
+    }
+
+    @Override
+    public PaginatedList<CandidateDao> findAllNeedAssigning(FilteredPageRequest pageRequest)
+    {
+        List<CandidateDao> candidates;
+        long count;
+        var sql = "SELECT ca.id,\n" +
+                "ca.candidate_number,\n" +
+                "ca.user_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at AS user_created_at,\n" +
+                "u.updated_at AS user_updated_at,\n" +
+                "ca.prefered_location,\n" +
+                "l.location,\n" +
+                "ca.dob,\n" +
+                "ca.address_id,\n" +
+                "a.line_one,\n" +
+                "a.line_two,\n" +
+                "a.city,\n" +
+                "a.county,\n" +
+                "a.postcode,\n" +
+                "ca.company_id,\n" +
+                "c.name,\n" +
+                "c.phone_number AS company_phone,\n" +
+                "c.email AS company_email,\n" +
+                "ca.flying_experience,\n" +
+                "ca.drone_id,\n" +
+                "d.manufacturer,\n" +
+                "d.model,\n" +
+                "ca.has_payed,\n" +
+                "ca.stage_id,\n" +
+                "s.stage\n" +
+                "FROM candidate ca\n" +
+                "   JOIN enabled_user u ON u.id = ca.user_id\n" +
+                "   JOIN course_location l ON l.id = ca.prefered_location\n" +
+                "   JOIN address a ON a.id = ca.address_id\n" +
+                "   LEFT JOIN company c ON c.id = ca.company_id\n" +
+                "   JOIN drone d ON d.id = ca.drone_id\n" +
+                "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
+                "WHERE ca.stage_id = ? AND ca.candidate_number LIKE ?\n" +
+                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "LIMIT ?\n" +
+                "OFFSET ?;";
+        var params = new Object[]{CandidateProcessStage.AWAITING_GS_ASSIGNMENT.getStageId(), pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
+        candidates = jdbcTemplate.query(sql, params, candidateMapper);
+        count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id WHERE c.stage_id = ? AND c.candidate_number LIKE ?;", new Object[]{CandidateProcessStage.AWAITING_GS_ASSIGNMENT.getStageId(), pageRequest.getSearchTermSql()}, Long.class);
+        return new PaginatedList<>(candidates, count, pageRequest);
+    }
+
+    public Optional<CandidateDao> findById(long candidateId)
+    {
+        var sql = "SELECT ca.id,\n" +
+                "ca.candidate_number,\n" +
+                "ca.user_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at AS user_created_at,\n" +
+                "u.updated_at AS user_updated_at,\n" +
+                "ca.prefered_location,\n" +
+                "l.location,\n" +
+                "ca.dob,\n" +
+                "ca.address_id,\n" +
+                "a.line_one,\n" +
+                "a.line_two,\n" +
+                "a.city,\n" +
+                "a.county,\n" +
+                "a.postcode,\n" +
+                "ca.company_id,\n" +
+                "c.name,\n" +
+                "c.phone_number AS company_phone,\n" +
+                "c.email AS company_email,\n" +
+                "ca.flying_experience,\n" +
+                "ca.drone_id,\n" +
+                "d.manufacturer,\n" +
+                "d.model,\n" +
+                "ca.has_payed,\n" +
+                "ca.stage_id,\n" +
+                "s.stage\n" +
+                "FROM candidate ca\n" +
+                "   JOIN enabled_user u ON u.id = ca.user_id\n" +
+                "   JOIN course_location l ON l.id = ca.prefered_location\n" +
+                "   JOIN address a ON a.id = ca.address_id\n" +
+                "   LEFT JOIN company c ON c.id = ca.company_id\n" +
+                "   JOIN drone d ON d.id = ca.drone_id\n" +
+                "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
+                "WHERE ca.id = ?;";
+        return jdbcTemplate.query(sql, new Object[] {candidateId}, candidateMapper).stream().findFirst();
+    }
+
+    @Override
+    public Optional<CandidateDao> findByEmail(String email)
+    {
+        var sql = "SELECT ca.id,\n" +
+                "ca.candidate_number,\n" +
+                "ca.user_id,\n" +
+                "u.forename,\n" +
+                "u.surname,\n" +
+                "u.email,\n" +
+                "u.phone_number,\n" +
+                "u.role,\n" +
+                "u.activated,\n" +
+                "u.disabled,\n" +
+                "u.created_at AS user_created_at,\n" +
+                "u.updated_at AS user_updated_at,\n" +
+                "ca.prefered_location,\n" +
+                "l.location,\n" +
+                "ca.dob,\n" +
+                "ca.address_id,\n" +
+                "a.line_one,\n" +
+                "a.line_two,\n" +
+                "a.city,\n" +
+                "a.county,\n" +
+                "a.postcode,\n" +
+                "ca.company_id,\n" +
+                "c.name,\n" +
+                "c.phone_number AS company_phone,\n" +
+                "c.email AS company_email,\n" +
+                "ca.flying_experience,\n" +
+                "ca.drone_id,\n" +
+                "d.manufacturer,\n" +
+                "d.model,\n" +
+                "ca.has_payed,\n" +
+                "ca.stage_id,\n" +
+                "s.stage\n" +
+                "FROM candidate ca\n" +
+                "   JOIN enabled_user u ON u.id = ca.user_id\n" +
+                "   JOIN course_location l ON l.id = ca.prefered_location\n" +
+                "   JOIN address a ON a.id = ca.address_id\n" +
+                "   LEFT JOIN company c ON c.id = ca.company_id\n" +
+                "   JOIN drone d ON d.id = ca.drone_id\n" +
+                "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
+                "WHERE u.email = ?;";
+        return jdbcTemplate.query(sql, new Object[] {email}, candidateMapper).stream().findFirst();
+    }
+
     @Override
     public boolean setHasPayed(long userId, boolean hasPayed)
     {
-        var sql = "UPDATE candidate SET has_payed = ? WHERE user_id = ?;";
-        var rowsAffected = jdbcTemplate.update(sql, hasPayed, userId);
+        var sql = "UPDATE candidate SET has_payed = ?, stage_id = ? WHERE user_id = ?;";
+        var rowsAffected = jdbcTemplate.update(sql, hasPayed, hasPayed ? CandidateProcessStage.AWAITING_GS_ASSIGNMENT : CandidateProcessStage.MAKE_PAYMENT, userId);
         return rowsAffected == 1;
     }
 }
