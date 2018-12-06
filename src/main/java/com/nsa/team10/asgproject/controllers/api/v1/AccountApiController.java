@@ -1,21 +1,18 @@
 package com.nsa.team10.asgproject.controllers.api.v1;
 
-import com.nsa.team10.asgproject.config.DefaultUserDetails;
 import com.nsa.team10.asgproject.repositories.daos.CandidateDao;
 import com.nsa.team10.asgproject.repositories.daos.UserDao;
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
+import com.nsa.team10.asgproject.services.implementations.AccountService;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
 import com.nsa.team10.asgproject.services.interfaces.ICandidateService;
 import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -48,7 +45,7 @@ public class AccountApiController
     @GetMapping("/loggedinuser")
     public ResponseEntity<UserDao> getLoggedInUser()
     {
-        var userDetails = getCurrentUserDetails();
+        var userDetails = AccountService.getCurrentUserDetails();
 
         if (userDetails.isPresent())
         {
@@ -63,7 +60,7 @@ public class AccountApiController
     @GetMapping("/loggedincandidate")
     public ResponseEntity<CandidateDao> getLoggedInCandidate()
     {
-        var userDetails = getCurrentUserDetails();
+        var userDetails = AccountService.getCurrentUserDetails();
 
         if (userDetails.isPresent())
         {
@@ -73,13 +70,5 @@ public class AccountApiController
         }
 
         return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
-    }
-
-    private Optional<DefaultUserDetails> getCurrentUserDetails()
-    {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken))
-            return Optional.of((DefaultUserDetails) authentication.getPrincipal());
-        else return Optional.empty();
     }
 }

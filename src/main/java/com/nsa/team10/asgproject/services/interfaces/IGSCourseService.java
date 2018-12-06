@@ -19,7 +19,6 @@ public interface IGSCourseService
     void assignInstructorToCourse(long gsCourseId, long instructorId);
 
     PaginatedList<GSCourseDao> findAll(FilteredPageRequest pageRequest);
-    PaginatedList<GSCourseDao> findAllForInstructor(long instructorId, FilteredPageRequest pageRequest);
     Optional<GSCourseDao> findById(long gsCourseId);
     PaginatedList<CandidateDao> findAssignedCandidates(long gsCourseId, FilteredPageRequest pageRequest);
     PaginatedList<GSCourseTypeDao> findAllTypes(FilteredPageRequest pageRequest);

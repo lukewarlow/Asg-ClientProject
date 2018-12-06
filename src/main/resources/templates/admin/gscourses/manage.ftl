@@ -296,10 +296,16 @@
                     this.refresh();
                 },
                 candidateModalPageSize: function () {
-                    this.modalRefresh();
+                    this.candidateModalRefresh();
                 },
                 candidateModalSearchTerm: function () {
-                    this.modalRefresh();
+                    this.candidateModalRefresh();
+                }
+                instructorModalPageSize: function () {
+                    this.instructorModalRefresh();
+                },
+                instructorModalSearchTerm: function () {
+                    this.instructorModalRefresh();
                 }
             },
             methods: {

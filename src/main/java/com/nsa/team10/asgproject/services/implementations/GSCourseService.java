@@ -2,10 +2,7 @@ package com.nsa.team10.asgproject.services.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
-import com.nsa.team10.asgproject.repositories.daos.CandidateDao;
-import com.nsa.team10.asgproject.repositories.daos.GSCourseDao;
-import com.nsa.team10.asgproject.repositories.daos.GSCourseLocationDao;
-import com.nsa.team10.asgproject.repositories.daos.GSCourseTypeDao;
+import com.nsa.team10.asgproject.repositories.daos.*;
 import com.nsa.team10.asgproject.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.repositories.interfaces.IGSRepository;
 import com.nsa.team10.asgproject.services.dtos.NewGSCourseDto;
@@ -50,13 +47,11 @@ public class GSCourseService implements IGSCourseService
     @Override
     public PaginatedList<GSCourseDao> findAll(FilteredPageRequest pageRequest)
     {
-        return gsCourseRepository.findAll(pageRequest);
-    }
-
-    @Override
-    public PaginatedList<GSCourseDao> findAllForInstructor(long instructorId, FilteredPageRequest pageRequest)
-    {
-        return gsCourseRepository.findAllForInstructor(instructorId, pageRequest);
+        var user = AccountService.getCurrentUserDetails().get().getUser();
+        if (user.getRole() == UserDao.Role.Instructor)
+            return gsCourseRepository.findAllForInstructor(user.getId(), pageRequest);
+        else
+            return gsCourseRepository.findAll(pageRequest);
     }
 
     @Override

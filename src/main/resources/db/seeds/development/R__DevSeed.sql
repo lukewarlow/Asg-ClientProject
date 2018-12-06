@@ -19,8 +19,9 @@ VALUES
        (4, 'Mary', 'Horne', 'maryh@example.com', '03069990562', 1,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
        (5, 'Abbey', 'Foster', 'abbeyf@example.com', '07700900964', 1,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
        (6, 'Sally', 'Smith', 'sallys@example.com', '03069990980', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', true, true),
-       (7, 'Instructor', 'User', 'instructor@example.com', '03069990970', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
-       (8, 'Admin', 'User', 'admin@example.com', '03069990348', 3,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true);
+       (7, 'Jodie', 'Bright', 'jodieb@example.com', '02920180220', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
+       (8, 'Instructor', 'User', 'instructor@example.com', '03069990970', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
+       (9, 'Admin', 'User', 'admin@example.com', '03069990348', 3,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true);
 
 INSERT INTO address(id, line_one, line_two, city, county, postcode)
 VALUES
@@ -66,10 +67,12 @@ VALUES
        (2, 'Somerset'),
        (3, 'Aberdeen');
 
-INSERT INTO ground_school_course(start_date, end_date, type_id, location_id)
+INSERT INTO ground_school_course(id, start_date, end_date, type_id, location_id)
 VALUES
-       ('2018-12-06','2018-12-09', 1, 1),
-       ('2018-12-11','2018-12-14', 1, 2);
+       (1, '2018-12-11','2018-12-14', 1, 1);
+
+INSERT INTO ground_school_course(id, start_date, end_date, type_id, location_id, instructor_id)
+VALUES (2, '2018-12-06','2018-12-09', 1, 2, 7);
 
 INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_location, has_payed, flying_experience, stage_id)
 VALUES

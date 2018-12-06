@@ -6,9 +6,12 @@ import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
 import com.nsa.team10.asgproject.services.dtos.Mail;
 import com.nsa.team10.asgproject.services.dtos.NewUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IAccountService;
+import com.nsa.team10.asgproject.services.interfaces.IEmailService;
 import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,18 +19,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class AccountService implements IAccountService, UserDetailsService
 {
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
+    private final IEmailService emailService;
     @Value("${server.basedomain}")
     private String baseDomain;
 
     @Autowired
-    public AccountService(IUserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService)
+    public AccountService(IUserRepository userRepository, PasswordEncoder passwordEncoder, IEmailService emailService)
     {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -63,5 +67,13 @@ public class AccountService implements IAccountService, UserDetailsService
         var user = userRepository.findWithPasswordByEmail(email);
         if (!user.isPresent()) throw new UsernameNotFoundException(email);
         else return new DefaultUserDetails(user.get());
+    }
+
+    public static Optional<DefaultUserDetails> getCurrentUserDetails()
+    {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken))
+            return Optional.of((DefaultUserDetails) authentication.getPrincipal());
+        else return Optional.empty();
     }
 }

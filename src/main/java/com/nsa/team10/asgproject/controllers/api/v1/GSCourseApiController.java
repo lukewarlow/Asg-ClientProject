@@ -11,6 +11,7 @@ import com.nsa.team10.asgproject.services.interfaces.IGSCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ public class GSCourseApiController
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity create(@Valid @RequestBody NewGSCourseDto newGSCourse)
     {
         gsCourseService.create(newGSCourse);
@@ -36,6 +38,7 @@ public class GSCourseApiController
     }
 
     @PostMapping("/{courseId:[0-9]+}/candidates/{candidateId:[0-9]+}")
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity assignCandidateToCourse(@PathVariable long courseId, @PathVariable long candidateId)
     {
         gsCourseService.assignCandidateToCourse(courseId, candidateId);
@@ -43,6 +46,7 @@ public class GSCourseApiController
     }
 
     @PostMapping("/{courseId:[0-9]+}/instructor/{instructorId:[0-9]+}")
+    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity assignInstructorToCourse(@PathVariable long courseId, @PathVariable long instructorId)
     {
         gsCourseService.assignInstructorToCourse(courseId, instructorId);
@@ -50,14 +54,10 @@ public class GSCourseApiController
     }
 
     @GetMapping("")
-    public ResponseEntity<PaginatedList<GSCourseDao>> findAll(@RequestParam(value = "instructorId", required = false) Long instructorId, @RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
+    public ResponseEntity<PaginatedList<GSCourseDao>> findAll(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
         var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerm);
-        PaginatedList<GSCourseDao> courses;
-        if (instructorId == null)
-            courses = gsCourseService.findAll(pageRequest);
-        else
-            courses = gsCourseService.findAllForInstructor(instructorId, pageRequest);
+        var courses = gsCourseService.findAll(pageRequest);
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 

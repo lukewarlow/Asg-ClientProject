@@ -34,10 +34,10 @@ public class CandidateService implements ICandidateService
 
     public void create(NewCandidateDto newCandidate)
     {
-        if (!getCurrentUserDetails().isPresent())
+        if (!AccountService.getCurrentUserDetails().isPresent())
             throw new AccessDeniedException("Need to be logged in");
 
-        var userId = getCurrentUserDetails().get().getUser().getId();
+        var userId = AccountService.getCurrentUserDetails().get().getUser().getId();
         candidateRepository.create(userId, newCandidate);
     }
 
@@ -68,7 +68,7 @@ public class CandidateService implements ICandidateService
     @PreAuthorize("hasAuthority('Candidate')")
     public void sendReceipt(boolean hasPayed)
     {
-        var userDetails = getCurrentUserDetails();
+        var userDetails = AccountService.getCurrentUserDetails();
         if (userDetails.isPresent())
         {
             var mail = new Mail();
@@ -82,13 +82,5 @@ public class CandidateService implements ICandidateService
 
             candidateRepository.setHasPayed(user.getId(), true);
         }
-    }
-
-    private Optional<DefaultUserDetails> getCurrentUserDetails()
-    {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken))
-            return Optional.of((DefaultUserDetails) authentication.getPrincipal());
-        else return Optional.empty();
     }
 }

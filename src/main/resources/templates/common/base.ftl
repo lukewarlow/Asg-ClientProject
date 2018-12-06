@@ -109,6 +109,15 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="instructor has-sub">
+                        <a class="js-arrow" href="#">
+                            <i class="fas fa-table"></i>Instructor</a>
+                        <ul class="list-unstyled navbar-mobile-sub__list js-sub-list">
+                            <li>
+                                <a href="/instructor/courses">Assigned Ground School Courses</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -147,6 +156,15 @@
                             </li>
                             <li>
                                 <a href="/admin/drones">Drones</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="instructor has-sub">
+                        <a class="js-arrow" href="#">
+                            <i class="fas fa-table"></i>Instructor</a>
+                        <ul class="list-unstyled navbar__sub-list js-sub-list">
+                            <li>
+                                <a href="/instructor/courses">Assigned Ground School Courses</a>
                             </li>
                         </ul>
                     </li>
