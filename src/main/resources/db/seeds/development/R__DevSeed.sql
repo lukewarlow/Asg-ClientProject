@@ -15,14 +15,17 @@ INSERT INTO user (id, forename, surname, email, phone_number, role, password, di
 VALUES
        (1, 'John', 'Smith', 'johns@example.com', '03069990541', 0,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
        (2, 'Dave', 'Smith', 'daves@example.com', '07700900731', 1,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
-       (3, 'William', 'Smith', 'wills@example.com', '07700900732', 1,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
-       (4, 'Sally', 'Smith', 'sallys@example.com', '03069990980', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', true, true),
-       (5, 'Instructor', 'User', 'instructor@example.com', '03069990970', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
-       (6, 'Admin', 'User', 'admin@example.com', '03069990348', 3,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true);
+       (3, 'William', 'Smith', 'wills@example.com', '07700900762', 1,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
+       (4, 'Mary', 'Horne', 'maryh@example.com', '03069990562', 1,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
+       (5, 'Abbey', 'Foster', 'abbeyf@example.com', '07700900964', 1,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
+       (6, 'Sally', 'Smith', 'sallys@example.com', '03069990980', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', true, true),
+       (7, 'Instructor', 'User', 'instructor@example.com', '03069990970', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
+       (8, 'Admin', 'User', 'admin@example.com', '03069990348', 3,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true);
 
 INSERT INTO address(id, line_one, line_two, city, county, postcode)
 VALUES
-       (1, '123 Drone Road', null, 'Cardiff', null, 'CF241AB');
+       (1, '123 Drone Road', null, 'Cardiff', null, 'CF241AB'),
+       (2, '123 Fake Road', null, 'Taunton', null, 'TA11AE');
 
 INSERT INTO drone(manufacturer, model)
 VALUES
@@ -65,9 +68,15 @@ VALUES
 
 INSERT INTO ground_school_course(start_date, end_date, type_id, location_id)
 VALUES
-       ('2018-12-06','2018-12-09', 1, 1);
+       ('2018-12-06','2018-12-09', 1, 1),
+       ('2018-12-11','2018-12-14', 1, 2);
 
 INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_location, has_payed, flying_experience, stage_id)
 VALUES
        (2, 1, null, '2000-12-01', 1, 1, FALSE, '2 Hours', 1),
-       (3, 1, null, '1990-01-09', 1, 1, TRUE, '6 Hours', 2);
+       (3, 1, null, '1990-01-09', 1, 1, TRUE, '6 Hours', 2),
+       (4, 2, null, '1996-03-17', 2, 2, TRUE, '4 Hours', 3);
+
+INSERT INTO ground_school_attempt(ground_school_id, candidate_id)
+VALUES
+       (2, 3);

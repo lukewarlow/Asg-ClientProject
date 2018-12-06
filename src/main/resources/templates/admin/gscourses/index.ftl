@@ -123,8 +123,8 @@
                 noOfPages: 1,
                 pageSize: 10,
                 page: 1,
-                orderBy: "id",
-                orderByAscending: false,
+                orderBy: "courseNumber",
+                orderByAscending: true,
                 searchTerm: "",
                 columns: [
                     {text: "Course Number", value: "courseNumber"},

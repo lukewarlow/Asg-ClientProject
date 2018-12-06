@@ -101,11 +101,11 @@
                 pageSize: 10,
                 page: 1,
                 orderBy: "manufacturer",
-                orderByAscending: false,
+                orderByAscending: true,
                 searchTerm: "",
                 newDrone: {},
                 columns: [
-                    {text: "Manufacturer", value: "Manufacturer"},
+                    {text: "Manufacturer", value: "manufacturer"},
                     {text: "Model", value: "model"}
                 ]
             },
