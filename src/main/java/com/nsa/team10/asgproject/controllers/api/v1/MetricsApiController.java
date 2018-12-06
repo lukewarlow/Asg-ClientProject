@@ -1,18 +1,13 @@
 package com.nsa.team10.asgproject.controllers.api.v1;
 
-import com.nsa.team10.asgproject.FilteredPageRequest;
-import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.StageMetricsDao;
 import com.nsa.team10.asgproject.services.interfaces.IMetricsService;
-import com.nsa.team10.asgproject.services.interfaces.IMetricsService;
-import com.nsa.team10.asgproject.validation.ConflictException;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,11 +22,10 @@ public class MetricsApiController
         this.metricsService = metricsService;
     }
 
-    @GetMapping("/stagemetrics")
-    public List findStageMetrics()
+    @GetMapping("/stagenumbers")
+    public List<StageMetricsDao> findStageMetrics()
     {
-        var metrics = metricsService.findStageMetrics();
-        return metrics;
+        return metricsService.findStageMetrics();
     }
 
 }
