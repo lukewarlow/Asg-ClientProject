@@ -9,8 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CourseController
 {
     @GetMapping()
-    public String index()
+    public String list()
     {
         return "/instructor/gscourses/index";
+    }
+
+    @GetMapping("/{id:[0-9]+}")
+    public String manage()
+    {
+        return "/instructor/gscourses/manage";
     }
 }

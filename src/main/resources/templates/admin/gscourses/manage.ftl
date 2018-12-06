@@ -14,11 +14,11 @@
                         </tr>
                         <tr>
                             <th>Start Date</th>
-                            <td>{{displayDate(course.startDate)}}</td>
+                            <td>{{course.startDate}}</td>
                         </tr>
                         <tr>
                             <th>End Date</th>
-                            <td>{{displayDate(course.endDate)}}</td>
+                            <td>{{course.endDate}}</td>
                         </tr>
                         <tr>
                             <th>Type</th>
@@ -300,7 +300,7 @@
                 },
                 candidateModalSearchTerm: function () {
                     this.candidateModalRefresh();
-                }
+                },
                 instructorModalPageSize: function () {
                     this.instructorModalRefresh();
                 },
@@ -371,12 +371,6 @@
                                 app.instructorModalNoOfPages = 1;
                             }
                         });
-                },
-                displayDate: function(date) {
-                    var day = new Date(date).getDate();
-                    var month = new Date(date).getMonth();
-                    var year = new Date(date).getFullYear();
-                    return day + " / " + month + " / " + year;
                 },
                 created: function() {
                     app.id = url(-1);

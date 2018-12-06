@@ -22,7 +22,7 @@
                         </tr>
                         <tr>
                             <th>Date of Birth</th>
-                            <td>{{dateOfBirth}}</td>
+                            <td>{{candidate.dateOfBirth}}</td>
                         </tr>
                         <tr>
                             <th>Flying experience</th>
@@ -60,14 +60,6 @@
                     drone: {}
                 },
                 id: 0
-            },
-            computed: {
-              dateOfBirth: function() {
-                  var day = new Date(this.candidate.dateOfBirth).getDate();
-                  var month = new Date(this.candidate.dateOfBirth).getMonth();
-                  var year = new Date(this.candidate.dateOfBirth).getFullYear();
-                  return day + " / " + month + " / " + year;
-              }
             },
             methods: {
                 refresh: function () {
