@@ -89,13 +89,13 @@
                     </div>
                     <div  class="form-group">
                         <label for="type" class="form-control-label">Type</label>
-                        <select id="type" name="type" v-model="newCourse.typeId">
+                        <select class="form-control" id="type" name="type" v-model="newCourse.typeId">
                             <option v-for="t in types" :value="t.id">{{t.type}}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="location" class="form-control-label">Location</label>
-                        <select id="location" name="type" v-model="newCourse.locationId">
+                        <select class="form-control" id="location" name="type" v-model="newCourse.locationId">
                             <option v-for="(l, index) in locations" :value="l.id">{{l.location}}</option>
                         </select>
                     </div>

@@ -260,9 +260,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 
-
-    <@scripts></@scripts>
-
     <script>
         $('.card').css('display', 'block');
         var account = {};
@@ -272,24 +269,28 @@
                 $("." + account.role.toLowerCase()).css('display', 'block');
                 $(".account-name").text(account.forename + " " + account.surname);
                 $(".account-email").text(account.email);
+
+                if (account.role === "Candidate") {
+                    axios.get("/api/v1/account/loggedincandidate")
+                        .then(function (response) {
+                            var candidate = response.data;
+                            for (var i = 0; i < 10; i++) {
+                                if (i !== candidate.stage.id) {
+                                    $(".stage-" + i).css('display', 'none');
+                                }
+                            }
+                        })
+                        .catch(function (reason) {
+                            if (reason.response.status === 417) {
+                                console.log("test");
+                            }
+                        });
+                }
             });
-        if (account.role === "Candidate") {
-            axios.get("/api/v1/account/loggedincandidate")
-                .then(function (response) {
-                    var candidate = response.data;
-                    for (var i = 0; i < 10; i++) {
-                        if (i !== candidate.stage.id) {
-                            $(".stage-" + i).css('display', 'none');
-                        }
-                    }
-                })
-                .catch(function (reason) {
-                    if (reason.response.status === 417) {
-                        console.log("test");
-                    }
-                });
-        }
     </script>
+
+
+    <@scripts></@scripts>
 
     <!-- Main JS-->
     <script src="/js/main.js"></script>

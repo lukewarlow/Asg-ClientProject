@@ -50,11 +50,10 @@
                             totals[i] = 0;
                         }
                     }
-                    console.log(totals);
                     var stageMetricsChartElement = $("#stage-metrics-chart");
                     stageMetricsChartElement.height = 150;
                     var stageMetricsChart = new Chart(stageMetricsChartElement, {
-                        type: 'doughnut',
+                        type: 'bar',
                         data: {
                             datasets: [{
                                 data: totals,
