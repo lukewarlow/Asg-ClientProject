@@ -34,6 +34,7 @@ public class CandidateRepository implements ICandidateRepository
             put("email", "email");
             put("hasPayed", "has_payed");
             put("stage", "stage_id");
+            put("dateOfBirth", "dob");
         }
 
         /**

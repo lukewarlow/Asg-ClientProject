@@ -12,11 +12,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureJdbc
 @DirtiesContext
+@Transactional
 public class DroneRepositoryTests
 {
     @Autowired
@@ -41,6 +43,7 @@ public class DroneRepositoryTests
     {
         var drone = new DroneDao("Test", "Drone");
         droneRepository.create(drone);
+        droneRepository.create(drone);
     }
 
     @Test
@@ -64,7 +67,7 @@ public class DroneRepositoryTests
     }
 
     @Test
-    public void testFindAllWithOrderBy()
+    public void testFindAllWithOrderByModel()
     {
         var filteredPageRequest = new FilteredPageRequest(1, (byte) 10, "model", true, "");
         var result = droneRepository.findAll(filteredPageRequest);
@@ -74,6 +77,15 @@ public class DroneRepositoryTests
         Assert.assertEquals("Anafi", result.getList().get(0).getModel());
         Assert.assertEquals("DJI", result.getList().get(3).getManufacturer());
         Assert.assertEquals("Inspire 1", result.getList().get(3).getModel());
+    }
+
+    @Test
+    public void testFindAllWithSearch()
+    {
+        var filteredPageRequest = new FilteredPageRequest(1, (byte) 10, "id", true, "XYZ123ABC");
+        var result = droneRepository.findAll(filteredPageRequest);
+        Assert.assertEquals(0, result.getNoOfPages());
+        Assert.assertEquals(0, result.getList().size());
     }
 }
 
