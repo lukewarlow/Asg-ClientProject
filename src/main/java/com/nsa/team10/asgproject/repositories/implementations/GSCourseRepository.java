@@ -3,7 +3,7 @@ package com.nsa.team10.asgproject.repositories.implementations;
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.*;
-import com.nsa.team10.asgproject.repositories.interfaces.IGSRepository;
+import com.nsa.team10.asgproject.repositories.interfaces.IGSCourseRepository;
 import com.nsa.team10.asgproject.services.dtos.NewGSCourseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class GSCourseRepository implements IGSRepository
+public class GSCourseRepository implements IGSCourseRepository
 {
     private final JdbcTemplate jdbcTemplate;
     private static RowMapper<GSCourseDao> gsCourseMapper;

@@ -4,7 +4,7 @@ import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.*;
 import com.nsa.team10.asgproject.repositories.interfaces.ICandidateRepository;
-import com.nsa.team10.asgproject.repositories.interfaces.IGSRepository;
+import com.nsa.team10.asgproject.repositories.interfaces.IGSCourseRepository;
 import com.nsa.team10.asgproject.services.dtos.NewGSCourseDto;
 import com.nsa.team10.asgproject.services.interfaces.IGSCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import java.util.Optional;
 @Service
 public class GSCourseService implements IGSCourseService
 {
-    private final IGSRepository gsCourseRepository;
+    private final IGSCourseRepository gsCourseRepository;
     private final ICandidateRepository candidateRepository;
 
     @Autowired
-    public GSCourseService(IGSRepository gsCourseRepository, ICandidateRepository candidateRepository)
+    public GSCourseService(IGSCourseRepository gsCourseRepository, ICandidateRepository candidateRepository)
     {
         this.gsCourseRepository = gsCourseRepository;
         this.candidateRepository = candidateRepository;

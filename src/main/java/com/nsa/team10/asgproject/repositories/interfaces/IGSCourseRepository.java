@@ -11,7 +11,7 @@ import com.nsa.team10.asgproject.services.dtos.NewGSCourseDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface IGSRepository
+public interface IGSCourseRepository
 {
     void create(NewGSCourseDto newGSCourse);
     void assignCandidateToCourse(long gsCourseId, long candidateId);

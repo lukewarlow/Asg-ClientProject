@@ -137,10 +137,10 @@ public class UserRepositoryTests
     @Test
     public void testDelete()
     {
-        var result = userRepository.findById(1);
+        var result = userRepository.findByIdIncDisabled(6);
         Assert.assertTrue(result.isPresent());
-        userRepository.delete(1);
-        var result2 = userRepository.findById(1);
+        userRepository.delete(6);
+        var result2 = userRepository.findByIdIncDisabled(6);
         Assert.assertFalse(result2.isPresent());
     }
 }
