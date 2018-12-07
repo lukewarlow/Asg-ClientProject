@@ -21,7 +21,8 @@ VALUES
        (6, 'Sally', 'Smith', 'sallys@example.com', '03069990980', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', true, true),
        (7, 'Jodie', 'Bright', 'jodieb@example.com', '02920180220', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
        (8, 'Instructor', 'User', 'instructor@example.com', '03069990970', 2,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
-       (9, 'Admin', 'User', 'admin@example.com', '03069990348', 3,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true);
+       (9, 'Admin', 'User', 'admin@example.com', '03069990348', 3,'$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true),
+       (10, 'Jacob', 'Richards', 'jacobr@example.com', '01174960769', 1, '$2a$10$zl6xZnSXDVBU.h87wnVJ1.1qFbz6CU/Rz8fe/LOYVjBQ1W9zMOESm', false, true);
 
 INSERT INTO address(id, line_one, line_two, city, county, postcode)
 VALUES
@@ -78,7 +79,8 @@ INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_l
 VALUES
        (2, 1, null, '2000-12-01', 1, 1, FALSE, '2 Hours', 1),
        (3, 1, null, '1990-01-09', 1, 1, TRUE, '6 Hours', 2),
-       (4, 2, null, '1996-03-17', 2, 2, TRUE, '4 Hours', 3);
+       (4, 2, null, '1996-03-17', 2, 2, TRUE, '4 Hours', 3),
+       (10, 2, null, '1993-05-27', 9, 2, TRUE, '4 Hours', 4);
 
 INSERT INTO ground_school_attempt(ground_school_id, candidate_id)
 VALUES

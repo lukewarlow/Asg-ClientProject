@@ -14,6 +14,12 @@ public class CandidateController
         return "/candidate/sign-up";
     }
 
+    @GetMapping("/opmanual")
+    public String downloads()
+    {
+        return "/candidate/opmanual";
+    }
+
     @GetMapping("/signup/newdrone")
     public String newDrone()
     {
