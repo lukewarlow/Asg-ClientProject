@@ -60,8 +60,8 @@ public class CandidateRepositoryTests
         var result = candidateRepository.findById(1);
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(2, result.get().getUser().getId());
-        Assert.assertEquals("John", result.get().getUser().getForename());
-        Assert.assertEquals("johns@example.com", result.get().getUser().getEmail());
+        Assert.assertEquals("Dave", result.get().getUser().getForename());
+        Assert.assertEquals("daves@example.com", result.get().getUser().getEmail());
         Assert.assertEquals("2000-12-01", result.get().getDateOfBirth());
 
         var result2 = candidateRepository.findById(99);
