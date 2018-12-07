@@ -41,9 +41,9 @@ bootRun {
 
 test {
     if (project.hasProperty("profiles")) {
-        systemProperty 'spring.profiles.active', project.property('profiles')
+        systemProperty 'spring.profiles.active', project.property('profiles') + ',testing'
     } else {
-        systemProperty 'spring.profiles.active', 'development'
+        systemProperty 'spring.profiles.active', 'development,testing'
         if (project.hasProperty("password")) {
             systemProperty 'spring.datasource.password', project.property('password')
         } else {
