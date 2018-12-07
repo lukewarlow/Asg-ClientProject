@@ -59,7 +59,7 @@
                 </div>
                 <div class="card-body card-block">
                     <button class="btn btn-primary" onclick="location.href='/download/OperationsManual.pdf'">
-                        Submit
+                        Download OM
                     </button>
                 </div>
             </div>
