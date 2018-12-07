@@ -91,9 +91,9 @@
                     <li class="guest">
                         <a href="/candidate/signup"> <i class="fas fa-check-square"></i>Candidate signup</a>
                     </li>
-                    <Li class="candidate" class="stage-4">
-                        <a href="/candidate/downloads"> <i class="fas fa-check-square"></i>Operation Manual</a>
-                    </Li>
+                    <li class="candidate stage-4">
+                        <a href="/candidate/opmanual"> <i class="fas fa-check-square"></i>Operation Manual</a>
+                    </li>
                     <li class="admin has-sub">
                         <a class="js-arrow" href="#">
                             <i class="fas fa-table"></i>Admin</a>
@@ -144,9 +144,9 @@
                     <li class="guest">
                         <a href="/candidate/signup"> <i class="fas fa-check-square"></i>Candidate signup</a>
                     </li>
-                    <Li class="candidate" class="stage-4">
-                        <a href="/candidate/downloads"> <i class="fas fa-check-square"></i>Operation Manual</a>
-                    </Li>
+                    <li class="candidate stage-4">
+                        <a href="/candidate/opmanual"> <i class="fas fa-check-square"></i>Operation Manual</a>
+                    </li>
                     <li class="admin has-sub">
                         <a class="js-arrow" href="#">
                             <i class="fas fa-table"></i>Admin</a>
