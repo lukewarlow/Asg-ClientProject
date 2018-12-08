@@ -75,7 +75,9 @@ public class ResultsRepository implements IResultsRepository
                         new CandidateProcessStageDao(
                                 rs.getLong("stage_id"),
                                 rs.getString("stage")
-                        )
+                        ),
+                        rs.getString("created_at"),
+                        rs.getString("updated_at")
                     ),
                     rs.getByte("question_bank"),
                     rs.getString("marked_date"),
@@ -86,12 +88,7 @@ public class ResultsRepository implements IResultsRepository
     @Override
     public void submitGSCourseResults(NewGSCourseResultDto result)
     {
-        var sql = "UPDATE ground_school_attempt gsa SET gsa.question_bank = ?, gsa.marked_date = NOW(), gsa.result = ? WHERE gsa.candidate_id = ? AND gsa.ground_school_id = ?;";
-        jdbcTemplate.update(sql, result.getQuestionBank(), result.getResult(), result.getCandidateId(), result.getGSCourseId());
-
-        var stageSql = "UPDATE candidate c SET c.stage_id = ? WHERE c.id = ?";
-
-        if (result.getResult() >= passGSMark)
-            jdbcTemplate.update(stageSql, CandidateProcessStage.SUBMIT_OP_MANUAL.getStageId(), result.getCandidateId());
+        var sql = "CALL mark_ground_school_attempt(?, ?, ?, ?, ?);";
+        jdbcTemplate.update(sql, result.getCandidateId(), result.getGSCourseId(), result.getQuestionBank(), result.getResult(), passGSMark);
     }
 }
