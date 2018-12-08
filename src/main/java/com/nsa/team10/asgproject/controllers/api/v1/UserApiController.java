@@ -56,7 +56,7 @@ public class UserApiController
     public ResponseEntity<UserDao> findById(@PathVariable long id)
     {
         Optional<UserDao> user = userService.findByIdIncDisabled(id);
-        return user.map(userDao -> new ResponseEntity<>(userDao, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+        return user.map(userDao -> new ResponseEntity<>(userDao, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PreAuthorize("hasAuthority('Admin')")
