@@ -55,34 +55,6 @@
                     var stageMetricsChart = new Chart(stageMetricsChartElement, {
                         type: 'bar',
                         data: {
-                            datasets: [{
-                                data: totals,
-                                backgroundColor: [
-                                    "rgba(20, 125, 255, 1)",
-                                    "rgba(35, 120, 255, 0.9)",
-                                    "rgba(50, 115, 255, 0.8)",
-                                    "rgba(65, 110, 255, 0.7)",
-                                    "rgba(80, 105, 255, 0.6)",
-                                    "rgba(95, 100, 255, 0.5)",
-                                    "rgba(110, 95, 255, 0.4)",
-                                    "rgba(125, 90, 255, 0.3)",
-                                    "rgba(140, 85, 255, 0.2)",
-                                    "rgba(155, 80, 255, 0.1)"
-                                ],
-                                hoverBackgroundColor: [
-                                    "rgba(20, 125, 200, 1)",
-                                    "rgba(35, 120, 200, 0.9)",
-                                    "rgba(50, 115, 200, 0.8)",
-                                    "rgba(65, 110, 200, 0.7)",
-                                    "rgba(80, 105, 200, 0.6)",
-                                    "rgba(95, 100, 200, 0.5)",
-                                    "rgba(110, 95, 200, 0.4)",
-                                    "rgba(125, 90, 200, 0.3)",
-                                    "rgba(140, 85, 200, 0.2)",
-                                    "rgba(155, 80, 200, 0.1)"
-                                ]
-
-                            }],
                             labels: [
                                 'Needs To Make Payment',
                                 'Awaiting Ground School Assignment',
@@ -94,15 +66,51 @@
                                 'Awaiting PfCO Recommendation',
                                 'Feedback Collection',
                                 'Completed'
+                            ],
+                            datasets: [
+                                {
+                                    label: "Number of candidates at each stage",
+                                    data: totals,
+                                    backgroundColor: [
+                                        "rgba(20, 125, 255, 1)",
+                                        "rgba(35, 120, 255, 0.9)",
+                                        "rgba(50, 115, 255, 0.8)",
+                                        "rgba(65, 110, 255, 0.7)",
+                                        "rgba(80, 105, 255, 0.6)",
+                                        "rgba(95, 100, 255, 0.5)",
+                                        "rgba(110, 95, 255, 0.4)",
+                                        "rgba(125, 90, 255, 0.3)",
+                                        "rgba(140, 85, 255, 0.2)",
+                                        "rgba(155, 80, 255, 0.1)"
+                                    ],
+                                    borderColor: [
+                                        "rgba(20, 125, 200, 1)",
+                                        "rgba(35, 120, 200, 0.9)",
+                                        "rgba(50, 115, 200, 0.8)",
+                                        "rgba(65, 110, 200, 0.7)",
+                                        "rgba(80, 105, 200, 0.6)",
+                                        "rgba(95, 100, 200, 0.5)",
+                                        "rgba(110, 95, 200, 0.4)",
+                                        "rgba(125, 90, 200, 0.3)",
+                                        "rgba(140, 85, 200, 0.2)",
+                                        "rgba(155, 80, 200, 0.1)"
+                                    ]
+                                }
                             ]
                         },
                         options: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    fontFamily: 'Poppins'
-                                }
-
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        fontSize: "12"
+                                    }
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        fontSize: "15"
+                                    }
+                                }]
                             },
                             responsive: true
                         }

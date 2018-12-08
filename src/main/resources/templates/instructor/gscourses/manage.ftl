@@ -51,7 +51,7 @@
                                 <i v-show="orderBy == column.value && orderByAscending == false" class="material-icons">arrow_downward</i>
                                 </span>
                             </th>
-                            <#--<th></th>-->
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -60,10 +60,10 @@
                             <td>{{ candidate.user.forename }}</td>
                             <td>{{ candidate.user.surname }}</td>
                             <td>{{ candidate.user.email }}</td>
-                            <#--<td><i class="material-icons">assignment</i></td>-->
+                            <td @click="showResultModal(candidate)" style="cursor: pointer;"><i class="material-icons">assignment</i></td>
                         </tr>
                         <tr v-if="assignedCandidates.length == 0">
-                            <td colspan="4">No results</td>
+                            <td colspan="5">No results</td>
                         </tr>
                         </tbody>
                     </table>
@@ -93,6 +93,32 @@
 </#macro>
 
 <#macro modals>
+    <div class="modal fade" id="submit-result" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Submit results</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="result = {}">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="question-bank" class="form-control-label">Question Bank</label>
+                        <input type="text" maxlength="1" id="question-bank" name="manufacturer" class="form-control" v-model="result.questionBank">
+                    </div>
+                    <div  class="form-group">
+                        <label for="result" class="form-control-label">Result</label>
+                        <input type="text" id="result" name="result" class="form-control" v-model="result.result">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="result = {}">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="submitResult">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </#macro>
 
 <#macro scripts>
@@ -105,6 +131,7 @@
                     location: {},
                     instructor: {}
                 },
+                result: {},
                 assignedCandidates: {},
                 id: 0,
                 noOfPages: 1,
@@ -152,6 +179,17 @@
                         .then(function (response) {
                             app.course = response.data;
                         });
+                },
+                showResultModal: function (candidate) {
+                   app.result.candidateId = candidate.id;
+                   $('#submit-result').modal();
+                },
+                submitResult: function () {
+                    app.result.gsCourseId = app.id;
+                    axios.post("/api/v1/results/gscourse", app.result)
+                        .then(function (value) {
+                            app.refresh();
+                        })
                 }
             }
         });

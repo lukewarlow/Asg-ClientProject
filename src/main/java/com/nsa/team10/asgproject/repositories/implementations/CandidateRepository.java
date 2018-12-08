@@ -254,10 +254,11 @@ public class CandidateRepository implements ICandidateRepository
                 "   JOIN drone d ON d.id = ca.drone_id\n" +
                 "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "   JOIN ground_school_attempt gsa ON gsa.candidate_id = ca.id AND gsa.ground_school_id = ?\n" +
+                "WHERE s.id = ?\n" +
                 "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
-        var params = new Object[]{gsCourseId, pageRequest.getPageSize(), pageRequest.getOffset()};
+        var params = new Object[]{gsCourseId, CandidateProcessStage.AWAITING_GS_RESULT.getStageId(), pageRequest.getPageSize(), pageRequest.getOffset()};
         candidates = jdbcTemplate.query(sql, params, candidateMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id JOIN ground_school_attempt gsa on gsa.candidate_id = c.id AND gsa.ground_school_id = ?;", new Object[]{gsCourseId}, Long.class);
         return new PaginatedList<>(candidates, count, pageRequest);
