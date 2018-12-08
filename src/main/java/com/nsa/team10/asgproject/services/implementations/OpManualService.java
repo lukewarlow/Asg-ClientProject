@@ -8,11 +8,13 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class OpManualService implements IOpManualService
@@ -45,14 +47,17 @@ public class OpManualService implements IOpManualService
             var candidate = candidateRepository.findByEmail(email);
             if (candidate.isPresent())
             {
-                var path = Paths.get("ASGResources/OperationsManualSubmissions/" + candidate.get().getId() + "/" + filename);
-                var resource = new UrlResource(path.toUri());
+                var directory = Paths.get("ASGResources/OperationManualSubmissions/" + candidate.get().getId());
+                if (Files.notExists(directory))
+                    Files.createDirectories(directory);
+                var uniqueId = UUID.randomUUID().toString();
+                var resource = new UrlResource(directory.toUri() + "/" + uniqueId + "-" + filename);
                 Files.write(resource.getFile().toPath(), bytes);
 
                 File uploadedFile = new File(resource.getURI());
                 uploadedFile.setReadOnly();
 
-                opManualRepository.submit(candidate.get().getId(), uploadedFile.getAbsolutePath());
+                opManualRepository.submit(candidate.get().getId(), directory.toString() + "/" + uniqueId + "-" + filename);
                 return "Success";
             }
             else return "Not candidate";
