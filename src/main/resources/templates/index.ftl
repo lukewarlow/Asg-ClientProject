@@ -1,13 +1,6 @@
 <#include "common/base.ftl">
 <#macro page_body>
     <div class="row">
-        <div class="col-md-12">
-            <div class="overview-wrap">
-                <h2 class="title-1">overview</h2>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
@@ -15,8 +8,17 @@
                 </div>
                 <div class="card-body card-block">
                     <button class="btn btn-primary candidate stage-1" id="make-payment">Make Payment</button>
-                    <h2 class="candidate stage-2">An admin will assign you to a ground school course soon.</h2>
+                    <h3 class="candidate stage-2">An admin will assign you to a ground school course soon.</h3>
+                    <h3 class="candidate stage-3">You have been assigned to a ground school course.</h3>
+                    <h3 class="candidate stage-4">Please download the operation manual template and submit when complete.</h3>
+                    <h3 class="candidate stage-5">Please await the results from your operation manual submission.</h3>
+                    <h3 class="candidate stage-6">You will be contacted to arrange your flight assessment.</h3>
+                    <h3 class="candidate stage-7">Please await the flight assessment results.</h3>
+                    <h3 class="candidate stage-8">Currently going through PfCO recommendation process.</h3>
+                    <h3 class="candidate stage-9">Feel free to submit feedback of your time with us.</h3>
+                    <h3 class="candidate stage-10">Thank you for your custom you have now completed the course.</h3>
                     <div class="admin">
+                        <h4 class="text-center">Number of candidates at each stage</h4>
                         <canvas id="stage-metrics-chart"></canvas>
                     </div>
                 </div>
@@ -52,34 +54,36 @@
                     }
                     var stageMetricsChartElement = $("#stage-metrics-chart");
                     stageMetricsChartElement.height = 150;
+                    Chart.defaults.global.legend.display = false;
                     var stageMetricsChart = new Chart(stageMetricsChartElement, {
+
                         type: 'bar',
                         data: {
                             datasets: [{
                                 data: totals,
                                 backgroundColor: [
-                                    "rgba(20, 125, 255, 1)",
-                                    "rgba(35, 120, 255, 0.9)",
-                                    "rgba(50, 115, 255, 0.8)",
-                                    "rgba(65, 110, 255, 0.7)",
-                                    "rgba(80, 105, 255, 0.6)",
-                                    "rgba(95, 100, 255, 0.5)",
-                                    "rgba(110, 95, 255, 0.4)",
-                                    "rgba(125, 90, 255, 0.3)",
-                                    "rgba(140, 85, 255, 0.2)",
-                                    "rgba(155, 80, 255, 0.1)"
+                                    "rgba(148, 0, 211, 1)",
+                                    "rgba(75, 0, 130, 1)",
+                                    "rgba(0, 0, 255, 1)",
+                                    "rgba(0, 255, 0, 1)",
+                                    "rgba(255, 255, 0, 1)",
+                                    "rgba(255, 127, 0, 1)",
+                                    "rgba(255, 0 , 0, 1)",
+                                    "rgba(211, 0, 148, 1)",
+                                    "rgba(130, 0, 75, 1)",
+                                    "rgba(255, 0, 255, 1)"
                                 ],
                                 hoverBackgroundColor: [
-                                    "rgba(20, 125, 200, 1)",
-                                    "rgba(35, 120, 200, 0.9)",
-                                    "rgba(50, 115, 200, 0.8)",
-                                    "rgba(65, 110, 200, 0.7)",
-                                    "rgba(80, 105, 200, 0.6)",
-                                    "rgba(95, 100, 200, 0.5)",
-                                    "rgba(110, 95, 200, 0.4)",
-                                    "rgba(125, 90, 200, 0.3)",
-                                    "rgba(140, 85, 200, 0.2)",
-                                    "rgba(155, 80, 200, 0.1)"
+                                    "rgba(148, 0, 211, 0.8)",
+                                    "rgba(75, 0, 130, 0.8)",
+                                    "rgba(0, 0, 255, 0.8)",
+                                    "rgba(0, 255, 0, 0.8)",
+                                    "rgba(255, 255, 0, 0.8)",
+                                    "rgba(255, 127, 0, 0.8)",
+                                    "rgba(255, 0 , 0, 0.8)",
+                                    "rgba(211, 0, 148, 0.8)",
+                                    "rgba(130, 0, 75, 0.8)",
+                                    "rgba(255, 0, 255, 0.8)"
                                 ]
 
                             }],

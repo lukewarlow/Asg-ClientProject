@@ -8,9 +8,9 @@
                     Download and Upload Operations Manual
                 </div>
                 <div class="card-body card-block">
-                    <button class="btn btn-primary" onclick="location.href='/api/v1/opmanual'">
+                    <a class="btn btn-primary" href="/api/v1/opmanual">
                         Download Operations Manual Template
-                    </button>
+                    </a>
                     <br>
                     <br>
                     <div>Upload</div>
@@ -18,9 +18,14 @@
                         <input id="file" type="file" name="file" /><br/><br/>
                         <button id="upload-op-manual" type="button" class="btn btn-primary">Submit</button>
                     </form>
+                    <br>
+                    <div class="alert alert-danger" id="error" style="display: none;" role="alert">
+                    </div>
+                    <div class="alert alert-success" id="success" style="display: none;" role="alert">
+                        Operation Manual Submission Successful!
+                    </div>
                 </div>
-
-        </div>
+            </div>
         </div>
     </div>
 </#macro>
@@ -36,7 +41,25 @@
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(function (response) {
-                console.log("test");
+                $('#success').css('display', 'block');
+                $('#error').css('display', 'none');
+                setTimeout(function () {
+                    window.location.href = "/";
+                }, 500);
+            }).catch(function (error) {
+                var status = error.response.status;
+                $('#success').css('display', 'none');
+                var errorElement = $('#error');
+                if (status === 204) {
+                    errorElement.text("Uploaded file was corrupt!");
+                } else if (status === 415) {
+                    errorElement.text("Uploaded file was the incorrect type (must be pdf)!");
+                } else if (status === 500) {
+                    errorElement.text("There was a server error, your submission was not saved!");
+                } else {
+                    errorElement.text("There was an error with your submission, your submission was not saved, please try again later!");
+                }
+                errorElement.css('display', 'block');
             })
         });
     </script>
