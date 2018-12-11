@@ -56,7 +56,6 @@
                     stageMetricsChartElement.height = 150;
                     Chart.defaults.global.legend.display = false;
                     var stageMetricsChart = new Chart(stageMetricsChartElement, {
-
                         type: 'bar',
                         data: {
                             datasets: [{
@@ -101,12 +100,18 @@
                             ]
                         },
                         options: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    fontFamily: 'Poppins'
-                                }
-
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        fontSize: "12"
+                                    }
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        fontSize: "15"
+                                    }
+                                }]
                             },
                             responsive: true
                         }
