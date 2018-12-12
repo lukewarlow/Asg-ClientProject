@@ -5,6 +5,7 @@ import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.UserDao;
 import com.nsa.team10.asgproject.repositories.daos.UserWithPasswordDao;
 import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
+import com.nsa.team10.asgproject.services.dtos.EditUserDto;
 import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -269,6 +270,14 @@ public class UserRepository implements IUserRepository
     {
         var sql = "UPDATE user SET disabled = FALSE WHERE id = ?;";
         var rowsAffected = jdbcTemplate.update(sql, userId);
+        return rowsAffected == 1;
+    }
+
+    @Override
+    public boolean edit(long userId, EditUserDto editedUser)
+    {
+        var sql = "UPDATE user SET forename = ?, surname = ?, email = ?, phone_number = ?, role = ? WHERE id = ?;";
+        var rowsAffected = jdbcTemplate.update(sql, editedUser.getForename(), editedUser.getSurname(), editedUser.getEmail(), editedUser.getPhoneNumber(), editedUser.getRole(), userId);
         return rowsAffected == 1;
     }
 

@@ -3,6 +3,7 @@ package com.nsa.team10.asgproject.controllers.api.v1;
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.UserDao;
+import com.nsa.team10.asgproject.services.dtos.EditUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -73,6 +75,15 @@ public class UserApiController
     public ResponseEntity enable(@PathVariable long id)
     {
         var success = userService.enable(id);
+        if (success) return new ResponseEntity(HttpStatus.OK);
+        else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
+    @PutMapping("/{id:[0-9]+")
+    public ResponseEntity edit(@PathVariable long id, @Valid @RequestBody EditUserDto editedUser)
+    {
+        var success = userService.edit(id, editedUser);
         if (success) return new ResponseEntity(HttpStatus.OK);
         else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
     }

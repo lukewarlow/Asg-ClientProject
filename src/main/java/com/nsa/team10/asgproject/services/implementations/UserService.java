@@ -4,6 +4,7 @@ import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.UserDao;
 import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
+import com.nsa.team10.asgproject.services.dtos.EditUserDto;
 import com.nsa.team10.asgproject.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,6 +68,15 @@ public class UserService implements IUserService
         var user = userRepository.findByIdIncDisabled(userId);
         if (user.isPresent())
             return userRepository.enable(userId);
+        else return false;
+    }
+
+    @Override
+    public boolean edit(long userId, EditUserDto editUser)
+    {
+        var user = userRepository.findByIdIncDisabled(userId);
+        if (user.isPresent())
+            return userRepository.edit(userId, editUser);
         else return false;
     }
 

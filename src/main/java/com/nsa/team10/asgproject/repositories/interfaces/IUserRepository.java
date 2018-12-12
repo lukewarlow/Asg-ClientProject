@@ -4,6 +4,7 @@ import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.UserDao;
 import com.nsa.team10.asgproject.repositories.daos.UserWithPasswordDao;
+import com.nsa.team10.asgproject.services.dtos.EditUserDto;
 import com.nsa.team10.asgproject.validation.ConflictException;
 
 import java.util.Optional;
@@ -21,6 +22,9 @@ public interface IUserRepository
     boolean verifyActivationToken(String email, String token);
     boolean disable(long userId);
     boolean enable(long userId);
+
+    boolean edit(long userId, EditUserDto editedUser);
+
     String generateActivationToken(String email);
     boolean delete(long userId);
 }
