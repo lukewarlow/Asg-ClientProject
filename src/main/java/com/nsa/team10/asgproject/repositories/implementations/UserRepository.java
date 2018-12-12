@@ -296,8 +296,7 @@ public class UserRepository implements IUserRepository
     @Override
     public boolean delete(long userId)
     {
-        //TODO needs updating to work with candidates
-        var sql = "DELETE FROM user WHERE id = ?";
+        var sql = "CALL delete_all_user_data(?)";
         var rowsAffected = jdbcTemplate.update(sql, userId);
         return rowsAffected == 1;
     }
