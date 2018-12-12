@@ -277,7 +277,7 @@ public class UserRepository implements IUserRepository
     public boolean edit(long userId, EditUserDto editedUser)
     {
         var sql = "UPDATE user SET forename = ?, surname = ?, email = ?, phone_number = ?, role = ? WHERE id = ?;";
-        var rowsAffected = jdbcTemplate.update(sql, editedUser.getForename(), editedUser.getSurname(), editedUser.getEmail(), editedUser.getPhoneNumber(), editedUser.getRole(), userId);
+        var rowsAffected = jdbcTemplate.update(sql, editedUser.getForename(), editedUser.getSurname(), editedUser.getEmail(), editedUser.getPhoneNumber(), editedUser.getRole().ordinal(), userId);
         return rowsAffected == 1;
     }
 

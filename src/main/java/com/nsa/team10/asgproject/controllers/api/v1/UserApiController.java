@@ -62,6 +62,15 @@ public class UserApiController
     }
 
     @PreAuthorize("hasAuthority('Admin')")
+    @PutMapping("/{id:[0-9]+}")
+    public ResponseEntity edit(@PathVariable long id, @Valid @RequestBody EditUserDto editedUser)
+    {
+        var success = userService.edit(id, editedUser);
+        if (success) return new ResponseEntity(HttpStatus.OK);
+        else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
+    }
+
+    @PreAuthorize("hasAuthority('Admin')")
     @PutMapping("/{id:[0-9]+}/disable")
     public ResponseEntity disable(@PathVariable long id)
     {
@@ -75,15 +84,6 @@ public class UserApiController
     public ResponseEntity enable(@PathVariable long id)
     {
         var success = userService.enable(id);
-        if (success) return new ResponseEntity(HttpStatus.OK);
-        else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
-    }
-
-    @PreAuthorize("hasAuthority('Admin')")
-    @PutMapping("/{id:[0-9]+")
-    public ResponseEntity edit(@PathVariable long id, @Valid @RequestBody EditUserDto editedUser)
-    {
-        var success = userService.edit(id, editedUser);
         if (success) return new ResponseEntity(HttpStatus.OK);
         else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
     }

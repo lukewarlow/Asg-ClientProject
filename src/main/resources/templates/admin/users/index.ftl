@@ -23,7 +23,7 @@
                                 <i v-show="orderBy == column.value && orderByAscending == false" class="material-icons">arrow_downward</i>
                                 </span>
                             </th>
-                            <th span="col"></th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -36,7 +36,10 @@
                                 <span v-if="user.activated">Activated</span>
                                 <span v-else>Not Activated</span>
                             </td>
-                            <td data-toggle="modal" data-target="#confirmDelete" @click="confirmDelete(user)"><i class="material-icons">delete</i></td>
+                            <td>
+                                <span data-toggle="modal" data-target="#confirmDelete" @click="confirmDelete(user)"><i class="material-icons">delete</i></span>
+                                <span @click="showEdit(user)"><i class="material-icons">edit</i></span>
+                            </td>
                         </tr>
                         <tr v-if="users.length == 0">
                             <td colspan="5">No results</td>
@@ -74,11 +77,11 @@
 </#macro>
 
 <#macro modals>
-    <div v-show="deleting != {}" class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div v-show="deleting != {}" class="modal fade" id="confirmDelete" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                    <h5 class="modal-title" id="confirm-delete-label">Confirm Delete</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="deleting = {}">
                         <i class="material-icons">close</i>
                     </button>
@@ -88,6 +91,49 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="deleting = {}">Close</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal" @click="deleteUser">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit-user" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edit-user-label">Edit user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="editedUser = {}">
+                        <i class="material-icons">close</i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit-forename">Forename</label>
+                        <input class="form-control" type="text" id="edit-forename" v-model="editedUser.forename"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-surname">Surname</label>
+                        <input class="form-control" type="text" id="edit-surname" v-model="editedUser.surname"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email">Email</label>
+                        <input class="form-control" type="text" id="edit-email" v-model="editedUser.email"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-phone">Phone number</label>
+                        <input class="form-control" type="text" id="edit-phone" v-model="editedUser.phoneNumber"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-role">Role</label>
+                        <select class="form-control" v-model="editedUser.role">
+                            <option value="Guest">Guest</option>
+                            <option value="Candidate">Candidate</option>
+                            <option value="Instructor">Instructor</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="editedUser = {}">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="editUser">Submit</button>
                 </div>
             </div>
         </div>
@@ -107,6 +153,7 @@
                 searchTerm: "",
                 showDisabled: false,
                 deleting: {},
+                editedUser: {},
                 columns: [
                     {text: "Forename", value: "forename"},
                     {text: "Surname", value: "surname"},
@@ -149,12 +196,21 @@
                             }
                         });
                 },
+                showEdit: function (user) {
+                    app.editedUser = user;
+                    $('#edit-user').modal();
+                },
+                editUser: function () {
+                    axios.put("/api/v1/users/" + app.editedUser.id, app.editedUser)
+                        .then(function (response) {
+                            $('#edit-user').modal(false);
+                        })
+                },
                 confirmDelete: function (user) {
                     app.deleting = user;
                 },
                 deleteUser: function() {
                     var toDeleteId = app.deleting.id;
-                    console.log(toDeleteId);
                     app.deleting = {};
                     axios.delete("/api/v1/users/" + toDeleteId)
                         .then(function (response) {
