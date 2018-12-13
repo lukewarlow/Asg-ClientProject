@@ -94,6 +94,7 @@ public class GSCourseApiController
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @PostMapping("/locations")
     public ResponseEntity createNewLocation(@RequestBody String location)
     {
