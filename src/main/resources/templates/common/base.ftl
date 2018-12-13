@@ -281,7 +281,7 @@
                     axios.get("/api/v1/account/loggedincandidate")
                         .then(function (response) {
                             var candidate = response.data;
-                            for (var i = 0; i < 10; i++) {
+                            for (var i = 1; i <= 10; i++) {
                                 if (i !== candidate.stage.id) {
                                     $(".stage-" + i).css('display', 'none');
                                 }

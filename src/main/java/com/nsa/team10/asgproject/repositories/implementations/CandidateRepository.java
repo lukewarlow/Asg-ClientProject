@@ -144,9 +144,9 @@ public class CandidateRepository implements ICandidateRepository
             companyId = holder.getKey().longValue();
         }
 
-        var candidateSql = "INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_location, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?);";
+        var candidateSql = "INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_location, flying_experience, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(candidateSql, userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), newCandidate.getPreferedLocation(), false);
+        jdbcTemplate.update(candidateSql, userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), newCandidate.getPreferedLocation(), newCandidate.getFlyingExperience(), false);
 
         var stageSql = "UPDATE candidate SET stage_id = ? WHERE user_id = ?";
 
