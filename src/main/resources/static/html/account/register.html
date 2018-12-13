@@ -17,6 +17,7 @@
 
     <!-- Bootstrap CSS-->
     <link href="/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- Vendor CSS-->
     <link href="/vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
@@ -76,7 +77,7 @@
                             <div class="login-checkbox">
                                 <div>
                                     <input type="checkbox" id="agree-terms" name="agree-terms">
-                                    <label for="agree-terms">I agree with the terms and conditions</label>
+                                    <label for="agree-terms">I agree with the <a href="" data-toggle="modal" data-target="#terms-and-conditions">terms and conditions.</a></label>
                                 </div>
                             </div>
                             <button class="au-btn au-btn--block au-btn--blue m-b-20" type="submit">register</button>
@@ -97,6 +98,25 @@
                                 Already have an account?
                                 <a href="/account/login">Log In</a>
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="terms-and-conditions" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirm-delete-label">Terms and conditions</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="material-icons">close</i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>I consent for ASG to use my personal data for the purpose of contacting me about the course. I understand that I will be asked for a copy of my proof of identity (passport or driving licence) when I join the ground-school course that will be used to support my PfCO application to the CAA.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>

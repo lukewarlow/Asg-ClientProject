@@ -7,7 +7,9 @@
                     Dashboard
                 </div>
                 <div class="card-body card-block">
+                    <h3 class="guest">Please sign up as a candidate.</h3>
                     <button class="btn btn-primary candidate stage-1" id="make-payment">Make Payment</button>
+                    <h3 class="candidate stage-2">An admin will assign you to a ground school course soon.</h3>
                     <h3 class="candidate stage-2">An admin will assign you to a ground school course soon.</h3>
                     <h3 class="candidate stage-3">You have been assigned to a ground school course.</h3>
                     <h3 class="candidate stage-4">Please download the operation manual template and submit when complete.</h3>
