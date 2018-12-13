@@ -94,7 +94,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="location" class="form-control-label">Location</label>
+                        <label for="location" class="form-control-label">Location <a href="/admin/courses/locations" target="_blank"><i class="material-icons">add_circle</i></a></label>
                         <select class="form-control" id="location" name="type" v-model="newCourse.locationId">
                             <option v-for="(l, index) in locations" :value="l.id">{{l.location}}</option>
                         </select>

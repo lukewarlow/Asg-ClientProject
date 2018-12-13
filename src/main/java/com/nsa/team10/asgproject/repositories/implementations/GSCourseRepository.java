@@ -249,6 +249,13 @@ public class GSCourseRepository implements IGSRepository
     }
 
     @Override
+    public void createLocation(String newLocation)
+    {
+        var sql = "INSERT INTO course_location(location) VALUES(?);";
+        jdbcTemplate.update(sql, newLocation);
+    }
+
+    @Override
     public PaginatedList<GSCourseLocationDao> findAllLocations(FilteredPageRequest pageRequest)
     {
         List<GSCourseLocationDao> locations;

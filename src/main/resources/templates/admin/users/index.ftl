@@ -204,6 +204,7 @@
                     axios.put("/api/v1/users/" + app.editedUser.id, app.editedUser)
                         .then(function (response) {
                             $('#edit-user').modal(false);
+                            app.refresh();
                         })
                 },
                 confirmDelete: function (user) {
