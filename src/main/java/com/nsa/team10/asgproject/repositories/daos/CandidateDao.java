@@ -13,8 +13,10 @@ public class CandidateDao
     private DroneDao drone;
     private Boolean hasPayed;
     private CandidateProcessStageDao stage;
+    private String createdAt;
+    private String updatedAt;
 
-    public CandidateDao(long id, String candidateNumber, UserDao userDao, GSCourseLocationDao preferedLocation, String dob, AddressDao address, CompanyDao company, String flyingExperience, DroneDao drone, boolean hasPayed, CandidateProcessStageDao stage)
+    public CandidateDao(long id, String candidateNumber, UserDao userDao, GSCourseLocationDao preferedLocation, String dob, AddressDao address, CompanyDao company, String flyingExperience, DroneDao drone, Boolean hasPayed, CandidateProcessStageDao stage, String createdAt, String updatedAt)
     {
         this.id = id;
         this.candidateNumber = candidateNumber;
@@ -27,18 +29,8 @@ public class CandidateDao
         this.drone = drone;
         this.hasPayed = hasPayed;
         this.stage = stage;
-    }
-
-    public CandidateDao(String candidateNumber, UserDao userDao, GSCourseLocationDao preferedLocation, String dob, AddressDao address, CompanyDao company, String flyingExperience, DroneDao drone)
-    {
-        this.candidateNumber = candidateNumber;
-        this.userDao = userDao;
-        this.preferedLocation = preferedLocation;
-        this.dob = dob;
-        this.address = address;
-        this.company = company;
-        this.flyingExperience = flyingExperience;
-        this.drone = drone;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public long getId()
@@ -94,5 +86,15 @@ public class CandidateDao
     public CandidateProcessStageDao getStage()
     {
         return stage;
+    }
+
+    public String getCreatedAt()
+    {
+        return createdAt;
+    }
+
+    public String getUpdatedAt()
+    {
+        return updatedAt;
     }
 }

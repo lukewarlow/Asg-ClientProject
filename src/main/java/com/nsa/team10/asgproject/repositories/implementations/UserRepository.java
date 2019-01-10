@@ -5,6 +5,7 @@ import com.nsa.team10.asgproject.PaginatedList;
 import com.nsa.team10.asgproject.repositories.daos.UserDao;
 import com.nsa.team10.asgproject.repositories.daos.UserWithPasswordDao;
 import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
+import com.nsa.team10.asgproject.services.dtos.EditUserDto;
 import com.nsa.team10.asgproject.validation.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -273,6 +274,14 @@ public class UserRepository implements IUserRepository
     }
 
     @Override
+    public boolean edit(long userId, EditUserDto editedUser)
+    {
+        var sql = "UPDATE user SET forename = ?, surname = ?, email = ?, phone_number = ?, role = ? WHERE id = ?;";
+        var rowsAffected = jdbcTemplate.update(sql, editedUser.getForename(), editedUser.getSurname(), editedUser.getEmail(), editedUser.getPhoneNumber(), editedUser.getRole().ordinal(), userId);
+        return rowsAffected == 1;
+    }
+
+    @Override
     public String generateActivationToken(String email)
     {
         var generateTokenSql = "UPDATE user SET activation_token = md5(CONCAT(NOW(), RAND())), activated = FALSE WHERE email = ?;";
@@ -287,7 +296,7 @@ public class UserRepository implements IUserRepository
     @Override
     public boolean delete(long userId)
     {
-        var sql = "DELETE FROM user WHERE id = ?";
+        var sql = "CALL delete_all_user_data(?)";
         var rowsAffected = jdbcTemplate.update(sql, userId);
         return rowsAffected == 1;
     }

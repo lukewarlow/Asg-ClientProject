@@ -13,11 +13,12 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.PreparedStatement;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class CandidateRepository implements ICandidateRepository
@@ -100,7 +101,9 @@ public class CandidateRepository implements ICandidateRepository
                     new CandidateProcessStageDao(
                             rs.getLong("stage_id"),
                             rs.getString("stage")
-                    )
+                    ),
+                    rs.getString("created_at"),
+                    rs.getString("updated_at")
             );
         };
     }
@@ -109,13 +112,13 @@ public class CandidateRepository implements ICandidateRepository
     public void create(long userId, NewCandidateDto newCandidate)
     {
         var addressSql = "INSERT INTO address(line_one, line_two, city, county, postcode) VALUES(?, ?, ?, ?, ?);";
-
         KeyHolder holder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection ->
+        {
             PreparedStatement pstmt = connection.prepareStatement(
                     addressSql,
-                    new String[] {"id"});
+                    new String[]{"id"});
             pstmt.setString(1, newCandidate.getAddress1());
             pstmt.setString(2, newCandidate.getAddress2());
             pstmt.setString(3, newCandidate.getCity());
@@ -129,10 +132,11 @@ public class CandidateRepository implements ICandidateRepository
         if (newCandidate.getCompanyName() != null && !newCandidate.getCompanyName().isEmpty())
         {
             var companySql = "INSERT INTO company(name, phone_number, email) VALUES(?, ?, ?);";
-            jdbcTemplate.update(connection -> {
+            jdbcTemplate.update(connection ->
+            {
                 PreparedStatement pstmt = connection.prepareStatement(
                         companySql,
-                        new String[] {"id"});
+                        new String[]{"id"});
                 pstmt.setString(1, newCandidate.getCompanyName());
                 pstmt.setString(2, newCandidate.getCompanyPhone());
                 pstmt.setString(3, newCandidate.getCompanyEmail());
@@ -141,9 +145,9 @@ public class CandidateRepository implements ICandidateRepository
             companyId = holder.getKey().longValue();
         }
 
-        var candidateSql = "INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_location, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?);";
+        var candidateSql = "INSERT INTO candidate(user_id, address_id, company_id, dob, drone_id, prefered_location, flying_experience, has_payed) VALUES(?, ?, ?, ?, ?, ?, ?, ?);";
 
-        jdbcTemplate.update(candidateSql, userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), newCandidate.getPreferedLocation(), false);
+        jdbcTemplate.update(candidateSql, userId, addressId, companyId == -1 ? null : companyId, newCandidate.getDateOfBirth(), newCandidate.getDroneId(), newCandidate.getPreferedLocation(), newCandidate.getFlyingExperience(), false);
 
         var stageSql = "UPDATE candidate SET stage_id = ? WHERE user_id = ?";
 
@@ -190,7 +194,9 @@ public class CandidateRepository implements ICandidateRepository
                 "d.model,\n" +
                 "ca.has_payed,\n" +
                 "ca.stage_id,\n" +
-                "s.stage\n" +
+                "s.stage,\n" +
+                "ca.created_at,\n" +
+                "ca.updated_at\n" +
                 "FROM candidate ca\n" +
                 "   JOIN enabled_user u ON u.id = ca.user_id\n" +
                 "   JOIN course_location l ON l.id = ca.prefered_location\n" +
@@ -207,7 +213,6 @@ public class CandidateRepository implements ICandidateRepository
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id WHERE c.candidate_number LIKE ?;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(candidates, count, pageRequest);
     }
-
 
 
     @Override
@@ -246,7 +251,9 @@ public class CandidateRepository implements ICandidateRepository
                 "d.model,\n" +
                 "ca.has_payed,\n" +
                 "ca.stage_id,\n" +
-                "s.stage\n" +
+                "s.stage,\n" +
+                "ca.created_at,\n" +
+                "ca.updated_at\n" +
                 "FROM candidate ca\n" +
                 "   JOIN enabled_user u ON u.id = ca.user_id\n" +
                 "   JOIN course_location l ON l.id = ca.prefered_location\n" +
@@ -255,10 +262,11 @@ public class CandidateRepository implements ICandidateRepository
                 "   JOIN drone d ON d.id = ca.drone_id\n" +
                 "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "   JOIN ground_school_attempt gsa ON gsa.candidate_id = ca.id AND gsa.ground_school_id = ?\n" +
+                "WHERE s.id = ?\n" +
                 "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
-        var params = new Object[]{gsCourseId, pageRequest.getPageSize(), pageRequest.getOffset()};
+        var params = new Object[]{gsCourseId, CandidateProcessStage.AWAITING_GS_RESULT.getStageId(), pageRequest.getPageSize(), pageRequest.getOffset()};
         candidates = jdbcTemplate.query(sql, params, candidateMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id JOIN ground_school_attempt gsa on gsa.candidate_id = c.id AND gsa.ground_school_id = ?;", new Object[]{gsCourseId}, Long.class);
         return new PaginatedList<>(candidates, count, pageRequest);
@@ -300,7 +308,9 @@ public class CandidateRepository implements ICandidateRepository
                 "d.model,\n" +
                 "ca.has_payed,\n" +
                 "ca.stage_id,\n" +
-                "s.stage\n" +
+                "s.stage,\n" +
+                "ca.created_at,\n" +
+                "ca.updated_at\n" +
                 "FROM candidate ca\n" +
                 "   JOIN enabled_user u ON u.id = ca.user_id\n" +
                 "   JOIN course_location l ON l.id = ca.prefered_location\n" +
@@ -351,7 +361,9 @@ public class CandidateRepository implements ICandidateRepository
                 "d.model,\n" +
                 "ca.has_payed,\n" +
                 "ca.stage_id,\n" +
-                "s.stage\n" +
+                "s.stage,\n" +
+                "ca.created_at,\n" +
+                "ca.updated_at\n" +
                 "FROM candidate ca\n" +
                 "   JOIN enabled_user u ON u.id = ca.user_id\n" +
                 "   JOIN course_location l ON l.id = ca.prefered_location\n" +
@@ -360,7 +372,7 @@ public class CandidateRepository implements ICandidateRepository
                 "   JOIN drone d ON d.id = ca.drone_id\n" +
                 "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "WHERE ca.id = ?;";
-        return jdbcTemplate.query(sql, new Object[] {candidateId}, candidateMapper).stream().findFirst();
+        return jdbcTemplate.query(sql, new Object[]{candidateId}, candidateMapper).stream().findFirst();
     }
 
     @Override
@@ -397,7 +409,9 @@ public class CandidateRepository implements ICandidateRepository
                 "d.model,\n" +
                 "ca.has_payed,\n" +
                 "ca.stage_id,\n" +
-                "s.stage\n" +
+                "s.stage,\n" +
+                "ca.created_at,\n" +
+                "ca.updated_at\n" +
                 "FROM candidate ca\n" +
                 "   JOIN enabled_user u ON u.id = ca.user_id\n" +
                 "   JOIN course_location l ON l.id = ca.prefered_location\n" +
@@ -406,7 +420,7 @@ public class CandidateRepository implements ICandidateRepository
                 "   JOIN drone d ON d.id = ca.drone_id\n" +
                 "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "WHERE u.email = ?;";
-        return jdbcTemplate.query(sql, new Object[] {email}, candidateMapper).stream().findFirst();
+        return jdbcTemplate.query(sql, new Object[]{email}, candidateMapper).stream().findFirst();
     }
 
     @Override

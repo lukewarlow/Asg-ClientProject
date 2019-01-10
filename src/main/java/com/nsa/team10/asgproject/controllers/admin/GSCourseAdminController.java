@@ -19,4 +19,10 @@ public class GSCourseAdminController
     {
         return "/admin/gscourses/manage";
     }
+
+    @GetMapping("/locations")
+    public String manageLocations()
+    {
+        return "/admin/gscourses/locations";
+    }
 }

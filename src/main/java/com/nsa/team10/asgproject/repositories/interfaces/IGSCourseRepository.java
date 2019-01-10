@@ -26,10 +26,11 @@ public interface IGSCourseRepository
         For select dropdown on forms in UI. Wouldn't use this in reality but not worth time to do a better selection UI.
      */
     List<GSCourseTypeDao> findAllTypes();
+
+    void createLocation(String newLocation);
     PaginatedList<GSCourseLocationDao> findAllLocations(FilteredPageRequest pageRequest);
     /*
         For select dropdown on forms in UI. Wouldn't use this in reality but not worth time to do a better selection UI.
      */
     List<GSCourseLocationDao> findAllLocations();
-
 }

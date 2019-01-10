@@ -94,8 +94,18 @@ public class GSCourseApiController
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
+    @PostMapping("/locations")
+    public ResponseEntity createNewLocation(@RequestBody String location)
+    {
+        //I know this is janky, Spring boot / axios is weird with single values, I cba to fight with it so this removes the = from the end of the string.
+        var locationString = location.substring(0, location.length() == 0 ? 0 : location.length() - 1);
+        gsCourseService.createLocation(locationString);
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
+
     @GetMapping("/locations")
-    public ResponseEntity<PaginatedList<GSCourseLocationDao>> findAllLocations(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
+    public ResponseEntity<PaginatedList<GSCourseLocationDao>> findLocations(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
         var pageRequest = new FilteredPageRequest(page, pageSize, orderBy, orderByAscending, searchTerm);
         var locations = gsCourseService.findAllLocations(pageRequest);

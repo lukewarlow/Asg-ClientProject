@@ -55,7 +55,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    Sign up as candidate
+                    Sign up as candidate (* means required)
                 </div>
                 <div class="card-body card-block">
                     <form method="post" id="candidate-sign-up" @submit.prevent="submit()">
@@ -120,8 +120,18 @@
                             <label for="flying-experience" class="form-control-label">Flying Experience Details *</label>
                             <input v-model="candidateSignup.flyingExperience" class="form-control" type="text" id="flying-experience" name="flying-experience" required>
                         </div>
-                        <div>* means required.</div>
+                        <div>
+                            <input type="checkbox" id="eyesight-standards" required>
+                            <label for="eyesight-standards">I meet the <a href="https://www.gov.uk/driving-eyesight-rules" target="_blank">minimum requirements for eyesight.</a></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="agree-terms" name="agree-terms">
+                            <label for="agree-terms">I agree with the <a href="" data-toggle="modal" data-target="#termsModal">terms and conditions</a> of the course process.</label>
+                        </div>
                     </form>
+                    <div v-show="termsUnaccepted" class="alert alert-danger" id="terms-unnaccepted" style="display: none;" role="alert">
+                        Terms and conditions must be accepted!
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary" form="candidate-sign-up">
@@ -147,6 +157,31 @@
             </div>
         </div>
     </div>
+    <div class="modal bd-modal-lg fade" id="termsModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content modal-lg">
+                <div class="modal-header modal-lg">
+                    <h5 class="modal-title">Terms and Conditions</h5>
+                </div>
+                <div class="modal-body modal-lg container-fluid">
+                    <div style="margin: 10px;">
+                        <ol>
+                            <li>After completing the GS Exam on Day 2 you must submit your Operations Manual for assessment within 3 months of the course dates</li>
+                            <li>Following approval of your Operations Manual you must undertake your Practical Flight Assessment within 6 months of the course dates.</li>
+                            <li>Any re-take of the Practical Flight Assessment, due to lack of skills, knowledge or weather (cancelled booking due to weather must be at least 24hrs prior to agreed assessment date/time) will cost £250.00 (ex VAT) per re-assessment or examination.</li>
+                            <li>All 3 critical elements to support a PfCO recommendation, to include supporting evidence to the CAA, must be completed within 9 months of the course dates.</li>
+                        </ol>
+                    </div>
+                    <br>
+                    <h4>Course Cancellation Policy</h4>
+                    <p>Any changes to any course booking with ASG must be made in writing to cjohnson@asg.ltd or Freephone 0800 9247001. Candidates must ensure that they receive written confirmed acknowledgement of course cancellation.Aviation Systems Group    Ltd   (known as ASG) will refund 100% of your course fee if you inform ASG in writing of your withdrawal from a nominated course at least 14 calendar days before the allocated course start date.  Within 7 to 14 calendar days prior to the course start date ASG will only refund 50% of the course fee or you can book on another ASG course subject to availability and provided you have ASG in writing. Within 7 calendar days of the course start date course applicants will not be able to receive any course fee refund but will be able   to be allocatedanother ASG course date subject to availabilityIf ASG should cancel a course start date for any reason then ASG will immediately refund 100% of course fees.</p>
+                </div>
+                <div class="modal-footer modal-lg">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </#macro>
 
 <#macro scripts>
@@ -159,7 +194,8 @@
                 suggestions: [],
                 selectedItem: {},
                 candidateSignup: { },
-                locations: []
+                locations: [],
+                termsUnaccepted: false
             },
             methods: {
                 find: function() {
@@ -184,11 +220,17 @@
                     $("#drone-selection").removeAttr('disabled');
                 },
                 submit: function() {
-                    app.candidateSignup.droneId = app.selectedItem.id;
-                    axios.post("/api/v1/candidates", app.candidateSignup)
-                        .then(function() {
-                            $("#successModal").modal();
-                        });
+                    app.termsUnaccepted = false;
+                    if (!$('#agree-terms').is(":checked")) {
+                        app.termsUnaccepted = true;
+                    }
+                    else {
+                        app.candidateSignup.droneId = app.selectedItem.id;
+                        axios.post("/api/v1/candidates", app.candidateSignup)
+                            .then(function () {
+                                $("#successModal").modal();
+                            });
+                    }
                 },
                 getMaxDob: function () {
                     var eighteenYearsAgo = new Date();

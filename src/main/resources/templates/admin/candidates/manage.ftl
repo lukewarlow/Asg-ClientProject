@@ -21,6 +21,14 @@
                             <td>{{candidate.user.surname}}</td>
                         </tr>
                         <tr>
+                            <th>Created at</th>
+                            <td>{{candidate.createdAt}}</td>
+                        </tr>
+                        <tr>
+                            <th>Updated at</th>
+                            <td>{{candidate.updatedAt}}</td>
+                        </tr>
+                        <tr>
                             <th>Date of Birth</th>
                             <td>{{candidate.dateOfBirth}}</td>
                         </tr>

@@ -79,6 +79,12 @@ public class GSCourseService implements IGSCourseService
     }
 
     @Override
+    public void createLocation(String newLocation)
+    {
+        gsCourseRepository.createLocation(newLocation);
+    }
+
+    @Override
     public PaginatedList<GSCourseLocationDao> findAllLocations(FilteredPageRequest pageRequest)
     {
         return gsCourseRepository.findAllLocations(pageRequest);
