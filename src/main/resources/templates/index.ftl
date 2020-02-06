@@ -29,6 +29,7 @@
 </#macro>
 
 <#macro scripts>
+    <script src="/vendor/chartjs/Chart.bundle.min.js"></script>
     <script>
         $('#make-payment').on('click', function () {
             axios.post("/api/v1/candidates/sendpayment")
