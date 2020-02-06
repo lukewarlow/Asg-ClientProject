@@ -29,11 +29,6 @@ bootRun {
         systemProperty 'spring.profiles.active', project.property('profiles')
     } else {
         systemProperty 'spring.profiles.active', 'development'
-        if (project.hasProperty("password")) {
-            systemProperty 'spring.datasource.password', project.property('password')
-        } else {
-            systemProperty 'spring.datasource.password', 'comsc'
-        }
     }
 
     main = 'com.nsa.team10.asgproject.AsgApp'
@@ -44,11 +39,6 @@ test {
         systemProperty 'spring.profiles.active', project.property('profiles') + ',testing'
     } else {
         systemProperty 'spring.profiles.active', 'development,testing'
-        if (project.hasProperty("password")) {
-            systemProperty 'spring.datasource.password', project.property('password')
-        } else {
-            systemProperty 'spring.datasource.password', 'comsc'
-        }
     }
 }
 
@@ -61,7 +51,8 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.flywaydb:flyway-core')
-    implementation('mysql:mysql-connector-java')
+    implementation('mysql:mysql-connector-java')   
+    implementation('com.google.guava:guava:23.5-jre')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
 }

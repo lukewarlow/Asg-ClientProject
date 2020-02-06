@@ -8,6 +8,7 @@ import com.nsa.team10.asgproject.services.interfaces.ICandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class CandidateApiController
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("")
     public ResponseEntity<PaginatedList<CandidateDao>> findAll(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
@@ -39,6 +41,7 @@ public class CandidateApiController
         return new ResponseEntity<>(candidates, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/needassigning")
     public ResponseEntity<PaginatedList<CandidateDao>> findAllNeedAssigning(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
@@ -47,6 +50,7 @@ public class CandidateApiController
         return new ResponseEntity<>(candidates, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/{id:[0-9]+}")
     public ResponseEntity<CandidateDao> findById(@PathVariable long id)
     {
@@ -60,7 +64,6 @@ public class CandidateApiController
     @PostMapping("sendpayment")
     public ResponseEntity receipt()
     {
-        System.out.print("debug testing blah blah blah");
         candidateService.sendReceipt(true);
         return new ResponseEntity(HttpStatus.OK);
     }

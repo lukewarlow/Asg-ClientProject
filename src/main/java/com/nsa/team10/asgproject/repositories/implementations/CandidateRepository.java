@@ -2,6 +2,7 @@ package com.nsa.team10.asgproject.repositories.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
+import com.nsa.team10.asgproject.repositories.SanitisedSql;
 import com.nsa.team10.asgproject.repositories.daos.*;
 import com.nsa.team10.asgproject.repositories.interfaces.ICandidateRepository;
 import com.nsa.team10.asgproject.services.dtos.NewCandidateDto;
@@ -13,42 +14,15 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CandidateRepository implements ICandidateRepository
 {
     private final JdbcTemplate jdbcTemplate;
     private static RowMapper<CandidateDao> candidateMapper;
-    private static Map<String, String> orderByCol = new HashMap<>()
-    {
-        {
-            put("id", "id");
-            put("candidateNumber", "candidate_number");
-            put("forename", "forename");
-            put("surname", "surname");
-            put("email", "email");
-            put("hasPayed", "has_payed");
-            put("stage", "stage_id");
-            put("dateOfBirth", "dob");
-        }
-
-        /**
-         * @param key for column name
-         * @return column name otherwise default "id"
-         */
-        @Override
-        public String get(Object key)
-        {
-            String col = super.get(key);
-            return col == null ? "id" : col;
-        }
-    };
 
     @Autowired
     public CandidateRepository(JdbcTemplate jdbcTemplate)
@@ -163,7 +137,7 @@ public class CandidateRepository implements ICandidateRepository
     {
         List<CandidateDao> candidates;
         long count;
-        var sql = "SELECT ca.id,\n" +
+        var sqlTemplate = "SELECT ca.id,\n" +
                 "ca.candidate_number,\n" +
                 "ca.user_id,\n" +
                 "u.forename,\n" +
@@ -205,11 +179,13 @@ public class CandidateRepository implements ICandidateRepository
                 "   JOIN drone d ON d.id = ca.drone_id\n" +
                 "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "WHERE ca.candidate_number LIKE ?\n" +
-                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "", CandidateDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        candidates = jdbcTemplate.query(sql, params, candidateMapper);
+        candidates = jdbcTemplate.query(sanitisedSql.toString(), params, candidateMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id WHERE c.candidate_number LIKE ?;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(candidates, count, pageRequest);
     }
@@ -220,7 +196,7 @@ public class CandidateRepository implements ICandidateRepository
     {
         List<CandidateDao> candidates;
         long count;
-        var sql = "SELECT ca.id,\n" +
+        var sqlTemplate = "SELECT ca.id,\n" +
                 "ca.candidate_number,\n" +
                 "ca.user_id,\n" +
                 "u.forename,\n" +
@@ -263,11 +239,13 @@ public class CandidateRepository implements ICandidateRepository
                 "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "   JOIN ground_school_attempt gsa ON gsa.candidate_id = ca.id AND gsa.ground_school_id = ?\n" +
                 "WHERE s.id = ?\n" +
-                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "", CandidateDao.class, "id");
         var params = new Object[]{gsCourseId, CandidateProcessStage.AWAITING_GS_RESULT.getStageId(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        candidates = jdbcTemplate.query(sql, params, candidateMapper);
+        candidates = jdbcTemplate.query(sanitisedSql.toString(), params, candidateMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id JOIN ground_school_attempt gsa on gsa.candidate_id = c.id AND gsa.ground_school_id = ?;", new Object[]{gsCourseId}, Long.class);
         return new PaginatedList<>(candidates, count, pageRequest);
     }
@@ -277,7 +255,7 @@ public class CandidateRepository implements ICandidateRepository
     {
         List<CandidateDao> candidates;
         long count;
-        var sql = "SELECT ca.id,\n" +
+        var sqlTemplate = "SELECT ca.id,\n" +
                 "ca.candidate_number,\n" +
                 "ca.user_id,\n" +
                 "u.forename,\n" +
@@ -319,11 +297,13 @@ public class CandidateRepository implements ICandidateRepository
                 "   JOIN drone d ON d.id = ca.drone_id\n" +
                 "   JOIN candidate_process_stage s ON s.id = ca.stage_id\n" +
                 "WHERE ca.stage_id = ? AND ca.candidate_number LIKE ?\n" +
-                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "", CandidateDao.class, "id");
         var params = new Object[]{CandidateProcessStage.AWAITING_GS_ASSIGNMENT.getStageId(), pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        candidates = jdbcTemplate.query(sql, params, candidateMapper);
+        candidates = jdbcTemplate.query(sanitisedSql.toString(), params, candidateMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM candidate c JOIN enabled_user u ON u.id = c.user_id WHERE c.stage_id = ? AND c.candidate_number LIKE ?;", new Object[]{CandidateProcessStage.AWAITING_GS_ASSIGNMENT.getStageId(), pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(candidates, count, pageRequest);
     }

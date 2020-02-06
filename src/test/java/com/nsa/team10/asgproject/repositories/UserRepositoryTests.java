@@ -67,7 +67,6 @@ public class UserRepositoryTests
     {
         var filteredPageRequest = new FilteredPageRequest(1, (byte) 10, "id", true, "");
         var result = userRepository.findAllDisabled(filteredPageRequest);
-        System.out.println(result.getList());
         Assert.assertEquals(1, result.getNoOfPages());
         Assert.assertEquals(1, result.getList().size());
         Assert.assertEquals("Sally", result.getList().get(0).getForename());

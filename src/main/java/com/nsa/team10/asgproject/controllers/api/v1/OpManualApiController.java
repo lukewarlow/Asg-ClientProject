@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
+@PreAuthorize("hasAnyAuthority('Candidate', 'Admin')")
 @RequestMapping("/api/v1/opmanual")
 public class OpManualApiController
 {
@@ -54,12 +55,10 @@ public class OpManualApiController
     }
 
     @PostMapping("/upload")
-    @PreAuthorize("hasAuthority('Candidate')")
     public ResponseEntity uploadSubmission(@RequestParam("file") MultipartFile file)
     {
         if (file.isEmpty())
         {
-            System.out.print("test");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         else

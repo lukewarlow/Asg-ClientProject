@@ -2,6 +2,7 @@ package com.nsa.team10.asgproject.repositories.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
+import com.nsa.team10.asgproject.repositories.SanitisedSql;
 import com.nsa.team10.asgproject.repositories.daos.UserDao;
 import com.nsa.team10.asgproject.repositories.daos.UserWithPasswordDao;
 import com.nsa.team10.asgproject.repositories.interfaces.IUserRepository;
@@ -13,9 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -24,30 +23,6 @@ public class UserRepository implements IUserRepository
     private final JdbcTemplate jdbcTemplate;
     private static RowMapper<UserWithPasswordDao> userWithPasswordMapper;
     private static RowMapper<UserDao> userMapper;
-    private static Map<String, String> orderByCol = new HashMap<>()
-    {
-        {
-            put("id", "id");
-            put("forename", "forename");
-            put("surname", "surname");
-            put("email", "email");
-            put("phoneNumber", "phone_number");
-            put("role", "role");
-            put("activated", "activated");
-        }
-
-        /**
-         * @param key for column name
-         * @return column name otherwise default "id"
-         */
-        @Override
-        public String get(Object key)
-        {
-            String col = super.get(key);
-            return col == null ? "id" : col;
-        }
-    };
-
 
     @Autowired
     public UserRepository(JdbcTemplate jdbcTemplate)
@@ -103,7 +78,7 @@ public class UserRepository implements IUserRepository
     {
         List<UserDao> users;
         long count;
-        var sql = "SELECT u.id,\n" +
+        var sqlTemplate = "SELECT u.id,\n" +
                 "u.forename,\n" +
                 "u.surname,\n" +
                 "u.email,\n" +
@@ -115,11 +90,13 @@ public class UserRepository implements IUserRepository
                 "u.updated_at\n" +
                 "FROM enabled_user u\n" +
                 "WHERE u.forename LIKE ?\n" +
-                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "u", UserDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        users = jdbcTemplate.query(sql, params, userMapper);
+        users = jdbcTemplate.query(sanitisedSql.toString(), params, userMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM enabled_user WHERE forename LIKE ?;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(users, count, pageRequest);
     }
@@ -129,7 +106,7 @@ public class UserRepository implements IUserRepository
     {
         List<UserDao> users;
         long count;
-        var sql = "SELECT u.id,\n" +
+        var sqlTemplate = "SELECT u.id,\n" +
                 "u.forename,\n" +
                 "u.surname,\n" +
                 "u.email,\n" +
@@ -142,11 +119,13 @@ public class UserRepository implements IUserRepository
                 "FROM user u\n" +
                 "WHERE u.forename LIKE ?\n" +
                 "AND u.disabled = TRUE\n" +
-                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "u", UserDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        users = jdbcTemplate.query(sql, params, userMapper);
+        users = jdbcTemplate.query(sanitisedSql.toString(), params, userMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user WHERE forename LIKE ? AND disabled = TRUE;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(users, count, pageRequest);
     }
@@ -156,7 +135,7 @@ public class UserRepository implements IUserRepository
     {
         List<UserDao> users;
         long count;
-        var sql = "SELECT u.id,\n" +
+        var sqlTemplate = "SELECT u.id,\n" +
                 "u.forename,\n" +
                 "u.surname,\n" +
                 "u.email,\n" +
@@ -168,11 +147,13 @@ public class UserRepository implements IUserRepository
                 "u.updated_at\n" +
                 "FROM enabled_user u\n" +
                 "WHERE u.role = 2 AND u.forename LIKE ?\n" +
-                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "u", UserDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        users = jdbcTemplate.query(sql, params, userMapper);
+        users = jdbcTemplate.query(sanitisedSql.toString(), params, userMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM enabled_user WHERE role = 2 AND forename LIKE ?;", new Object[]{pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(users, count, pageRequest);
     }
