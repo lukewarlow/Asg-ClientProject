@@ -4,6 +4,7 @@ import com.nsa.team10.asgproject.repositories.daos.StageMetricsDao;
 import com.nsa.team10.asgproject.services.interfaces.IMetricsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasAuthority('Admin')")
 @RequestMapping("/api/v1/metrics")
 public class MetricsApiController
 {
@@ -27,5 +29,4 @@ public class MetricsApiController
     {
         return metricsService.findStageMetrics();
     }
-
 }

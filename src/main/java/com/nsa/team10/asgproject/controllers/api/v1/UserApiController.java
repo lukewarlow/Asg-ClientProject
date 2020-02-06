@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
+@PreAuthorize("hasAuthority('Admin')")
 @RequestMapping("/api/v1/users")
 public class UserApiController
 {
@@ -26,7 +27,6 @@ public class UserApiController
         this.userService = userService;
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("")
     public ResponseEntity<PaginatedList<UserDao>> findAll(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
@@ -35,7 +35,6 @@ public class UserApiController
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/disabled")
     public ResponseEntity<PaginatedList<UserDao>> findAllDisabled(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
@@ -44,7 +43,6 @@ public class UserApiController
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/instructors")
     public ResponseEntity<PaginatedList<UserDao>> findAllInstructors(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
@@ -53,7 +51,6 @@ public class UserApiController
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @GetMapping("/{id:[0-9]+}")
     public ResponseEntity<UserDao> findById(@PathVariable long id)
     {
@@ -61,7 +58,6 @@ public class UserApiController
         return user.map(userDao -> new ResponseEntity<>(userDao, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @PutMapping("/{id:[0-9]+}")
     public ResponseEntity edit(@PathVariable long id, @Valid @RequestBody EditUserDto editedUser)
     {
@@ -70,7 +66,6 @@ public class UserApiController
         else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @PutMapping("/{id:[0-9]+}/disable")
     public ResponseEntity disable(@PathVariable long id)
     {
@@ -79,7 +74,6 @@ public class UserApiController
         else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @PutMapping("/{id:[0-9]+}/enable")
     public ResponseEntity enable(@PathVariable long id)
     {
@@ -88,7 +82,6 @@ public class UserApiController
         else return new ResponseEntity(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping("/{id:[0-9]+}")
     public ResponseEntity delete(@PathVariable long id)
     {

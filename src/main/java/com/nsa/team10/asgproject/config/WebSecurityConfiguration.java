@@ -1,7 +1,6 @@
 package com.nsa.team10.asgproject.config;
 
 import com.nsa.team10.asgproject.services.implementations.AccountService;
-import com.nsa.team10.asgproject.services.implementations.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,6 +46,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/admin/**").hasAuthority("Admin")
+                .antMatchers("/instructor/**").hasAuthority("Instructor")
+                .antMatchers("/candidate/**").hasAuthority("Candidate")
                 .antMatchers("/account/**", "/api/v1/account/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/fonts/**").permitAll()
@@ -67,6 +69,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/account/login");
         http.headers().frameOptions().disable();
+        http.headers().contentSecurityPolicy("script-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:8080 https://localhost:8443 https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' http://localhost:8080 https://localhost:8443 https://fonts.googleapis.com; img-src 'self' http://localhost:8080 https://localhost:8443;");
     }
 
     @Override

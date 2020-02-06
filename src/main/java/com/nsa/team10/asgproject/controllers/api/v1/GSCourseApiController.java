@@ -53,6 +53,7 @@ public class GSCourseApiController
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin', 'Instructor')")
     @GetMapping("")
     public ResponseEntity<PaginatedList<GSCourseDao>> findAll(@RequestParam(value = "page", required = false, defaultValue = "1") long page, @RequestParam(value = "pageSize", required = false, defaultValue = "10") byte pageSize, @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy, @RequestParam(value = "orderByAscending", required = false, defaultValue = "true") boolean orderByAscending, @RequestParam(value = "search", required = false, defaultValue = "") String searchTerm)
     {
@@ -61,6 +62,7 @@ public class GSCourseApiController
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin', 'Instructor')")
     @GetMapping("/{id:[0-9]+}")
     public ResponseEntity<GSCourseDao> findById(@PathVariable long id)
     {

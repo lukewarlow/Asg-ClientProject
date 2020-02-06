@@ -2,6 +2,7 @@ package com.nsa.team10.asgproject.repositories.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
+import com.nsa.team10.asgproject.repositories.SanitisedSql;
 import com.nsa.team10.asgproject.repositories.daos.*;
 import com.nsa.team10.asgproject.repositories.interfaces.IGSCourseRepository;
 import com.nsa.team10.asgproject.services.dtos.NewGSCourseDto;
@@ -22,52 +23,6 @@ public class GSCourseRepository implements IGSCourseRepository
     private static RowMapper<GSCourseDao> gsCourseMapper;
     private static RowMapper<GSCourseTypeDao> typeMapper;
     private static RowMapper<GSCourseLocationDao> locationMapper;
-
-    private static Map<String, String> gsCourseOrderByCol = new HashMap<>()
-    {
-        {
-            put("id", "id");
-            put("number", "course_number");
-            put("startDate", "start_date");
-            put("endDate", "end_date");
-            put("location", "location");
-        }
-
-        @Override
-        public String get(Object key)
-        {
-            var col = super.get(key);
-            return col == null ? "id" : col;
-        }
-    };
-    private static Map<String, String> typeOrderByCol = new HashMap<>()
-    {
-        {
-            put("id", "id");
-            put("type", "type");
-        }
-
-        @Override
-        public String get(Object key)
-        {
-            var col = super.get(key);
-            return col == null ? "id" : col;
-        }
-    };
-    private static Map<String, String> locationOrderByCol = new HashMap<>()
-    {
-        {
-            put("id", "id");
-            put("location", "location");
-        }
-
-        @Override
-        public String get(Object key)
-        {
-            var col = super.get(key);
-            return col == null ? "id" : col;
-        }
-    };
 
     @Autowired
     public GSCourseRepository(JdbcTemplate jdbcTemplate)
@@ -125,7 +80,7 @@ public class GSCourseRepository implements IGSCourseRepository
     {
         List<GSCourseDao> courses;
         long count;
-        var sql = "SELECT c.id,\n" +
+        var sqlTemplate = "SELECT c.id,\n" +
                 "c.course_number,\n" +
                 "c.start_date,\n" +
                 "c.end_date,\n" +
@@ -148,11 +103,13 @@ public class GSCourseRepository implements IGSCourseRepository
                 "   JOIN course_type ct ON ct.id = c.type_id\n" +
                 "   LEFT JOIN enabled_user u ON u.id = c.instructor_id\n" +
                 "WHERE c.course_number LIKE ?\n" +
-                "ORDER BY " + gsCourseOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "", GSCourseDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        courses = jdbcTemplate.query(sql, params, gsCourseMapper);
+        courses = jdbcTemplate.query(sanitisedSql.toString(), params, gsCourseMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ground_school_course c WHERE c.course_number LIKE ?;", new Object[] {pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(courses, count, pageRequest);
     }
@@ -162,7 +119,7 @@ public class GSCourseRepository implements IGSCourseRepository
     {
         List<GSCourseDao> courses;
         long count;
-        var sql = "SELECT c.id,\n" +
+        var sqlTemplate = "SELECT c.id,\n" +
                 "c.course_number,\n" +
                 "c.start_date,\n" +
                 "c.end_date,\n" +
@@ -185,11 +142,13 @@ public class GSCourseRepository implements IGSCourseRepository
                 "   JOIN course_type ct ON ct.id = c.type_id\n" +
                 "   JOIN enabled_user u ON u.id = c.instructor_id\n" +
                 "WHERE c.instructor_id = ? AND c.course_number LIKE ?\n" +
-                "ORDER BY " + gsCourseOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "", GSCourseDao.class, "id");
         var params = new Object[]{instructorId, pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        courses = jdbcTemplate.query(sql, params, gsCourseMapper);
+        courses = jdbcTemplate.query(sanitisedSql.toString(), params, gsCourseMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ground_school_course c JOIN enabled_user u ON u.id = c.instructor_id WHERE c.instructor_id = ? AND c.course_number LIKE ?;", new Object[] {instructorId, pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(courses, count, pageRequest);
     }
@@ -228,15 +187,17 @@ public class GSCourseRepository implements IGSCourseRepository
     {
         List<GSCourseTypeDao> types;
         long count;
-        var sql = "SELECT ct.id,\n" +
+        var sqlTemplate = "SELECT ct.id,\n" +
                 "ct.type\n" +
                 "FROM course_type ct\n" +
                 "WHERE ct.type LIKE ?\n" +
-                "ORDER BY " + typeOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "ct", GSCourseTypeDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        types = jdbcTemplate.query(sql, params, typeMapper);
+        types = jdbcTemplate.query(sanitisedSql.toString(), params, typeMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM course_type ct WHERE ct.type LIKE ?;", new Object[] {pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(types, count, pageRequest);
     }
@@ -260,15 +221,17 @@ public class GSCourseRepository implements IGSCourseRepository
     {
         List<GSCourseLocationDao> locations;
         long count;
-        var sql = "SELECT cl.id,\n" +
+        var sqlTemplate = "SELECT cl.id,\n" +
                 "cl.location\n" +
                 "FROM course_location cl\n" +
                 "WHERE cl.location LIKE ?\n" +
-                "ORDER BY " + locationOrderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "cl", GSCourseLocationDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        locations = jdbcTemplate.query(sql, params, locationMapper);
+        locations = jdbcTemplate.query(sanitisedSql.toString(), params, locationMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM course_location cl WHERE cl.location LIKE ?;", new Object[] {pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(locations, count, pageRequest);
     }

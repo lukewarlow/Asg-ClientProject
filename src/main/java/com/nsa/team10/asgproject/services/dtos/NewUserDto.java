@@ -3,7 +3,6 @@ package com.nsa.team10.asgproject.services.dtos;
 import com.nsa.team10.asgproject.validation.PasswordMatches;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @PasswordMatches
 public class NewUserDto

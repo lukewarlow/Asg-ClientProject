@@ -13,7 +13,7 @@ public class FilteredPageRequest
         if (page < 1)
             throw new IllegalArgumentException("Page cannot be less than 1");
         if (pageSize < 1)
-            throw new IllegalArgumentException("Page cannot be less than 1");
+            throw new IllegalArgumentException("Page size cannot be less than 1");
 
         this.page = page;
         this.pageSize = pageSize;
@@ -42,7 +42,12 @@ public class FilteredPageRequest
         return (page - 1) * pageSize;
     }
 
-    public String getOrderByAscending()
+    public boolean getOrderByAscending()
+    {
+        return orderByAscending;
+    }
+
+    public String getOrderByAscendingString()
     {
         return orderByAscending ? " ASC" : " DESC";
     }

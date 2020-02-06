@@ -48,7 +48,7 @@ public class CandidateRepositoryTests
     @Test
     public void testFindAllWithOrderByDob()
     {
-        var filteredPageRequest = new FilteredPageRequest(1, (byte) 10, "dateOfBirth", true, "");
+        var filteredPageRequest = new FilteredPageRequest(1, (byte) 10, "dob", true, "");
         var result = candidateRepository.findAll(filteredPageRequest);
         Assert.assertEquals(1, result.getNoOfPages());
         Assert.assertEquals("1990-01-09", result.getList().get(0).getDateOfBirth());

@@ -2,6 +2,7 @@ package com.nsa.team10.asgproject.repositories.implementations;
 
 import com.nsa.team10.asgproject.FilteredPageRequest;
 import com.nsa.team10.asgproject.PaginatedList;
+import com.nsa.team10.asgproject.repositories.SanitisedSql;
 import com.nsa.team10.asgproject.repositories.daos.DroneDao;
 import com.nsa.team10.asgproject.repositories.interfaces.IDroneRepository;
 import com.nsa.team10.asgproject.validation.ConflictException;
@@ -20,25 +21,6 @@ public class DroneRepository implements IDroneRepository
 {
     private final JdbcTemplate jdbcTemplate;
     private static RowMapper<DroneDao> droneMapper;
-    private static Map<String, String> orderByCol = new HashMap<>()
-    {
-        {
-            put("id", "id");
-            put("manufacturer", "manufacturer");
-            put("model", "model");
-        }
-
-        /**
-         * @param key for column name
-         * @return column name otherwise default "id"
-         */
-        @Override
-        public String get(Object key)
-        {
-            String col = super.get(key);
-            return col == null ? "id" : col;
-        }
-    };
 
     @Autowired
     public DroneRepository(JdbcTemplate jdbcTemplate)
@@ -73,16 +55,18 @@ public class DroneRepository implements IDroneRepository
     {
         List<DroneDao> drones;
         long count;
-        var sql = "SELECT d.id,\n" +
+        var sqlTemplate = "SELECT d.id,\n" +
                 "d.manufacturer,\n" +
                 "d.model\n" +
                 "FROM drone d\n" +
                 "WHERE LOWER(CONCAT(d.manufacturer, ' ', d.model)) LIKE ?\n" +
-                "ORDER BY " + orderByCol.get(pageRequest.getOrderBy()) + pageRequest.getOrderByAscending() + "\n" +
+                "ORDER BY %s \n" +
                 "LIMIT ?\n" +
                 "OFFSET ?;";
+
+        var sanitisedSql = new SanitisedSql(sqlTemplate, pageRequest.getOrderBy(), pageRequest.getOrderByAscending(), "d", DroneDao.class, "id");
         var params = new Object[]{pageRequest.getSearchTermSql(), pageRequest.getPageSize(), pageRequest.getOffset()};
-        drones = jdbcTemplate.query(sql, params, droneMapper);
+        drones = jdbcTemplate.query(sanitisedSql.toString(), params, droneMapper);
         count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM drone d WHERE LOWER(CONCAT(d.manufacturer, ' ', d.model)) LIKE ?;", new Object[] {pageRequest.getSearchTermSql()}, Long.class);
         return new PaginatedList<>(drones, count, pageRequest);
     }
